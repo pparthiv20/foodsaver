@@ -10,6 +10,12 @@ requireAuth(['user']);
 $db = getDB();
 $user = getCurrentUser();
 
+// If donor profile is blocked/suspended, redirect to suspended page
+if (isset($user['status']) && in_array($user['status'], ['blocked', 'suspended'], true)) {
+    header('Location: ../pages/suspended.php?type=user');
+    exit;
+}
+
 // Handle donations
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && !verifyCSRFToken($_POST['csrf_token'] ?? '')) {
     setFlashMessage('error', 'Invalid request.');

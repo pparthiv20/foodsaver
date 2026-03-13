@@ -32,14 +32,24 @@ $restaurants = $db->query("SELECT * FROM restaurants ORDER BY created_at DESC LI
                     <td><?php echo htmlspecialchars($restaurant['restaurant_name']); ?></td>
                     <td><?php echo htmlspecialchars($restaurant['address'] ?? 'N/A'); ?></td>
                     <td>
-                        <span class="badge badge-<?php echo $restaurant['status']; ?>">
-                            <?php echo ucfirst($restaurant['status']); ?>
+                        <?php
+                            $status = $restaurant['status'];
+                            $statusClass = 'badge-' . $status;
+                            if ($status === 'blocked') {
+                                $statusClass = 'badge-blocked';
+                            }
+                        ?>
+                        <span class="badge <?php echo $statusClass; ?>">
+                            <?php echo ucfirst($status); ?>
                         </span>
                     </td>
                     <td><?php echo date('M d, Y', strtotime($restaurant['created_at'])); ?></td>
                     <td>
-                        <button class="btn btn-sm btn-outline">View</button>
-                        <button class="btn btn-sm btn-outline">Edit</button>
+                        <button class="btn btn-sm btn-outline" type="button">View</button>
+                        <button class="btn btn-sm btn-outline" type="button"
+                                onclick="handleAction('<?php echo $restaurant['status'] === 'blocked' ? 'unblock' : 'block'; ?>', 'restaurant', <?php echo (int)$restaurant['id']; ?>)">
+                            <?php echo $restaurant['status'] === 'blocked' ? 'Unblock' : 'Block'; ?>
+                        </button>
                     </td>
                 </tr>
                 <?php endforeach; ?>
@@ -89,6 +99,11 @@ $restaurants = $db->query("SELECT * FROM restaurants ORDER BY created_at DESC LI
 }
 
 .badge-rejected {
+    background: rgba(239, 68, 68, 0.1);
+    color: #991b1b;
+}
+
+.badge-blocked {
     background: rgba(239, 68, 68, 0.1);
     color: #991b1b;
 }

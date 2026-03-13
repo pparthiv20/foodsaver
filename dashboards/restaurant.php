@@ -12,8 +12,13 @@ requireAuth(['restaurant']);
 $db = getDB();
 $user = getCurrentUser();
 
-// Check if restaurant is approved
-if ($user['status'] !== 'approved') {
+// Check restaurant status
+if (isset($user['status']) && $user['status'] !== 'approved') {
+    if (in_array($user['status'], ['blocked', 'suspended', 'rejected'], true)) {
+        header('Location: ../pages/suspended.php?type=restaurant');
+        exit;
+    }
+
     setFlashMessage('error', 'Your account is pending approval. Please wait for admin verification.');
     header('Location: ../pages/login.php');
     exit;

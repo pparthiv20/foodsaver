@@ -91,15 +91,37 @@ if (isset($_GET['action'])) {
                 break;
                 
             case 'suspend':
+            case 'block':
                 if ($type === 'restaurant') {
-                    $db->prepare("UPDATE restaurants SET status = 'suspended' WHERE id = ?")
+                    // Block restaurant
+                    $db->prepare("UPDATE restaurants SET status = 'blocked' WHERE id = ?")
                        ->execute([$id]);
                 } elseif ($type === 'ngo') {
+                    // Block NGO
                     $db->prepare("UPDATE ngos SET status = 'blocked' WHERE id = ?")
                        ->execute([$id]);
+                } elseif ($type === 'user') {
+                    // Block donor/user
+                    $db->prepare("UPDATE users SET status = 'blocked' WHERE id = ?")
+                       ->execute([$id]);
                 }
-                logActivity($_SESSION['user_id'], 'admin', 'suspend_' . $type, "Suspended {$type} ID: {$id}");
-                echo json_encode(['success' => true, 'message' => 'Suspended successfully']);
+                logActivity($_SESSION['user_id'], 'admin', 'block_' . $type, "Blocked {$type} ID: {$id}");
+                echo json_encode(['success' => true, 'message' => 'Blocked successfully']);
+                break;
+
+            case 'unblock':
+                if ($type === 'restaurant') {
+                    $db->prepare("UPDATE restaurants SET status = 'approved' WHERE id = ?")
+                       ->execute([$id]);
+                } elseif ($type === 'ngo') {
+                    $db->prepare("UPDATE ngos SET status = 'approved' WHERE id = ?")
+                       ->execute([$id]);
+                } elseif ($type === 'user') {
+                    $db->prepare("UPDATE users SET status = 'active' WHERE id = ?")
+                       ->execute([$id]);
+                }
+                logActivity($_SESSION['user_id'], 'admin', 'unblock_' . $type, "Unblocked {$type} ID: {$id}");
+                echo json_encode(['success' => true, 'message' => 'Unblocked successfully']);
                 break;
                 
             default:

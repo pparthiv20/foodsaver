@@ -51,12 +51,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $user = $stmt->fetch();
                 
                 if ($user && password_verify($password, $user['password'])) {
-                    // Check status for restaurants and NGOs
+                    // Check account status before logging in
                     if (isset($user['status'])) {
                         if ($user['status'] === 'pending') {
                             $error = 'Your account is pending approval. Please wait for admin verification.';
-                        } elseif ($user['status'] === 'rejected' || $user['status'] === 'suspended' || $user['status'] === 'blocked') {
-                            $error = 'Your account has been ' . $user['status'] . '. Please contact support.';
+                        } elseif (in_array($user['status'], ['rejected', 'suspended', 'blocked'], true)) {
+                            // Redirect blocked/suspended/rejected accounts to suspended page
+                            header('Location: suspended.php?type=' . urlencode($userType));
+                            exit;
                         }
                     }
                     

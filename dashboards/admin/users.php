@@ -31,12 +31,24 @@ $users = $db->query("SELECT * FROM users ORDER BY created_at DESC LIMIT 20")->fe
                     <td><?php echo htmlspecialchars($user['email'] ?? 'N/A'); ?></td>
                     <td><?php echo ucfirst($user['user_type'] ?? 'user'); ?></td>
                     <td>
-                        <span class="badge badge-active">Active</span>
+                        <?php
+                            $status = $user['status'] ?? 'active';
+                            $statusClass = 'badge-active';
+                            if (in_array($status, ['blocked', 'suspended'], true)) {
+                                $statusClass = 'badge-blocked';
+                            }
+                        ?>
+                        <span class="badge <?php echo $statusClass; ?>">
+                            <?php echo ucfirst($status); ?>
+                        </span>
                     </td>
                     <td><?php echo date('M d, Y', strtotime($user['created_at'] ?? 'now')); ?></td>
                     <td>
-                        <button class="btn btn-sm btn-outline">View</button>
-                        <button class="btn btn-sm btn-outline">Edit</button>
+                        <button class="btn btn-sm btn-outline" type="button">View</button>
+                        <button class="btn btn-sm btn-outline" type="button"
+                                onclick="handleAction('<?php echo ($user['status'] ?? 'active') === 'blocked' ? 'unblock' : 'block'; ?>', 'user', <?php echo (int)$user['id']; ?>)">
+                            <?php echo ($user['status'] ?? 'active') === 'blocked' ? 'Unblock' : 'Block'; ?>
+                        </button>
                     </td>
                 </tr>
                 <?php endforeach; ?>
@@ -78,5 +90,10 @@ $users = $db->query("SELECT * FROM users ORDER BY created_at DESC LIMIT 20")->fe
 .badge-active {
     background: rgba(16, 185, 129, 0.1);
     color: #047857;
+}
+
+.badge-blocked {
+    background: rgba(239, 68, 68, 0.1);
+    color: #b91c1c;
 }
 </style>

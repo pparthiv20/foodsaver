@@ -32,14 +32,24 @@ $ngos = $db->query("SELECT * FROM ngos ORDER BY created_at DESC LIMIT 20")->fetc
                     <td><?php echo htmlspecialchars($ngo['ngo_name']); ?></td>
                     <td><?php echo htmlspecialchars($ngo['contact_email'] ?? 'N/A'); ?></td>
                     <td>
-                        <span class="badge badge-<?php echo $ngo['status']; ?>">
-                            <?php echo ucfirst($ngo['status']); ?>
+                        <?php
+                            $status = $ngo['status'];
+                            $statusClass = 'badge-' . $status;
+                            if (in_array($status, ['blocked', 'suspended'], true)) {
+                                $statusClass = 'badge-blocked';
+                            }
+                        ?>
+                        <span class="badge <?php echo $statusClass; ?>">
+                            <?php echo ucfirst($status); ?>
                         </span>
                     </td>
                     <td><?php echo date('M d, Y', strtotime($ngo['created_at'])); ?></td>
                     <td>
-                        <button class="btn btn-sm btn-outline">View</button>
-                        <button class="btn btn-sm btn-outline">Edit</button>
+                        <button class="btn btn-sm btn-outline" type="button">View</button>
+                        <button class="btn btn-sm btn-outline" type="button"
+                                onclick="handleAction('<?php echo $ngo['status'] === 'blocked' ? 'unblock' : 'block'; ?>', 'ngo', <?php echo (int)$ngo['id']; ?>)">
+                            <?php echo $ngo['status'] === 'blocked' ? 'Unblock' : 'Block'; ?>
+                        </button>
                     </td>
                 </tr>
                 <?php endforeach; ?>
@@ -89,6 +99,11 @@ $ngos = $db->query("SELECT * FROM ngos ORDER BY created_at DESC LIMIT 20")->fetc
 }
 
 .badge-rejected {
+    background: rgba(239, 68, 68, 0.1);
+    color: #991b1b;
+}
+
+.badge-blocked {
     background: rgba(239, 68, 68, 0.1);
     color: #991b1b;
 }
