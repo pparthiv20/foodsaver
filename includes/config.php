@@ -294,21 +294,18 @@ function generateOTP($length = 6) {
     return str_pad(random_int(0, pow(10, $length) - 1), $length, '0', STR_PAD_LEFT);
 }
 
-// Send Email Function
-function sendEmail($to, $subject, $body, $altBody = '') {
-    $headers = "MIME-Version: 1.0" . "\r\n";
-    $headers .= "Content-type: text/html; charset=UTF-8" . "\r\n";
-    $headers .= "From: " . FROM_NAME . " <" . FROM_EMAIL . ">" . "\r\n";
-    $headers .= "Reply-To: " . FROM_EMAIL . "\r\n";
-    $headers .= "X-Mailer: PHP/" . phpversion();
-    
-    return mail($to, $subject, $body, $headers);
-}
-    return true;
-
 
 // Auto-include CSRF token in forms
 function csrfField() {
     return '<input type="hidden" name="csrf_token" value="' . generateCSRFToken() . '">';
+}
+
+function sendEmail($to, $subject, $body)
+{
+    $headers  = "MIME-Version: 1.0\r\n";
+    $headers .= "Content-type:text/html;charset=UTF-8\r\n";
+    $headers .= "From: FoodSaver <noreply@foodsaver.com>\r\n";
+
+    return mail($to, $subject, $body, $headers);
 }
 ?>
