@@ -1,0 +1,528 @@
+/**
+ * Food-Saver - User Dashboard Styles
+ * Clean CSS for user dashboard page - no inline styles
+ */
+
+/* ==================== Navigation ==================== */
+.user-navbar {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.user-menu {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.user-badge {
+    color: var(--gray-700);
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    background: var(--primary-50);
+    border-radius: 50px;
+}
+
+/* ==================== Hero Section ==================== */
+.dashboard-hero {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    padding: 4rem 0 3rem 0;
+    color: white;
+    margin-bottom: 3rem;
+}
+
+.hero-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.hero-text h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    margin-top: 0;
+    color: white;
+}
+
+.hero-text p {
+    font-size: 1rem;
+    opacity: 0.95;
+    margin: 0;
+    color: white;
+}
+
+.hero-emoji {
+    font-size: 4rem;
+    opacity: 0.2;
+}
+
+/* ==================== Stats Section ==================== */
+.stats-container {
+    margin-bottom: 4rem;
+}
+
+.stat-card-user {
+    border-top: 4px solid var(--primary-600);
+    padding: 2.5rem 2rem;
+    text-align: center;
+}
+
+.stat-card-user.secondary {
+    border-top-color: var(--secondary-600);
+}
+
+.stat-card-user.success {
+    border-top-color: var(--success);
+}
+
+.stat-card-user.warning {
+    border-top-color: #f59e0b;
+}
+
+.stat-value {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+}
+
+.stat-value.primary {
+    color: var(--primary-600);
+}
+
+.stat-value.secondary {
+    color: var(--secondary-600);
+}
+
+.stat-value.success {
+    color: var(--success);
+}
+
+.stat-value.warning {
+    color: #f59e0b;
+}
+
+.stat-label {
+    color: var(--gray-600);
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+}
+
+.stat-description {
+    font-size: 0.85rem;
+    color: var(--gray-500);
+}
+
+/* ==================== Main Content ==================== */
+.dashboard-main {
+    margin-bottom: 3rem;
+}
+
+.flash-message {
+    margin-bottom: 2.5rem;
+}
+
+/* ==================== Donation Section ==================== */
+.donate-section {
+    margin-bottom: 5rem;
+    padding-bottom: 3rem;
+    border-bottom: 1px solid var(--gray-100);
+}
+
+.donate-section h2 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 3rem;
+    color: var(--gray-900);
+    margin-top: 0;
+}
+
+.donate-section h2 i {
+    color: var(--primary-600);
+}
+
+.donation-cards {
+    gap: 2.5rem;
+}
+
+.donation-card {
+    border: 2px solid var(--primary-100);
+    overflow: hidden;
+}
+
+.donation-card.ngo-card {
+    border-color: #d1fae5;
+}
+
+.donation-header {
+    color: white;
+    padding: 2rem;
+}
+
+.donation-header.platform {
+    background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
+}
+
+.donation-header.ngo {
+    background: linear-gradient(135deg, var(--success), #047857);
+}
+
+.donation-header h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+}
+
+.donation-header p {
+    margin: 0;
+    opacity: 0.9;
+    font-size: 0.9rem;
+}
+
+.donation-form-group {
+    margin-bottom: 2rem;
+}
+
+.donation-form-label {
+    font-weight: 600;
+    display: block;
+    margin-bottom: 1rem;
+}
+
+.preset-buttons {
+    display: grid;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.preset-buttons.four-col {
+    grid-template-columns: repeat(4, 1fr);
+}
+
+.preset-buttons.three-col {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.preset {
+    background: white;
+    border: 2px solid var(--gray-200);
+    padding: 1rem;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 200ms;
+    color: var(--gray-700);
+    font-size: 0.95rem;
+}
+
+.preset:hover {
+    border-color: var(--primary-500);
+    background: var(--primary-50);
+    color: var(--primary-600);
+}
+
+.preset.active {
+    background: var(--primary-600);
+    border-color: var(--primary-600);
+    color: white;
+    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+}
+
+.donation-input {
+    padding: 1rem;
+    border: 1px solid var(--gray-300);
+    border-radius: var(--radius-md);
+    font-size: 1rem;
+    width: 100%;
+    font-family: inherit;
+}
+
+.donation-textarea {
+    padding: 1rem;
+    border: 1px solid var(--gray-300);
+    border-radius: var(--radius-md);
+    font-size: 1rem;
+    font-family: inherit;
+    width: 100%;
+}
+
+.donate-btn {
+    padding: 1rem;
+    font-weight: 600;
+    font-size: 1rem;
+    width: 100%;
+}
+
+.donate-btn.ngo {
+    background: var(--success);
+    color: white;
+    border: none;
+    border-radius: var(--radius-lg);
+    cursor: pointer;
+}
+
+/* ==================== Section Headers ==================== */
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 3rem;
+}
+
+.section-header h2 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--gray-900);
+    margin: 0;
+}
+
+.section-header a {
+    color: var(--primary-600);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.95rem;
+}
+
+.section-header i.ngo {
+    color: var(--success);
+}
+
+.section-header i.restaurant {
+    color: #f59e0b;
+}
+
+/* ==================== Partner Cards ==================== */
+.partners-section {
+    margin-bottom: 5rem;
+    padding-bottom: 3rem;
+    border-bottom: 1px solid var(--gray-100);
+}
+
+.partners-section.last {
+    border-bottom: none;
+    margin-bottom: 3rem;
+}
+
+.partner-cards {
+    gap: 2.5rem;
+}
+
+.partner-card {
+    border: none;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    transition: all 300ms;
+    display: flex;
+    flex-direction: column;
+}
+
+.partner-header {
+    padding: 2rem;
+    border-bottom: 1px solid var(--gray-100);
+    display: flex;
+    flex-direction: column;
+}
+
+.partner-header.ngo {
+    background: linear-gradient(135deg, var(--success-50), var(--primary-50));
+}
+
+.partner-header.restaurant {
+    background: linear-gradient(135deg, #f59e0b-50, var(--primary-50));
+}
+
+.partner-emoji {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.partner-name {
+    font-weight: 700;
+    margin: 0;
+    color: var(--gray-900);
+    margin-bottom: 0.5rem;
+}
+
+.partner-location {
+    font-size: 0.85rem;
+    color: var(--gray-500);
+    margin: 0;
+}
+
+.partner-body {
+    padding: 2rem;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.partner-description {
+    font-size: 0.9rem;
+    color: var(--gray-600);
+    line-height: 1.6;
+    margin: 0 0 2rem 0;
+}
+
+.partner-stats {
+    display: grid;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.partner-stats.two-col {
+    grid-template-columns: 1fr 1fr;
+}
+
+.stat-box {
+    padding: 1.5rem;
+    border-radius: var(--radius-lg);
+    text-align: center;
+    border: 1px solid;
+}
+
+.stat-box.success {
+    background: linear-gradient(135deg, var(--success)-50), white);
+    border-color: #d1fae5;
+}
+
+.stat-box.success .stat-number {
+    color: var(--success);
+}
+
+.stat-box.warning {
+    background: linear-gradient(135deg, #f59e0b-50), white);
+    border-color: #fcd34d;
+}
+
+.stat-box.warning .stat-number {
+    color: #f59e0b;
+}
+
+.stat-number {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.stat-text {
+    font-size: 0.85rem;
+    color: var(--gray-600);
+    font-weight: 500;
+}
+
+.partner-contact {
+    width: 100%;
+    border: 1px solid;
+    background: var(--primary-50);
+    color: var(--primary-600);
+    padding: 1rem;
+    text-align: center;
+    border-radius: var(--radius-md);
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 200ms;
+    display: inline-block;
+    border-radius: var(--radius-md);
+}
+
+.partner-contact.restaurant {
+    background: #f59e0b-50);
+    color: #f59e0b;
+    border-color: #fde68a;
+}
+
+/* ==================== Footer ==================== */
+.dashboard-footer {
+    background: var(--gray-900);
+    color: white;
+    margin-top: 5rem;
+    padding: 3rem 0;
+}
+
+.footer-grid {
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.footer-section h4 {
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: white;
+}
+
+.footer-section p {
+    font-size: 0.875rem;
+    color: #aaa;
+    line-height: 1.6;
+}
+
+.footer-links {
+    font-size: 0.875rem;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-links li {
+    margin-bottom: 0.5rem;
+}
+
+.footer-links a {
+    color: #aaa;
+    text-decoration: none;
+    transition: color 200ms;
+}
+
+.footer-links a:hover {
+    color: var(--primary-500);
+}
+
+.footer-divider {
+    border-color: #333;
+    margin: 2rem 0;
+    opacity: 0.5;
+}
+
+.footer-copyright {
+    text-align: center;
+    font-size: 0.875rem;
+    color: #666;
+}
+
+/* ==================== Responsive ==================== */
+@media (max-width: 768px) {
+    .grid-4 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .grid-3,
+    .grid-2 {
+        grid-template-columns: 1fr;
+    }
+
+    .hero-text h1 {
+        font-size: 2rem;
+    }
+
+    .preset-buttons.four-col {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .preset-buttons.three-col {
+        grid-template-columns: 1fr;
+    }
+
+    .hero-content {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .hero-emoji {
+        margin-top: 1rem;
+    }
+
+    .section-header {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+    }
+}

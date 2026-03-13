@@ -294,12 +294,18 @@ function generateOTP($length = 6) {
     return str_pad(random_int(0, pow(10, $length) - 1), $length, '0', STR_PAD_LEFT);
 }
 
-// Send Email Function (Placeholder - implement with PHPMailer)
+// Send Email Function
 function sendEmail($to, $subject, $body, $altBody = '') {
-    // Implement using PHPMailer or similar
-    // Return true on success, false on failure
-    return true;
+    $headers = "MIME-Version: 1.0" . "\r\n";
+    $headers .= "Content-type: text/html; charset=UTF-8" . "\r\n";
+    $headers .= "From: " . FROM_NAME . " <" . FROM_EMAIL . ">" . "\r\n";
+    $headers .= "Reply-To: " . FROM_EMAIL . "\r\n";
+    $headers .= "X-Mailer: PHP/" . phpversion();
+    
+    return mail($to, $subject, $body, $headers);
 }
+    return true;
+
 
 // Auto-include CSRF token in forms
 function csrfField() {

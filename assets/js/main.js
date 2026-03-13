@@ -25,8 +25,6 @@ function initNavigation() {
     const navbar = document.querySelector('.navbar');
     if (!navbar) return;
     
-    let lastScroll = 0;
-    
     window.addEventListener('scroll', () => {
         const currentScroll = window.pageYOffset;
         
@@ -36,15 +34,6 @@ function initNavigation() {
         } else {
             navbar.classList.remove('scrolled');
         }
-        
-        // Hide/show on scroll (optional)
-        if (currentScroll > lastScroll && currentScroll > 100) {
-            navbar.style.transform = 'translateY(-100%)';
-        } else {
-            navbar.style.transform = 'translateY(0)';
-        }
-        
-        lastScroll = currentScroll;
     }, { passive: true });
 }
 
@@ -292,8 +281,7 @@ function showNotification(message, type = 'info', duration = 5000) {
     
     // Animate in
     requestAnimationFrame(() => {
-        notification.style.opacity = '1';
-        notification.style.transform = 'translateY(0)';
+        notification.classList.add('show');
     });
     
     // Close button
@@ -310,8 +298,7 @@ function showNotification(message, type = 'info', duration = 5000) {
 }
 
 function closeNotification(notification) {
-    notification.style.opacity = '0';
-    notification.style.transform = 'translateY(-10px)';
+    notification.classList.remove('show');
     setTimeout(() => notification.remove(), 300);
 }
 

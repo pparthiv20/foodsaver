@@ -239,6 +239,12 @@ $flash = getFlashMessage();
                         </a>
                     </li>
                     <li class="sidebar-item">
+                        <a href="?page=ngo-profiles" class="sidebar-link <?php echo $page === 'ngo-profiles' ? 'active' : ''; ?>">
+                            <span class="sidebar-icon"><i class="fas fa-hands-helping"></i></span>
+                            NGO Profiles
+                        </a>
+                    </li>
+                    <li class="sidebar-item">
                         <a href="?page=profile" class="sidebar-link <?php echo $page === 'profile' ? 'active' : ''; ?>">
                             <span class="sidebar-icon"><i class="fas fa-user-circle"></i></span>
                             Profile
@@ -541,6 +547,9 @@ $flash = getFlashMessage();
                             </table>
                         </div>
                     </div>
+                    
+                <?php elseif ($page === 'ngo-profiles'): ?>
+                    <?php include 'restaurant/ngo-profiles.php'; ?>
                     
                 <?php elseif ($page === 'profile'): ?>
                     <div class="page-header">

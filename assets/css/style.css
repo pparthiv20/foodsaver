@@ -179,6 +179,7 @@ p {
 
 .section {
     padding: var(--space-3xl) 0;
+    scroll-margin-top: 90px;
 }
 
 .section-sm {
@@ -1707,6 +1708,20 @@ textarea.form-control {
     display: flex;
     align-items: center;
     gap: var(--space-md);
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    max-width: 400px;
+    z-index: 9999;
+    box-shadow: var(--shadow-lg);
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: all 300ms ease;
+}
+
+.alert.show {
+    opacity: 1;
+    transform: translateY(0);
 }
 
 .alert-success {
@@ -1731,6 +1746,21 @@ textarea.form-control {
     background: #dbeafe;
     color: #1e40af;
     border: 1px solid #bfdbfe;
+}
+
+.alert-close {
+    background: none;
+    border: none;
+    color: inherit;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0;
+    margin-left: auto;
+    transition: all 200ms ease;
+}
+
+.alert-close:hover {
+    opacity: 0.6;
 }
 
 /* ==================== Modal ==================== */

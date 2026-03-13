@@ -115,15 +115,17 @@ CREATE TABLE food_listings (
 CREATE TABLE donations (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT,
+    ngo_id INT,
     amount DECIMAL(10, 2) NOT NULL,
     currency VARCHAR(3) DEFAULT 'INR',
-    payment_method ENUM('upi', 'credit_card', 'debit_card', 'net_banking') NOT NULL,
+    payment_method ENUM('upi', 'credit_card', 'debit_card', 'net_banking', 'online') DEFAULT 'online' NOT NULL,
     transaction_id VARCHAR(100),
     status ENUM('pending', 'completed', 'failed', 'refunded') DEFAULT 'pending',
     message TEXT,
     anonymous BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL,
+    FOREIGN KEY (ngo_id) REFERENCES ngos(id) ON DELETE SET NULL
 );
 
 -- Feedback Table
