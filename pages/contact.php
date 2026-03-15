@@ -29,6 +29,13 @@ if (empty($name) || empty($email) || empty($subject) || empty($message)) {
     exit;
 }
 
+// Validate email
+if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    setFlashMessage('error', 'Please enter a valid email address.');
+    header('Location: ../index.php#contact');
+    exit;
+}
+
 try {
     $db = getDB();
 
@@ -39,6 +46,7 @@ try {
     $adminEmail = 'pcparthiv20@gmail.com';
     $emailSubject = 'New contact form submission - FoodSaver';
 
+    // Email to Admin
     $emailBody = '
     <div style="background-color:#f3f4f6;padding:24px 0;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif;">
         <table width="100%" cellpadding="0" cellspacing="0">
@@ -110,15 +118,79 @@ try {
     </div>
     ';
 
-    // Send email
-    @sendEmail($adminEmail, $emailSubject, $emailBody);
+    // Send email to admin
+    $adminEmailSent = sendEmail($adminEmail, $emailSubject, $emailBody, $email);
+
+    // Email to User (Confirmation)
+    $userEmailSubject = 'We received your message - FoodSaver';
+    $userEmailBody = '
+    <div style="background-color:#f3f4f6;padding:24px 0;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif;">
+        <table width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+                <td align="center">
+                    <table width="100%" style="max-width:600px;background:#ffffff;border-radius:24px;box-shadow:0 10px 40px rgba(15,23,42,0.16);overflow:hidden;">
+
+                        <tr>
+                            <td style="padding:20px 32px;background:linear-gradient(135deg,#16a34a,#22c55e);color:#ffffff;">
+                                <h2 style="margin:0;">🌱 FoodSaver</h2>
+                                <p style="margin:5px 0 0;font-size:14px;">Thank you for reaching out</p>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td style="padding:24px 32px;">
+                                <h3 style="margin-top:0;color:#111827;">Hello ' . htmlspecialchars($name) . ',</h3>
+                                <p style="font-size:14px;color:#6b7280;line-height:1.6;">
+                                    Thank you for contacting FoodSaver! We have received your message and appreciate you taking the time to get in touch with us.
+                                </p>
+
+                                <div style="margin:20px 0;padding:12px;border-radius:10px;background:#f0fdf4;border:1px solid #86efac;">
+                                    <strong style="color:#16a34a;">Your Message Summary:</strong>
+                                    <p style="margin:8px 0 0;font-size:13px;color:#166534;">
+                                        <strong>Subject:</strong> ' . htmlspecialchars($subject) . '<br>
+                                        <strong>Submitted:</strong> ' . date('F d, Y \a\t h:i A') . '
+                                    </p>
+                                </div>
+
+                                <p style="font-size:14px;color:#6b7280;line-height:1.6;">
+                                    Our team will review your message and get back to you as soon as possible. We typically respond within 24-48 business hours.
+                                </p>
+
+                                <p style="font-size:14px;color:#6b7280;">
+                                    If you need immediate assistance, please feel free to reach out through our phone line or visit our website for more information.
+                                </p>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td style="padding:16px 32px;font-size:12px;color:#9ca3af;border-top:1px solid #e5e7eb;">
+                                <p style="margin:0;">
+                                    Please do not reply to this email. For further assistance, visit: <br>
+                                    <a href="' . APP_URL . '" style="color:#16a34a;text-decoration:none;">' . APP_URL . '</a>
+                                </p>
+                            </td>
+                        </tr>
+
+                    </table>
+
+                    <div style="margin-top:12px;font-size:11px;color:#9ca3af;">
+                        &copy; ' . date('Y') . ' FoodSaver. All rights reserved.
+                    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+    ';
+
+    // Send confirmation email to user
+    $userEmailSent = sendEmail($email, $userEmailSubject, $userEmailBody);
 
     setFlashMessage('success', 'contact_thanks');
 
 } catch (PDOException $e) {
-
+    error_log("Contact Form Error: " . $e->getMessage());
     setFlashMessage('error', 'Failed to send message. Please try again later.');
-
 }
 
 header('Location: ../index.php#contact');

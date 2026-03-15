@@ -387,89 +387,20 @@ $flash = getFlashMessage();
         </div>
     </section>
 
-    <!-- Contact Section -->
+    <!-- Have a Query Section -->
     <section id="contact" class="section">
         <div class="container">
-            <div class="section-header scroll-animate">
-                <span class="section-label">Get In Touch</span>
-                <h2 class="section-title">Contact Us</h2>
-                <p class="section-subtitle">
-                    Have questions or want to learn more? We'd love to hear from you.
-                </p>
-            </div>
-            
-            <div class="grid grid-2 contact-grid">
-                <div class="card scroll-animate">
-                    <div class="card-body">
-                        <form action="pages/contact.php" method="POST" data-validate>
-                            <?php echo csrfField(); ?>
-                            
-                            <div class="form-group">
-                                <label class="form-label required">Your Name</label>
-                                <input type="text" name="name" class="form-control" required>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label class="form-label required">Email Address</label>
-                                <input type="email" name="email" class="form-control" required>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label class="form-label">Phone Number</label>
-                                <input type="tel" name="phone" class="form-control">
-                            </div>
-                            
-                            <div class="form-group">
-                                <label class="form-label required">Subject</label>
-                                <input type="text" name="subject" class="form-control" required>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label class="form-label required">Message</label>
-                                <textarea name="message" class="form-control" rows="5" required></textarea>
-                            </div>
-                            
-                            <button type="submit" class="btn btn-primary btn-block">
-                                <i class="fas fa-paper-plane"></i>
-                                Send Message
-                            </button>
-                        </form>
-                    </div>
-                </div>
-
-                
-                <div class="scroll-animate">
-                    <div class="card mb-4">
-                        <div class="card-body">
-                            <h3 class="mb-4"><i class="fas fa-map-marker-alt text-primary"></i> Our Office</h3>
-                            <p class="text-gray">
-                                123 Green Street, Eco Park<br>
-                                Mumbai, Maharashtra 400001<br>
-                                India
-                            </p>
-                        </div>
-                    </div>
-                    
-                    <div class="card mb-4">
-                        <div class="card-body">
-                            <h3 class="mb-4"><i class="fas fa-envelope text-primary"></i> Email Us</h3>
-                            <p class="text-gray">
-                                General: contact@foodsaver.org<br>
-                                Support: support@foodsaver.org<br>
-                                Partnerships: partner@foodsaver.org
-                            </p>
-                        </div>
-                    </div>
-                    
-                    <div class="card">
-                        <div class="card-body">
-                            <h3 class="mb-4"><i class="fas fa-phone text-primary"></i> Call Us</h3>
-                            <p class="text-gray">
-                                Phone: +91 98765 43210<br>
-                                Mon - Sat: 9:00 AM - 6:00 PM
-                            </p>
-                        </div>
-                    </div>
+            <div class="scroll-animate">
+                <div style="text-align: center; padding: 3rem;">
+                    <span class="section-label">Questions?</span>
+                    <h2 class="section-title">Have a Query?</h2>
+                    <p class="section-subtitle" style="max-width: 600px; margin: 1.5rem auto;">
+                        Got questions about FoodSaver or need assistance? Our dedicated support team is here to help you.
+                        Reach out to us anytime and we'll get back to you promptly.
+                    </p>
+                    <a href="pages/contact-page.php" class="btn btn-primary btn-lg">
+                        <i class="fas fa-envelope"></i> Contact Us
+                    </a>
                 </div>
             </div>
         </div>
@@ -690,7 +621,7 @@ $flash = getFlashMessage();
                 <div>
                     <h4 class="footer-title">Support</h4>
                     <ul class="footer-links">
-                        <li><a href="#contact">Contact Us</a></li>
+                        <li><a href="pages/contact-page.php">Contact Us</a></li>
                         <li><a href="#">FAQs</a></li>
                         <li><a href="#">Help Center</a></li>
                         <li><a href="#">Privacy Policy</a></li>

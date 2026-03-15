@@ -27,9 +27,11 @@ define('APP_VERSION', '1.0.0');
 // Email Configuration
 define('SMTP_HOST', 'smtp.gmail.com');
 define('SMTP_PORT', 587);
-define('SMTP_USERNAME', 'your-email@gmail.com');
-define('SMTP_PASSWORD', 'your-app-password');
-define('FROM_EMAIL', 'noreply@foodsaver.org');
+
+define('SMTP_USERNAME', 'pcparthiv20@gmail.com');
+define('SMTP_PASSWORD', 'jbdkvzungbbbjcwr'); // app password here
+
+define('FROM_EMAIL', 'pcparthiv20@gmail.com');
 define('FROM_NAME', 'Food-Saver');
 
 // File Upload Configuration
@@ -300,12 +302,55 @@ function csrfField() {
     return '<input type="hidden" name="csrf_token" value="' . generateCSRFToken() . '">';
 }
 
-function sendEmail($to, $subject, $body)
+function sendEmail($to, $subject, $body, $replyTo = null)
 {
-    $headers  = "MIME-Version: 1.0\r\n";
-    $headers .= "Content-type:text/html;charset=UTF-8\r\n";
-    $headers .= "From: FoodSaver <noreply@foodsaver.com>\r\n";
+    try {
+        // Include PHPMailer classes
+        require_once __DIR__ . '/PHPMailer-master/src/PHPMailer.php';
+        require_once __DIR__ . '/PHPMailer-master/src/SMTP.php';
+        require_once __DIR__ . '/PHPMailer-master/src/Exception.php';
 
-    return mail($to, $subject, $body, $headers);
+        $mail = new \PHPMailer\PHPMailer\PHPMailer(true);
+
+        // Server settings
+        $mail->isSMTP();
+        $mail->Host       = SMTP_HOST;
+        $mail->SMTPAuth   = true;
+        $mail->Username   = SMTP_USERNAME;
+        $mail->Password   = SMTP_PASSWORD;
+        $mail->SMTPSecure = \PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS;
+        $mail->Port       = SMTP_PORT;
+        $mail->Timeout    = 10;
+        $mail->SMTPKeepAlive = true;
+
+        // Recipients
+        $mail->setFrom(FROM_EMAIL, FROM_NAME);
+        $mail->addAddress($to);
+        
+        if ($replyTo) {
+            $mail->addReplyTo($replyTo);
+        }
+
+        // Content
+        $mail->isHTML(true);
+        $mail->Subject = $subject;
+        $mail->Body    = $body;
+        $mail->AltBody = strip_tags($body);
+
+        // Send email
+        return $mail->send();
+
+    } catch (\PHPMailer\PHPMailer\Exception $e) {
+        error_log("Email Error: " . $e->getMessage());
+        
+        // Fallback to basic mail() function if PHPMailer fails
+        $headers  = "MIME-Version: 1.0\r\n";
+        $headers .= "Content-type:text/html;charset=UTF-8\r\n";
+        $headers .= "From: " . FROM_NAME . " <" . FROM_EMAIL . ">\r\n";
+        if ($replyTo) {
+            $headers .= "Reply-To: " . $replyTo . "\r\n";
+        }
+        return mail($to, $subject, $body, $headers);
+    }
 }
 ?>
