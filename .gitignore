@@ -1,0 +1,33 @@
+# IDE and Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+*.sublime-project
+*.sublime-workspace
+
+# OS
+.DS_Store
+Thumbs.db
+.env
+
+# PHP-specific
+vendor/
+.php_cs.cache
+composer.lock
+
+# Local development
+config.local.php
+.htaccess.local
+
+# Logs
+*.log
+
+# Node modules (if using any frontend tools)
+node_modules/
+npm-debug.log
+
+# Build artifacts
+dist/
+build/
