@@ -18,7 +18,7 @@ Thank you for considering contributing to Food Saver! Here are some ways you can
 
 #### Setup Development Environment
 ```bash
-git clone https://github.com/your-username/food-saver-php.git
+git clone https://github.com/pparthiv20/foodsaver.git
 cd food-saver-php
 ```
 

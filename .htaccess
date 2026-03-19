@@ -50,3 +50,4 @@ php_value max_input_time 300
 
 # Default charset
 AddDefaultCharset UTF-8
+    
