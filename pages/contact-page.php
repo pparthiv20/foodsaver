@@ -34,25 +34,17 @@ $flash = getFlashMessage();
 <body>
     <!-- Thank you modal -->
     <?php if ($flash && $flash['type'] === 'success' && $flash['message'] === 'contact_thanks'): ?>
-        <div id="contactThankYouModal" class="modal show" style="position: fixed; z-index: 1100; inset: 0; display: flex; align-items: center; justify-content: center; background: rgba(15, 23, 42, 0.55); animation: fadeIn 250ms ease;">
-            <div style="background: #ffffff; border-radius: 1.75rem; max-width: 420px; width: 90%; padding: 2rem 2.25rem; box-shadow: 0 24px 80px rgba(15, 23, 42, 0.35); text-align: center; position: relative; animation: slideUp 260ms ease;">
-                <button type="button" onclick="closeContactThankYouModal()" aria-label="Close"
-                        style="position:absolute; top: 0.9rem; right: 1rem; border:none; background:transparent; font-size:1.25rem; color:#9ca3af; cursor:pointer;">
+        <div id="contactThankYouModal" class="thank-you-modal-overlay">
+            <div class="thank-you-modal-content">
+                <button type="button" onclick="closeContactThankYouModal()" class="thank-you-close-btn" aria-label="Close">
                     &times;
                 </button>
-                <div style="margin-bottom: 1.25rem;">
-                    <div style="width:72px;height:72px;border-radius:999px;margin:0 auto 0.75rem;background:linear-gradient(135deg,#22c55e,#16a34a);display:flex;align-items:center;justify-content:center;box-shadow:0 12px 30px rgba(22,163,74,0.45);">
-                        <span style="font-size:2rem;">😊</span>
-                    </div>
-                    <h2 style="margin:0 0 0.5rem 0;font-size:1.4rem;font-family:'Poppins',system-ui,sans-serif;color:#111827;">
-                        Thank you!
-                    </h2>
-                    <p style="margin:0;color:#4b5563;font-size:0.95rem;">
-                        A real human from our team will see this and get back to you soon.
-                    </p>
+                <div class="thank-you-modal-icon">
+                    <span>😊</span>
                 </div>
-                <button type="button" onclick="closeContactThankYouModal()"
-                        style="margin-top:0.75rem;padding:0.7rem 1.8rem;border-radius:999px;border:none;background:linear-gradient(135deg,#22c55e,#16a34a);color:#ffffff;font-weight:600;cursor:pointer;">
+                <h2 class="thank-you-modal-title">Thank you!</h2>
+                <p class="thank-you-modal-text">A real human from our team will see this and get back to you soon.</p>
+                <button type="button" onclick="closeContactThankYouModal()" class="thank-you-modal-btn">
                     Got it
                 </button>
             </div>
