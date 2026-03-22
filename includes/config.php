@@ -4,32 +4,6 @@
  * Database and Application Settings
  */
 
-// Load environment variables from .env file
-function loadEnv($filePath = null) {
-    if ($filePath === null) {
-        $filePath = __DIR__ . '/../.env';
-    }
-    
-    if (!file_exists($filePath)) {
-        throw new Exception(".env file not found at: $filePath");
-    }
-    
-    $lines = file($filePath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-    foreach ($lines as $line) {
-        if (strpos($line, '=') === false || strpos($line, '#') === 0) {
-            continue;
-        }
-        list($key, $value) = explode('=', $line, 2);
-        $key = trim($key);
-        $value = trim($value);
-        putenv("$key=$value");
-        $_ENV[$key] = $value;
-    }
-}
-
-// Load environment variables
-loadEnv();
-
 // Error reporting (disable in production)
 error_reporting(E_ALL);
 ini_set('display_errors', 0);
@@ -37,29 +11,27 @@ ini_set('display_errors', 0);
 // Session configuration
 session_start();
 
-// Parse DATABASE_URL for connection details
-$dbUrl = parse_url(getenv('DATABASE_URL'));
-define('DB_DRIVER', $dbUrl['scheme'] ?? 'pgsql');
-define('DB_HOST', $dbUrl['host'] ?? 'localhost');
-define('DB_PORT', $dbUrl['port'] ?? 5432);
-define('DB_USERNAME', $dbUrl['user'] ?? '');
-define('DB_PASSWORD', $dbUrl['pass'] ?? '');
-define('DB_NAME', ltrim($dbUrl['path'] ?? '/postgres', '/'));
+// Database Configuration - MySQL (InfinityFree)
+define('DB_HOST', 'sql103.infinityfree.com');
+define('DB_USERNAME', 'if0_41439659');
+define('DB_PASSWORD', '2uSkHrVjAWZ8u2');
+define('DB_NAME', 'if0_41439659_food');
 define('DB_CHARSET', 'utf8mb4');
 
 // Application Configuration
-define('APP_NAME', getenv('APP_NAME') ?: 'Food-Saver');
+define('APP_NAME', 'Food-Saver');
 define('APP_TAGLINE', 'Reduce Food Waste. Feed the Hungry.');
-define('APP_URL', getenv('APP_URL') ?: 'https://foodsaver.xo.je');
+define('APP_URL', 'http://localhost/food-saver-php');
 define('APP_VERSION', '1.0.0');
 
 // Email Configuration
-define('SMTP_HOST', getenv('SMTP_HOST') ?: 'smtp.gmail.com');
-define('SMTP_PORT', getenv('SMTP_PORT') ?: 587);
-define('SMTP_USERNAME', getenv('SMTP_USERNAME') ?: 'pcparthiv20@gmail.com');
-define('SMTP_PASSWORD', getenv('SMTP_PASSWORD') ?: '');
-define('FROM_EMAIL', getenv('SMTP_USERNAME') ?: 'pcparthiv20@gmail.com');
-define('FROM_NAME', getenv('APP_NAME') ?: 'Food-Saver');
+define('SMTP_HOST', 'smtp.gmail.com');
+define('SMTP_PORT', 587);
+
+define('SMTP_USERNAME', 'pcparthiv20@gmail.com');
+define('SMTP_PASSWORD', 'waxm qzdl tyrn atlk');
+define('FROM_EMAIL', 'pcparthiv20@gmail.com');
+define('FROM_NAME', 'Food-Saver');
 
 // File Upload Configuration
 define('UPLOAD_MAX_SIZE', 5 * 1024 * 1024); // 5MB
@@ -80,16 +52,7 @@ class Database {
     
     private function __construct() {
         try {
-            $driver = strtolower(DB_DRIVER);
-            
-            if ($driver === 'postgresql' || $driver === 'pgsql') {
-                // PostgreSQL DSN (for Supabase)
-                $dsn = "pgsql:host=" . DB_HOST . ";port=" . DB_PORT . ";dbname=" . DB_NAME;
-            } else {
-                // MySQL DSN (fallback)
-                $dsn = "mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=" . DB_CHARSET;
-            }
-            
+            $dsn = "mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=" . DB_CHARSET;
             $options = [
                 PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
                 PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
