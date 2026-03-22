@@ -1,9 +1,6 @@
 -- Food-Saver Database Schema
 -- MySQL Database for Food Waste Reduction Platform
 
-CREATE DATABASE IF NOT EXISTS food_saver CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE food_saver;
-
 -- Admin Table
 CREATE TABLE admins (
     id INT AUTO_INCREMENT PRIMARY KEY,
