@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/../includes/config.php';
 /**
  * Database Migration Script: MySQL to PostgreSQL (Supabase)
  * 

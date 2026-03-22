@@ -6,30 +6,8 @@
  * and verifies that tables are properly created
  */
 
-// Load environment variables
-function loadEnv($filePath = null) {
-    if ($filePath === null) {
-        $filePath = __DIR__ . '/../.env';
-    }
-    
-    if (!file_exists($filePath)) {
-        return false;
-    }
-    
-    $lines = file($filePath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-    foreach ($lines as $line) {
-        if (strpos($line, '=') === false || strpos($line, '#') === 0) {
-            continue;
-        }
-        list($key, $value) = explode('=', $line, 2);
-        $key = trim($key);
-        $value = trim($value);
-        putenv("$key=$value");
-        $_ENV[$key] = $value;
-    }
-}
-
-loadEnv();
+// Load config which includes .env loading
+require_once __DIR__ . '/../includes/config.php';
 
 echo "=== Food-Saver Supabase Connection Test ===\n\n";
 
