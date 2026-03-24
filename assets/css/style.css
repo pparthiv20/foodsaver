@@ -302,6 +302,10 @@ p {
     width: 100%;
 }
 
+.nav-links a:focus {
+    outline: none;
+}
+
 .nav-actions {
     display: flex;
     align-items: center;

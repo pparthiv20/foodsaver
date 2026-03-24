@@ -193,7 +193,7 @@ $flash = getFlashMessage();
                             </h3>
                             <p class="text-gray">
                                 <strong>Phone:</strong> +91 98765 43210<br>
-                                <strong>Hours:</strong> Mon - Sat: 9:00 AM - 6:00 PM<br>
+                                <strong>Hours:</strong> Mon to Sat: 9:00 AM to 6:00 PM<br>
                                 <strong>Timezone:</strong> IST (UTC+5:30)
                             </p>
                         </div>
@@ -220,7 +220,7 @@ $flash = getFlashMessage();
                             <i class="fas fa-question-circle"></i> How quickly will I hear back?
                         </h4>
                         <p class="text-gray">
-                            We aim to respond to all inquiries within 24-48 business hours. During peak times, it may take up to 72 hours.
+                            We aim to respond to all inquiries within 24 to 48 business hours. During peak times, it may take up to 72 hours.
                         </p>
                     </div>
                 </div>
@@ -259,7 +259,7 @@ $flash = getFlashMessage();
                         <div class="logo-icon">
                             <i class="fas fa-leaf"></i>
                         </div>
-                        <span>Food-Saver</span>
+                        <span>Food Saver</span>
                     </a>
                     <p>
                         Connecting restaurants, NGOs, and donors to redistribute surplus food 
@@ -281,9 +281,9 @@ $flash = getFlashMessage();
                     <h4 class="footer-title">Support</h4>
                     <ul class="footer-links">
                         <li><a href="contact-page.php">Contact Us</a></li>
-                        <li><a href="#">FAQs</a></li>
-                        <li><a href="#">Privacy Policy</a></li>
-                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="help-center.php">Help Center</a></li>
+                        <li><a href="privacy-policy.php">Privacy Policy</a></li>
+                        <li><a href="terms-of-service.php">Terms of Service</a></li>
                     </ul>
                 </div>
             </div>

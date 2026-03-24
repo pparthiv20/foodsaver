@@ -165,10 +165,18 @@ if ($flash) {
             color: white;
             justify-content: center;
             margin-bottom: var(--space-md);
+            background: rgba(255, 255, 255, 0.15);
+            padding: var(--space-sm) var(--space-lg);
+            border-radius: var(--radius-lg);
+            width: fit-content;
+            margin-left: auto;
+            margin-right: auto;
+            border: 2px solid rgba(255, 255, 255, 0.3);
         }
         
         .auth-header .logo-icon {
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.25);
+            border-radius: 8px;
         }
         
         .auth-body {
@@ -264,6 +272,75 @@ if ($flash) {
             display: block;
             margin-bottom: 0.5rem;
         }
+        
+        /* Combined Input Box Container */
+        .input-box-wrapper {
+            border: 2px solid #e5e7eb;
+            border-radius: var(--radius-2xl);
+            padding: var(--space-lg);
+            background: white;
+        }
+        
+        .input-box-wrapper .form-group {
+            margin-bottom: 0;
+        }
+        
+        .input-box-wrapper .form-group:first-child {
+            /* margin-bottom: var(--space-lg); */
+            padding-bottom: var(--space-lg);
+            /* border-bottom: 1px solid #e5e7eb; */
+        }
+        
+        .input-box-wrapper .form-group label {
+            font-size: 0.95rem;
+            color: #374151;
+            margin-bottom: 0.75rem;
+        }
+        
+        .input-box-wrapper .input-group {
+            /* border-radius: var(--radius-lg); */
+            border: 1px solid #d1d5db;
+            display: flex;
+            overflow: hidden;
+        }
+        
+        .input-box-wrapper .input-group-text {
+            background: #f3f4f6;
+            border: none;
+            border-right: 1px solid #d1d5db;
+            color: #6b7280;
+            padding: var(--space-md);
+        }
+        
+        .input-box-wrapper .form-control {
+            border: none;
+            padding: var(--space-md);
+            flex: 1;
+            background: white;
+            color: #1f2937;
+        }
+        
+        .input-box-wrapper .form-control::placeholder {
+            color: #9ca3af;
+        }
+        
+        .input-box-wrapper .form-control:focus {
+            outline: none;
+            background: #f9fafb;
+        }
+        
+        .input-box-wrapper .btn {
+            border: none;
+            background: white;
+            color: #6b7280;
+            padding: var(--space-md);
+            cursor: pointer;
+            border-left: 1px solid #d1d5db;
+        }
+        
+        .input-box-wrapper .btn:hover {
+            color: #374151;
+        }
     </style>
 </head>
 <body>
@@ -314,22 +391,24 @@ if ($flash) {
                         
                         <input type="hidden" name="user_type" id="user_type" value="user">
                         
-                        <div class="form-group">
-                            <label class="form-label required">Email Address</label>
-                            <div class="input-group">
-                                <span class="input-group-text"><i class="fas fa-envelope"></i></span>
-                                <input type="email" name="email" class="form-control" placeholder="Enter your email" required>
+                        <div class="input-box-wrapper">
+                            <div class="form-group" id="email-group">
+                                <label class="form-label required">Email Address</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                                    <input type="email" name="email" class="form-control" placeholder="Enter your email" required>
+                                </div>
                             </div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label class="form-label required">Password</label>
-                            <div class="input-group">
-                                <span class="input-group-text"><i class="fas fa-lock"></i></span>
-                                <input type="password" name="password" id="password" class="form-control" placeholder="Enter your password" required>
-                                <button type="button" class="btn btn-ghost" data-toggle-password="password" style="border-radius: 0 var(--radius-lg) var(--radius-lg) 0;">
-                                    <i class="fas fa-eye"></i>
-                                </button>
+                            
+                            <div class="form-group" id="password-group">
+                                <label class="form-label required">Password</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                                    <input type="password" name="password" id="password" class="form-control" placeholder="Enter your password" required>
+                                    <button type="button" class="btn btn-ghost" data-toggle-password="password">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                         

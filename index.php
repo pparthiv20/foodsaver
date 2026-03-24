@@ -53,7 +53,7 @@ $flash = getFlashMessage();
                     <span>😊</span>
                 </div>
                 <h2 class="thank-you-modal-title">Thank you!</h2>
-                <p class="thank-you-modal-text">A real human from our team will see this and get back to you soon.</p>
+                <p class="thank-you-modal-text">We will get back to you as soon as possible.</p>
                 <button type="button" onclick="closeContactThankYouModal()" class="thank-you-modal-btn">
                     Got it
                 </button>
@@ -88,7 +88,7 @@ $flash = getFlashMessage();
                         </a>
                         <a href="pages/logout.php" class="btn btn-outline btn-sm">Logout</a>
                     <?php else: ?>
-                        <a href="pages/login.php" class="btn btn-outline btn-sm">Login</a>
+                        <button type="button" onclick="openLoginModal()" class="btn btn-outline btn-sm">Login</button>
                         <a href="pages/register.php" class="btn btn-primary btn-sm">Join Us</a>
                     <?php endif; ?>
                 </div>
@@ -125,15 +125,11 @@ $flash = getFlashMessage();
                     
                     <div class="hero-actions">
                         <button onclick="openDonationModal()" class="btn btn-primary btn-lg">
-                            <i class="fas fa-heart"></i>
                             Donate Now
                         </button>
-                        <a href="pages/register.php?type=restaurant" class="btn btn-outline btn-lg">
-                            Join as Restaurant
-                        </a>
-                        <a href="pages/register.php?type=ngo" class="btn btn-secondary btn-lg">
-                            Join as NGO
-                        </a>
+                        <a href="pages/register.php" class="btn btn-outline btn-lg">
+                            Contribute Now
+                    </a>
                     </div>
                 </div>
                 
@@ -230,7 +226,7 @@ $flash = getFlashMessage();
                         Fighting Hunger Through Innovation
                     </h3>
                     <p class="about-text">
-                        Food-Saver is a mission-driven platform dedicated to reducing food waste while addressing hunger in our communities. We believe that surplus food from restaurants should never go to waste when hungry families need nourishment.
+                        Food-Saver is a mission driven platform dedicated to reducing food waste while addressing hunger in our communities. We believe that surplus food from restaurants should never go to waste when hungry families need nourishment.
                     </p>
                     <p class="about-text-last">
                         By connecting restaurants, NGOs, and donors, we create a sustainable ecosystem where everyone benefits. Our technology makes it simple, efficient, and impactful to redistribute food and save lives.
@@ -363,7 +359,7 @@ $flash = getFlashMessage();
                     </div>
                     <div class="card-body">
                         <p class="report-card-text">
-                            Detailed month-by-month performance metrics, food distribution statistics, and partner activities.
+                            Detailed month by month performance metrics, food distribution statistics, and partner activities.
                         </p>
                         <div class="report-card-meta">
                             <span><i class="fas fa-calendar"></i> February 2026</span>
@@ -417,7 +413,7 @@ $flash = getFlashMessage();
             <div class="grid grid-3">
                 <div class="testimonial-card scroll-animate">
                     <div class="testimonial-content">
-                        Food-Saver has transformed how we handle surplus food. Instead of wasting it, 
+                        Food Saver has transformed how we handle surplus food. Instead of wasting it, 
                         we now feed hundreds of people every month. It's fulfilling and good for business.
                     </div>
                     <div class="testimonial-author">
@@ -461,8 +457,8 @@ $flash = getFlashMessage();
                 
                 <div class="testimonial-card scroll-animate">
                     <div class="testimonial-content">
-                        We were struggling with food waste until we joined Food-Saver. Now we get tax benefits 
-                        and our waste has reduced by 40%. It's a win-win for everyone involved.
+                        We were struggling with food waste until we joined Food Saver. Now we get tax benefits 
+                        and our waste has reduced by 40%. It's a win win for everyone involved.
                     </div>
                     <div class="testimonial-author">
                         <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face" 
@@ -491,7 +487,7 @@ $flash = getFlashMessage();
                 <span class="section-label">Testimonials</span>
                 <h2 class="section-title">What NGOs Say</h2>
                 <p class="section-subtitle">
-                    Hear from NGO partners who are using Food-Saver to serve their communities.
+                    Hear from NGO partners who are using Food Saver to serve their communities.
                 </p>
             </div>
             
@@ -499,7 +495,7 @@ $flash = getFlashMessage();
                 <div class="testimonial-card scroll-animate">
                     <div class="testimonial-content">
                         As an NGO, finding consistent food sources was always a challenge. 
-                        Food-Saver has made it so much easier to access quality food donations regularly.
+                        Food Saver has made it so much easier to access quality food donations regularly.
                     </div>
                     <div class="testimonial-author">
                         <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face" 
@@ -520,7 +516,7 @@ $flash = getFlashMessage();
                 
                 <div class="testimonial-card scroll-animate">
                     <div class="testimonial-content">
-                        The scheduled pickup feature has been a game-changer for us. We can now plan our operations 
+                        The scheduled pickup feature has been a game changer for us. We can now plan our operations 
                         better and serve more people without having to worry about logistics.
                     </div>
                     <div class="testimonial-author">
@@ -542,8 +538,8 @@ $flash = getFlashMessage();
                 
                 <div class="testimonial-card scroll-animate">
                     <div class="testimonial-content">
-                        With Food-Saver, we've been able to increase our outreach by 60%. The connections we make 
-                        with restaurants have become long-term partnerships that benefit our entire community.
+                        With Food Saver, we've been able to increase our outreach by 60%. The connections we make 
+                        with restaurants have become long term partnerships that benefit our entire community.
                     </div>
                     <div class="testimonial-author">
                         <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop&crop=face" 
@@ -619,10 +615,9 @@ $flash = getFlashMessage();
                     <h4 class="footer-title">Support</h4>
                     <ul class="footer-links">
                         <li><a href="pages/contact-page.php">Contact Us</a></li>
-                        <li><a href="#">FAQs</a></li>
-                        <li><a href="#">Help Center</a></li>
-                        <li><a href="#">Privacy Policy</a></li>
-                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="pages/help-center.php">Help Center</a></li>
+                        <li><a href="pages/privacy-policy.php">Privacy Policy</a></li>
+                        <li><a href="pages/terms-of-service.php">Terms of Service</a></li>
                     </ul>
                 </div>
                 
@@ -647,7 +642,7 @@ $flash = getFlashMessage();
     <div id="donationModal" class="modal" style="display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); animation: fadeIn 300ms ease; justify-content: center; align-items: center;">
         <div class="modal-content" style="background-color: white; margin: auto; padding: 0; border-radius: var(--radius-xl); width: 90%; max-width: 500px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3); animation: slideUp 300ms ease;">
             <div style="padding: 2rem; background: linear-gradient(135deg, var(--primary-500), var(--primary-600)); color: white; border-radius: var(--radius-xl) var(--radius-xl) 0 0; display: flex; justify-content: space-between; align-items: center;">
-                <h2 style="margin: 0; font-size: 1.5rem;"><i class="fas fa-heart"></i> Make a Donation</h2>
+                <h2 style="margin: 0; font-size: 1.5rem;"> Make a Donation</h2>
                 <button onclick="closeDonationModal()" style="background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer; transition: transform 200ms;">&times;</button>
             </div>
             <div style="padding: 2rem;">
