@@ -1,11 +1,11 @@
 <?php
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-?>
 /**
  * Food-Saver - Landing Page
  * Modern landing page with all sections: Home, About, Reports, Contact, Objective with donation modal
  */
+
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
 require_once 'includes/config.php';
 
