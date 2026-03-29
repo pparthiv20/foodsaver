@@ -24,7 +24,18 @@ define('APP_TAGLINE', 'Reduce Food Waste. Feed the Hungry.');
 
 // Auto-detect APP_URL based on current host and project root path
 $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
-$host = $_SERVER['HTTP_HOST'] ?? 'localhost';
+
+// Set your Infinity Free domain here as fallback
+// Production domain for all redirects
+define('PRODUCTION_DOMAIN', 'foodsaver.xo.je');
+
+$host = $_SERVER['HTTP_HOST'] ?? PRODUCTION_DOMAIN;
+
+// Only use localhost if we're actually on localhost
+if ($host === 'localhost' || empty($_SERVER['HTTP_HOST'])) {
+    $host = PRODUCTION_DOMAIN;
+}
+
 $projectRootPath = realpath(__DIR__ . '/..');
 $documentRootPath = realpath($_SERVER['DOCUMENT_ROOT'] ?? '');
 $basePath = '';
