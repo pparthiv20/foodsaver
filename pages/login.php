@@ -26,69 +26,71 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $error = 'Please fill in all fields.';
         } else {
             $db = getDB();
-            $table = '';
-            
-            switch ($userType) {
-                case 'admin':
-                    $table = 'admins';
-                    break;
-                case 'restaurant':
-                    $table = 'restaurants';
-                    break;
-                case 'ngo':
-                    $table = 'ngos';
-                    break;
-                case 'user':
-                    $table = 'users';
-                    break;
-                default:
-                    $error = 'Invalid user type.';
+            $tableName = '';
+
+            // Validate user type and get table name safely
+            $tableName = getTableNameForUserType($userType);
+            if (!$tableName) {
+                $error = 'Invalid user type.';
             }
-            
-            if (empty($error) && !empty($table)) {
-                $stmt = $db->prepare("SELECT * FROM {$table} WHERE email = ? LIMIT 1");
-                $stmt->execute([$email]);
-                $user = $stmt->fetch();
-                
-                if ($user && password_verify($password, $user['password'])) {
-                    // Check account status before logging in
-                    if (isset($user['status'])) {
-                        if ($user['status'] === 'pending') {
-                            $error = 'Your account is pending approval. Please wait for admin verification.';
-                        } elseif (in_array($user['status'], ['rejected', 'suspended', 'blocked'], true)) {
-                            // Redirect blocked/suspended/rejected accounts to suspended page
-                            header('Location: suspended.php?type=' . urlencode($userType));
+
+            if (empty($error)) {
+                // Rate limiting check
+                if (!checkRateLimit($email, 'login')) {
+                    $remaining = getRemainingAttempts($email, 'login');
+                    $error = 'Too many login attempts. Please try again in a few minutes.';
+                    // Log suspicious activity
+                    logActivity(0, 'system', 'brute_force_attempt', 'Multiple failed login attempts from: ' . ($_SERVER['REMOTE_ADDR'] ?? 'unknown'));
+                } else {
+                    $stmt = $db->prepare("SELECT * FROM {$tableName} WHERE email = ? LIMIT 1");
+                    $stmt->execute([$email]);
+                    $user = $stmt->fetch();
+
+                    if ($user && password_verify($password, $user['password'])) {
+                        // Valid credentials - reset rate limit
+                        unset($_SESSION['rate_limit'][$email]['login']);
+
+                        // Check account status before logging in
+                        if (isset($user['status'])) {
+                            if ($user['status'] === 'pending') {
+                                $error = 'Your account is pending approval. Please wait for admin verification.';
+                            } elseif (in_array($user['status'], ['rejected', 'suspended', 'blocked'], true)) {
+                                // Redirect blocked/suspended/rejected accounts to suspended page
+                                header('Location: suspended.php?type=' . urlencode($userType));
+                                exit;
+                            }
+                        }
+
+                        if (empty($error)) {
+                            // Set session variables
+                            $_SESSION['user_id'] = $user['id'];
+                            $_SESSION['user_type'] = $userType;
+                            $_SESSION['user_email'] = $user['email'];
+                            $_SESSION['user_name'] = $user['full_name'] ?? $user['restaurant_name'] ?? $user['ngo_name'] ?? $user['username'];
+
+                            // Update last login
+                            $db->prepare("UPDATE {$tableName} SET last_login = NOW() WHERE id = ?")
+                               ->execute([$user['id']]);
+
+                            // Log activity
+                            logActivity($user['id'], $userType, 'login', 'User logged in successfully');
+
+                            // Redirect
+                            $redirect = $_SESSION['redirect_url'] ?? null;
+                            unset($_SESSION['redirect_url']);
+
+                            if ($redirect) {
+                                header('Location: ' . $redirect);
+                            } else {
+                                redirectBasedOnRole();
+                            }
                             exit;
                         }
+                    } else {
+                        // Record failed attempt for rate limiting
+                        recordAttempt($email, 'login');
+                        $error = 'Invalid email or password.';
                     }
-                    
-                    if (empty($error)) {
-                        // Set session variables
-                        $_SESSION['user_id'] = $user['id'];
-                        $_SESSION['user_type'] = $userType;
-                        $_SESSION['user_email'] = $user['email'];
-                        $_SESSION['user_name'] = $user['full_name'] ?? $user['restaurant_name'] ?? $user['ngo_name'] ?? $user['username'];
-                        
-                        // Update last login
-                        $db->prepare("UPDATE {$table} SET last_login = NOW() WHERE id = ?")
-                           ->execute([$user['id']]);
-                        
-                        // Log activity
-                        logActivity($user['id'], $userType, 'login', 'User logged in successfully');
-                        
-                        // Redirect
-                        $redirect = $_SESSION['redirect_url'] ?? null;
-                        unset($_SESSION['redirect_url']);
-                        
-                        if ($redirect) {
-                            header('Location: ' . $redirect);
-                        } else {
-                            redirectBasedOnRole();
-                        }
-                        exit;
-                    }
-                } else {
-                    $error = 'Invalid email or password.';
                 }
             }
         }

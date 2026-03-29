@@ -9,6 +9,7 @@ ini_set('display_errors', 1);
 
 require_once 'includes/config.php';
 
+
 // Get site statistics
 $stats = getSiteStatistics();
 $isLoggedIn = isLoggedIn();
@@ -88,7 +89,7 @@ $flash = getFlashMessage();
                         </a>
                         <a href="pages/logout.php" class="btn btn-outline btn-sm">Logout</a>
                     <?php else: ?>
-                        <button type="button" onclick="openLoginModal()" class="btn btn-outline btn-sm">Login</button>
+                        <a href="pages/login.php" class="btn btn-outline btn-sm">Login</a>
                         <a href="pages/register.php" class="btn btn-primary btn-sm">Join Us</a>
                     <?php endif; ?>
                 </div>

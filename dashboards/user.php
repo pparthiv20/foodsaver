@@ -16,7 +16,10 @@ if (isset($user['status']) && in_array($user['status'], ['blocked', 'suspended']
     exit;
 }
 
-// Handle donations
+// Get current page
+$page = $_GET['page'] ?? 'dashboard';
+
+// Handle form submissions
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && !verifyCSRFToken($_POST['csrf_token'] ?? '')) {
     setFlashMessage('error', 'Invalid request.');
 } elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -39,8 +42,56 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !verifyCSRFToken($_POST['csrf_token
             
             logActivity($_SESSION['user_id'], 'user', 'make_donation', 'Donated ₹' . $amount);
             setFlashMessage('success', 'Thank you for your donation of ₹' . number_format($amount, 2) . '!');
+            $_SESSION['show_donation_thank_you'] = true;
+            $_SESSION['donation_amount'] = $amount;
         }
         header('Location: user.php');
+        exit;
+    }
+    
+    if ($action === 'update_profile') {
+        $stmt = $db->prepare("
+            UPDATE users 
+            SET full_name = ?, phone = ?, address = ?, city = ?, state = ?, pincode = ?, bio = ?
+            WHERE id = ?
+        ");
+        
+        $stmt->execute([
+            sanitizeInput($_POST['full_name']),
+            sanitizeInput($_POST['phone'] ?? ''),
+            sanitizeInput($_POST['address'] ?? ''),
+            sanitizeInput($_POST['city'] ?? ''),
+            sanitizeInput($_POST['state'] ?? ''),
+            sanitizeInput($_POST['pincode'] ?? ''),
+            sanitizeInput($_POST['bio'] ?? ''),
+            $_SESSION['user_id']
+        ]);
+        
+        logActivity($_SESSION['user_id'], 'user', 'update_profile', 'Updated profile information');
+        setFlashMessage('success', 'Profile updated successfully!');
+        header('Location: user.php?page=profile');
+        exit;
+    }
+    
+    if ($action === 'change_password') {
+        $currentPassword = $_POST['current_password'];
+        $newPassword = $_POST['new_password'];
+        $confirmPassword = $_POST['confirm_password'];
+        
+        if ($newPassword !== $confirmPassword) {
+            setFlashMessage('error', 'Passwords do not match.');
+        } elseif (strlen($newPassword) < 8) {
+            setFlashMessage('error', 'Password must be at least 8 characters.');
+        } elseif (!password_verify($currentPassword, $user['password'])) {
+            setFlashMessage('error', 'Current password is incorrect.');
+        } else {
+            $db->prepare("UPDATE users SET password = ? WHERE id = ?")
+               ->execute([password_hash($newPassword, PASSWORD_DEFAULT), $_SESSION['user_id']]);
+            logActivity($_SESSION['user_id'], 'user', 'change_password', 'Changed password');
+            setFlashMessage('success', 'Password changed successfully!');
+        }
+        
+        header('Location: user.php?page=profile');
         exit;
     }
 }
@@ -68,8 +119,6 @@ $flash = getFlashMessage();
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="stylesheet" href="../assets/css/user-dashboard.css">
-    <link rel="stylesheet" href="../assets/css/mobile-responsive.css">
-    <link rel="stylesheet" href="../assets/css/mobile-advanced.css">
 </head>
 <body>
     <!-- Navigation -->
@@ -82,10 +131,18 @@ $flash = getFlashMessage();
                 </a>
                 <div class="nav-actions">
                     <div class="user-menu">
-                        <span class="user-badge">
+                        <button class="user-badge" onclick="toggleUserMenu()" style="background: none; border: none; cursor: pointer; padding: 0.5rem 1rem; border-radius: 8px; transition: background 200ms;">
                             <i class="fas fa-user-circle"></i> <?php echo htmlspecialchars(explode(' ', $user['full_name'])[0]); ?>
-                        </span>
-                        <a href="../pages/logout.php" class="btn btn-outline btn-sm">Logout</a>
+                            <i class="fas fa-chevron-down" style="font-size: 0.8rem; margin-left: 0.5rem;"></i>
+                        </button>
+                        <div id="userDropdown" class="user-dropdown" style="display: none; position: absolute; top: 100%; right: 1rem; background: white; border: 1px solid #E5E7EB; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); z-index: 1000; min-width: 180px; margin-top: 0.5rem;">
+                            <a href="user.php?page=profile" class="dropdown-item" style="display: block; padding: 0.75rem 1rem; border-bottom: 1px solid #E5E7EB; color: #374151; text-decoration: none; transition: background 200ms;">
+                                <i class="fas fa-user"></i> My Profile
+                            </a>
+                            <a href="../pages/logout.php" class="dropdown-item" style="display: block; padding: 0.75rem 1rem; color: #374151; text-decoration: none; transition: background 200ms;">
+                                <i class="fas fa-sign-out-alt"></i> Logout
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -147,7 +204,108 @@ $flash = getFlashMessage();
             </div>
         <?php endif; ?>
 
-        <!-- Donation Section -->
+        <?php if ($page === 'profile'): ?>
+            <!-- Profile Settings Page -->
+            <div class="page-header">
+                <h1 class="page-title">Profile Settings</h1>
+            </div>
+            
+            <div class="grid grid-2">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Personal Information</h3>
+                    </div>
+                    <div class="card-body">
+                        <form method="POST" action="">
+                            <?php echo csrfField(); ?>
+                            <input type="hidden" name="action" value="update_profile">
+                            
+                            <div class="form-group">
+                                <label class="form-label">Full Name</label>
+                                <input type="text" name="full_name" class="form-control" value="<?php echo htmlspecialchars($user['full_name']); ?>" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Email</label>
+                                <input type="email" class="form-control" value="<?php echo htmlspecialchars($user['email']); ?>" disabled>
+                                <small style="color: #6B7280; display: block; margin-top: 0.5rem;">Email cannot be changed</small>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Phone</label>
+                                <input type="tel" name="phone" class="form-control" value="<?php echo htmlspecialchars($user['phone'] ?? ''); ?>">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Bio / About You</label>
+                                <textarea name="bio" class="form-control" rows="3" placeholder="Tell us about yourself..."><?php echo htmlspecialchars($user['bio'] ?? ''); ?></textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Address</label>
+                                <textarea name="address" class="form-control" rows="2"><?php echo htmlspecialchars($user['address'] ?? ''); ?></textarea>
+                            </div>
+                            
+                            <div class="grid grid-3">
+                                <div class="form-group">
+                                    <label class="form-label">City</label>
+                                    <input type="text" name="city" class="form-control" value="<?php echo htmlspecialchars($user['city'] ?? ''); ?>">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">State</label>
+                                    <input type="text" name="state" class="form-control" value="<?php echo htmlspecialchars($user['state'] ?? ''); ?>">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Pincode</label>
+                                    <input type="text" name="pincode" class="form-control" value="<?php echo htmlspecialchars($user['pincode'] ?? ''); ?>">
+                                </div>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Save Changes
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Change Password</h3>
+                    </div>
+                    <div class="card-body">
+                        <form method="POST" action="">
+                            <?php echo csrfField(); ?>
+                            <input type="hidden" name="action" value="change_password">
+                            
+                            <div class="form-group">
+                                <label class="form-label">Current Password</label>
+                                <input type="password" name="current_password" class="form-control" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">New Password</label>
+                                <input type="password" name="new_password" class="form-control" minlength="8" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Confirm New Password</label>
+                                <input type="password" name="confirm_password" class="form-control" required>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-key"></i> Change Password
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            <a href="user.php" class="btn btn-outline" style="margin-top: 2rem;">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </a>
+
+        <?php else: ?>
+            <!-- Donation Section -->
         <section class="donate-section" id="donate">
             <h2><i class="fas fa-hand-holding-heart"></i> Make a Donation</h2>
             <div class="grid grid-2 donation-cards">
@@ -220,6 +378,8 @@ $flash = getFlashMessage();
                 </div>
             </div>
         </section>
+
+        <?php endif; ?>
 
         <!-- NGOs -->
         <section class="partners-section" id="ngos">
@@ -332,16 +492,120 @@ $flash = getFlashMessage();
         </div>
     </footer>
 
-    <script src="../assets/js/main.js"></script>
+    <!-- Thank You Donation Modal -->
+    <?php if (isset($_SESSION['show_donation_thank_you']) && $_SESSION['show_donation_thank_you']): ?>
+        <div id="donationThankYouModal" class="modal-overlay" style="display: flex; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); z-index: 9999; justify-content: center; align-items: center;">
+            <div class="modal-content" style="background: white; border-radius: 16px; width: 90%; max-width: 500px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3); animation: slideUp 300ms ease; overflow: hidden; text-align: center;">
+                <!-- Modal Header -->
+                <div style="background: linear-gradient(135deg, #10B981 0%, #059669 100%); color: white; padding: 2rem;">
+                    <div style="font-size: 3rem; margin-bottom: 1rem;">🎉</div>
+                    <h2 style="margin: 0; font-size: 1.75rem; font-weight: 700;">Thank You!</h2>
+                </div>
+
+                <!-- Modal Body -->
+                <div style="padding: 2rem;">
+                    <p style="font-size: 1.1rem; color: #374151; margin-bottom: 1rem;">
+                        Your generous donation of <strong>₹<?php echo number_format($_SESSION['donation_amount'], 2); ?></strong> will make a real difference in fighting hunger and food waste.
+                    </p>
+                    <p style="color: #6B7280; margin-bottom: 2rem;">
+                        We've sent you a confirmation email with all the details about your contribution. Together, we're creating positive change in our community.
+                    </p>
+                    
+                    <div style="background: #F0FDF4; border-left: 4px solid #10B981; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; text-align: left;">
+                        <p style="margin: 0; color: #374151; font-size: 0.9rem;">
+                            <i class="fas fa-check-circle" style="color: #10B981; margin-right: 0.5rem;"></i>
+                            <strong>Your donation receipt has been saved to your profile.</strong>
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Modal Footer -->
+                <div style="padding: 1.5rem; background: #F9FAFB; border-top: 1px solid #E5E7EB;">
+                    <button onclick="closeDonationThankYouModal()" class="btn btn-primary" style="width: 100%;">
+                        <i class="fas fa-check"></i> Got It!
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <script>
+            function closeDonationThankYouModal() {
+                const modal = document.getElementById('donationThankYouModal');
+                if (modal) {
+                    modal.style.display = 'none';
+                    // Clear the session flag
+                    fetch('user.php?clear_donation_flag=1');
+                }
+            }
+
+            // Auto-show modal on page load
+            window.addEventListener('load', function() {
+                const modal = document.getElementById('donationThankYouModal');
+                if (modal) {
+                    modal.style.display = 'flex';
+                }
+            });
+
+            // Close on Escape key
+            document.addEventListener('keydown', function(event) {
+                if (event.key === 'Escape') {
+                    closeDonationThankYouModal();
+                }
+            });
+
+            // Close when clicking outside
+            const modal = document.getElementById('donationThankYouModal');
+            if (modal) {
+                modal.addEventListener('click', function(e) {
+                    if (e.target === this) {
+                        closeDonationThankYouModal();
+                    }
+                });
+            }
+        </script>
+        <?php unset($_SESSION['show_donation_thank_you']); ?>
+    <?php endif; ?>
+
+    <!-- User Menu Dropdown Script -->
     <script>
-        document.querySelectorAll('.preset').forEach(btn => {
-            btn.addEventListener('click', function(e) {
-                e.preventDefault();
-                document.querySelectorAll('.preset').forEach(b => b.classList.remove('active'));
-                this.classList.add('active');
-                this.closest('form').querySelector('input[name="amount"]').value = this.dataset.val;
+        function toggleUserMenu() {
+            const dropdown = document.getElementById('userDropdown');
+            if (dropdown) {
+                dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+            }
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            const userMenu = document.querySelector('.user-menu');
+            const dropdown = document.getElementById('userDropdown');
+            
+            if (userMenu && dropdown && !userMenu.contains(event.target)) {
+                dropdown.style.display = 'none';
+            }
+        });
+
+        // Add hover effect to dropdown items
+        document.querySelectorAll('.dropdown-item').forEach(item => {
+            item.addEventListener('mouseover', function() {
+                this.style.background = '#F3F4F6';
+            });
+            item.addEventListener('mouseout', function() {
+                this.style.background = 'transparent';
             });
         });
+
+        // Dismiss flash messages after 5 seconds
+        setTimeout(function() {
+            const flashMsg = document.querySelector('.flash-message');
+            if (flashMsg) {
+                flashMsg.style.opacity = '0';
+                flashMsg.style.transition = 'opacity 300ms ease';
+                setTimeout(function() {
+                    flashMsg.style.display = 'none';
+                }, 300);
+            }
+        }, 5000);
     </script>
 </body>
 </html>
