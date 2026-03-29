@@ -118,7 +118,10 @@ $flash = getFlashMessage();
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/dashboards.css">
     <link rel="stylesheet" href="../assets/css/user-dashboard.css">
+    <link rel="stylesheet" href="../assets/css/micro-interactions.css">
+    <link rel="stylesheet" href="../assets/css/mobile-responsive.css">
 </head>
 <body>
     <!-- Navigation -->
@@ -131,15 +134,15 @@ $flash = getFlashMessage();
                 </a>
                 <div class="nav-actions">
                     <div class="user-menu">
-                        <button class="user-badge" onclick="toggleUserMenu()" style="background: none; border: none; cursor: pointer; padding: 0.5rem 1rem; border-radius: 8px; transition: background 200ms;">
+                        <button class="user-badge" onclick="toggleUserMenu()">
                             <i class="fas fa-user-circle"></i> <?php echo htmlspecialchars(explode(' ', $user['full_name'])[0]); ?>
-                            <i class="fas fa-chevron-down" style="font-size: 0.8rem; margin-left: 0.5rem;"></i>
+                            <i class="fas fa-chevron-down"></i>
                         </button>
-                        <div id="userDropdown" class="user-dropdown" style="display: none; position: absolute; top: 100%; right: 1rem; background: white; border: 1px solid #E5E7EB; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); z-index: 1000; min-width: 180px; margin-top: 0.5rem;">
-                            <a href="user.php?page=profile" class="dropdown-item" style="display: block; padding: 0.75rem 1rem; border-bottom: 1px solid #E5E7EB; color: #374151; text-decoration: none; transition: background 200ms;">
+                        <div id="userDropdown" class="user-dropdown">
+                            <a href="user.php?page=profile" class="dropdown-item">
                                 <i class="fas fa-user"></i> My Profile
                             </a>
-                            <a href="../pages/logout.php" class="dropdown-item" style="display: block; padding: 0.75rem 1rem; color: #374151; text-decoration: none; transition: background 200ms;">
+                            <a href="../pages/logout.php" class="dropdown-item">
                                 <i class="fas fa-sign-out-alt"></i> Logout
                             </a>
                         </div>
@@ -150,48 +153,29 @@ $flash = getFlashMessage();
     </nav>
 
     <!-- Welcome Hero -->
-    <section class="dashboard-hero">
+    <section class="dashboard-hero minimal">
         <div class="container">
             <div class="hero-content">
                 <div class="hero-text">
-                    <h1>Welcome back, <?php echo htmlspecialchars(explode(' ', $user['full_name'])[0]); ?>! 👋</h1>
-                    <p>Together we're making a difference. Let's fight food waste today.</p>
+                    <h1>Welcome, <?php echo htmlspecialchars(explode(' ', $user['full_name'])[0]); ?></h1>
+                    <p>Making a real difference, one donation at a time</p>
                 </div>
-                <div class="hero-emoji">🍃</div>
             </div>
         </div>
     </section>
-
-    <!-- Stats Section -->
-    <div class="container stats-container">
-        <div class="grid grid-4">
+    <div class="container stats-container minimal">
+        <div class="grid grid-3 stats-minimal">
             <div class="card stat-card-user">
                 <div class="stat-value primary">₹<?php echo number_format($stats['donated']); ?></div>
                 <div class="stat-label">Total Donated</div>
-                <div class="stat-description">
-                    <i class="fas fa-arrow-up" style="color: var(--success);"></i> Making impact
-                </div>
-            </div>
-            <div class="card stat-card-user secondary">
-                <div class="stat-value secondary"><?php echo $stats['count']; ?></div>
-                <div class="stat-label">Donations</div>
-                <div class="stat-description">
-                    <i class="fas fa-gift"></i> Your generosity
-                </div>
             </div>
             <div class="card stat-card-user success">
-                <div class="stat-value success"><?php echo number_format($stats['helped']); ?></div>
-                <div class="stat-label">People Helped</div>
-                <div class="stat-description">
-                    <i class="fas fa-hand-holding-heart"></i> Lives touched
-                </div>
+                <div class="stat-value success"><?php echo $stats['count']; ?></div>
+                <div class="stat-label">Donations Made</div>
             </div>
-            <div class="card stat-card-user warning">
-                <div class="stat-value warning"><?php echo count($ngos) + count($restaurants); ?></div>
-                <div class="stat-label">Partners</div>
-                <div class="stat-description">
-                    <i class="fas fa-network-wired"></i> Ecosystem
-                </div>
+            <div class="card stat-card-user">
+                <div class="stat-value secondary"><?php echo number_format($stats['helped']); ?></div>
+                <div class="stat-label">People Helped</div>
             </div>
         </div>
     </div>
@@ -209,7 +193,7 @@ $flash = getFlashMessage();
             <div class="page-header">
                 <h1 class="page-title">Profile Settings</h1>
             </div>
-            
+
             <div class="grid grid-2">
                 <div class="card">
                     <div class="card-header">
@@ -219,33 +203,33 @@ $flash = getFlashMessage();
                         <form method="POST" action="">
                             <?php echo csrfField(); ?>
                             <input type="hidden" name="action" value="update_profile">
-                            
+
                             <div class="form-group">
                                 <label class="form-label">Full Name</label>
                                 <input type="text" name="full_name" class="form-control" value="<?php echo htmlspecialchars($user['full_name']); ?>" required>
                             </div>
-                            
+
                             <div class="form-group">
                                 <label class="form-label">Email</label>
                                 <input type="email" class="form-control" value="<?php echo htmlspecialchars($user['email']); ?>" disabled>
                                 <small style="color: #6B7280; display: block; margin-top: 0.5rem;">Email cannot be changed</small>
                             </div>
-                            
+
                             <div class="form-group">
                                 <label class="form-label">Phone</label>
                                 <input type="tel" name="phone" class="form-control" value="<?php echo htmlspecialchars($user['phone'] ?? ''); ?>">
                             </div>
-                            
+
                             <div class="form-group">
                                 <label class="form-label">Bio / About You</label>
                                 <textarea name="bio" class="form-control" rows="3" placeholder="Tell us about yourself..."><?php echo htmlspecialchars($user['bio'] ?? ''); ?></textarea>
                             </div>
-                            
+
                             <div class="form-group">
                                 <label class="form-label">Address</label>
                                 <textarea name="address" class="form-control" rows="2"><?php echo htmlspecialchars($user['address'] ?? ''); ?></textarea>
                             </div>
-                            
+
                             <div class="grid grid-3">
                                 <div class="form-group">
                                     <label class="form-label">City</label>
@@ -260,14 +244,14 @@ $flash = getFlashMessage();
                                     <input type="text" name="pincode" class="form-control" value="<?php echo htmlspecialchars($user['pincode'] ?? ''); ?>">
                                 </div>
                             </div>
-                            
+
                             <button type="submit" class="btn btn-primary">
                                 <i class="fas fa-save"></i> Save Changes
                             </button>
                         </form>
                     </div>
                 </div>
-                
+
                 <div class="card">
                     <div class="card-header">
                         <h3>Change Password</h3>
@@ -276,22 +260,22 @@ $flash = getFlashMessage();
                         <form method="POST" action="">
                             <?php echo csrfField(); ?>
                             <input type="hidden" name="action" value="change_password">
-                            
+
                             <div class="form-group">
                                 <label class="form-label">Current Password</label>
                                 <input type="password" name="current_password" class="form-control" required>
                             </div>
-                            
+
                             <div class="form-group">
                                 <label class="form-label">New Password</label>
                                 <input type="password" name="new_password" class="form-control" minlength="8" required>
                             </div>
-                            
+
                             <div class="form-group">
                                 <label class="form-label">Confirm New Password</label>
                                 <input type="password" name="confirm_password" class="form-control" required>
                             </div>
-                            
+
                             <button type="submit" class="btn btn-primary">
                                 <i class="fas fa-key"></i> Change Password
                             </button>
@@ -299,166 +283,134 @@ $flash = getFlashMessage();
                     </div>
                 </div>
             </div>
-            
-            <a href="user.php" class="btn btn-outline" style="margin-top: 2rem;">
+
+            <a href="user.php" class="btn btn-outline back-to-dashboard">
                 <i class="fas fa-arrow-left"></i> Back to Dashboard
             </a>
 
         <?php else: ?>
-            <!-- Donation Section -->
-        <section class="donate-section" id="donate">
-            <h2><i class="fas fa-hand-holding-heart"></i> Make a Donation</h2>
-            <div class="grid grid-2 donation-cards">
-                <!-- Platform Donation -->
-                <div class="card donation-card">
-                    <div class="donation-header platform">
-                        <h3><i class="fas fa-heart"></i> FoodSaver Platform</h3>
-                        <p>Support our mission directly</p>
+            <!-- Donation Section - Centered Card -->
+            <section class="donate-section-wrapper">
+                <div class="donation-section-container">
+                    <div class="donation-section-header">
+                        <h2><i class="fas fa-heart"></i> Make a Donation</h2>
+                        <p>Support our mission to reduce food waste</p>
                     </div>
-                    <div class="card-body">
-                        <form method="POST">
-                            <?php echo csrfField(); ?>
-                            <input type="hidden" name="action" value="make_donation">
-                            <input type="hidden" name="ngo_id" value="0">
-                            
-                            <div class="donation-form-group">
-                                <label class="donation-form-label">Choose Amount</label>
-                                <div class="preset-buttons four-col">
-                                    <button type="button" class="preset" data-val="100">₹100</button>
-                                    <button type="button" class="preset" data-val="500">₹500</button>
-                                    <button type="button" class="preset active" data-val="1000">₹1000</button>
-                                    <button type="button" class="preset" data-val="5000">₹5000</button>
-                                </div>
-                                <input type="number" name="amount" class="donation-input form-control" value="1000" min="10" required>
-                            </div>
-                            <div class="donation-form-group">
-                                <textarea name="message" class="donation-textarea form-control" placeholder="Add a message (optional)..." rows="3"></textarea>
-                            </div>
-                            <button type="submit" class="btn btn-primary donate-btn btn-block">
-                                <i class="fas fa-donate"></i> Donate Now
-                            </button>
-                        </form>
-                    </div>
-                </div>
+                    <div class="card donation-card-centered">
+                        <div class="card-body">
+                            <form method="POST">
+                                <?php echo csrfField(); ?>
+                                <input type="hidden" name="action" value="make_donation">
+                                <input type="hidden" name="ngo_id" value="0">
 
-                <!-- NGO Donation -->
-                <div class="card donation-card ngo-card">
-                    <div class="donation-header ngo">
-                        <h3><i class="fas fa-hands-helping"></i> Support an NGO</h3>
-                        <p>Help organizations directly</p>
-                    </div>
-                    <div class="card-body">
-                        <form method="POST">
-                            <?php echo csrfField(); ?>
-                            <input type="hidden" name="action" value="make_donation">
-                            
-                            <div class="donation-form-group">
-                                <label class="donation-form-label">Select NGO</label>
-                                <select name="ngo_id" class="form-control donation-input" required>
-                                    <option value="">-- Choose an NGO --</option>
-                                    <?php foreach ($ngos as $ngo): ?>
-                                        <option value="<?php echo $ngo['id']; ?>"><?php echo htmlspecialchars($ngo['ngo_name']); ?> · <?php echo htmlspecialchars($ngo['city']); ?></option>
-                                    <?php endforeach; ?>
-                                </select>
-                            </div>
-                            <div class="donation-form-group">
-                                <label class="donation-form-label">Amount</label>
-                                <div class="preset-buttons three-col">
-                                    <button type="button" class="preset" data-val="500">₹500</button>
-                                    <button type="button" class="preset active" data-val="1000">₹1000</button>
-                                    <button type="button" class="preset" data-val="2000">₹2000</button>
+                                <div class="donation-form-group">
+                                    <label class="donation-form-label">Choose Amount</label>
+                                    <div class="preset-buttons minimal-presets">
+                                        <button type="button" class="preset" data-val="100">₹100</button>
+                                        <button type="button" class="preset" data-val="500">₹500</button>
+                                        <button type="button" class="preset active" data-val="1000">₹1000</button>
+                                        <button type="button" class="preset" data-val="5000">₹5000</button>
+                                    </div>
+                                    <input type="number" name="amount" class="donation-input form-control" value="1000" min="10" required placeholder="Or enter custom amount">
                                 </div>
-                                <input type="number" name="amount" class="donation-input form-control" value="1000" min="10" required>
-                            </div>
-                            <button type="submit" class="donate-btn ngo">
-                                <i class="fas fa-donate"></i> Donate to NGO
-                            </button>
-                        </form>
+                                <div class="donation-form-group">
+                                    <label class="donation-form-label">Select Recipient (Optional)</label>
+                                    <select name="ngo_id" class="form-control donation-input">
+                                        <option value="">Support FoodSaver Platform</option>
+                                        <?php foreach ($ngos as $ngo): ?>
+                                            <option value="<?php echo $ngo['id']; ?>"><?php echo htmlspecialchars($ngo['ngo_name']); ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn btn-primary donate-btn-minimal btn-block">
+                                    <i class="fas fa-heart"></i> Donate Now
+                                </button>
+                            </form>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </section>
+            </section>
+
+            <!-- Connected NGOs Section -->
+            <section class="partners-section" id="ngos">
+                <div class="section-header">
+                    <h2><i class="fas fa-hands-helping ngo"></i> Connected NGOs</h2>
+                    <a href="#">View all →</a>
+                </div>
+                <div class="grid grid-3 partner-cards">
+                    <?php foreach (array_slice($ngos, 0, 3) as $ngo):
+                        $peopleServed = $db->query("SELECT COALESCE(SUM(people_served), 0) FROM food_listings WHERE status = 'delivered' AND claimed_by IN (SELECT id FROM ngos WHERE id = " . $ngo['id'] . ")")->fetchColumn();
+                    ?>
+                    <div class="card partner-card">
+                        <div class="partner-header ngo">
+                            <div class="partner-emoji">🤝</div>
+                            <h4 class="partner-name"><?php echo htmlspecialchars($ngo['ngo_name']); ?></h4>
+                            <p class="partner-location">
+                                <i class="fas fa-location-dot"></i> <?php echo htmlspecialchars($ngo['city']); ?>
+                            </p>
+                        </div>
+                        <div class="partner-body">
+                            <p class="partner-description">
+                                <?php echo htmlspecialchars(substr($ngo['description'] ?? 'Dedicated to serving the community', 0, 80)); ?>...
+                            </p>
+                            <div class="partner-stats">
+                                <div class="stat-box success">
+                                    <div class="stat-number"><?php echo number_format($peopleServed); ?></div>
+                                    <div class="stat-text">People Served</div>
+                                </div>
+                            </div>
+                            <a href="mailto:<?php echo htmlspecialchars($ngo['email_contact']); ?>" class="partner-contact">
+                                <i class="fas fa-envelope"></i> Get in Touch
+                            </a>
+                        </div>
+                    </div>
+                    <?php endforeach; ?>
+                </div>
+            </section>
+
+            <!-- Connected Restaurants Section -->
+            <section class="partners-section" id="restaurants">
+                <div class="section-header">
+                    <h2><i class="fas fa-utensils restaurant"></i> Connected Restaurants</h2>
+                    <a href="#">View all →</a>
+                </div>
+                <div class="grid grid-3 partner-cards">
+                    <?php foreach (array_slice($restaurants, 0, 3) as $rest):
+                        $foodCount = $db->query("SELECT COUNT(*) FROM food_listings WHERE restaurant_id = " . $rest['id'])->fetchColumn();
+                        $delivered = $db->query("SELECT COUNT(*) FROM food_listings WHERE restaurant_id = " . $rest['id'] . " AND status = 'delivered'")->fetchColumn();
+                    ?>
+                    <div class="card partner-card">
+                        <div class="partner-header restaurant">
+                            <div class="partner-emoji">🍽️</div>
+                            <h4 class="partner-name"><?php echo htmlspecialchars($rest['restaurant_name']); ?></h4>
+                            <p class="partner-location">
+                                <i class="fas fa-location-dot"></i> <?php echo htmlspecialchars($rest['city']); ?>
+                            </p>
+                        </div>
+                        <div class="partner-body">
+                            <p class="partner-description">
+                                <?php echo htmlspecialchars(substr($rest['description'] ?? 'Quality dining for good cause', 0, 80)); ?>...
+                            </p>
+                            <div class="partner-stats two-col">
+                                <div class="stat-box warning">
+                                    <div class="stat-number"><?php echo $foodCount; ?></div>
+                                    <div class="stat-text">Foods Posted</div>
+                                </div>
+                                <div class="stat-box success">
+                                    <div class="stat-number"><?php echo $delivered; ?></div>
+                                    <div class="stat-text">Delivered</div>
+                                </div>
+                            </div>
+                            <a href="mailto:<?php echo htmlspecialchars($rest['email']); ?>" class="partner-contact restaurant">
+                                <i class="fas fa-envelope"></i> Get in Touch
+                            </a>
+                        </div>
+                    </div>
+                    <?php endforeach; ?>
+                </div>
+            </section>
 
         <?php endif; ?>
-
-        <!-- NGOs -->
-        <section class="partners-section" id="ngos">
-            <div class="section-header">
-                <h2><i class="fas fa-hands-helping ngo"></i> Partner NGOs</h2>
-                <a href="#">View all →</a>
-            </div>
-            <div class="grid grid-3 partner-cards">
-                <?php foreach (array_slice($ngos, 0, 3) as $ngo): 
-                    $peopleServed = $db->query("SELECT COALESCE(SUM(people_served), 0) FROM food_listings WHERE status = 'delivered' AND claimed_by IN (SELECT id FROM ngos WHERE id = " . $ngo['id'] . ")")->fetchColumn();
-                ?>
-                <div class="card partner-card">
-                    <div class="partner-header ngo">
-                        <div class="partner-emoji">🤝</div>
-                        <h4 class="partner-name"><?php echo htmlspecialchars($ngo['ngo_name']); ?></h4>
-                        <p class="partner-location">
-                            <i class="fas fa-location-dot"></i> <?php echo htmlspecialchars($ngo['city']); ?>
-                        </p>
-                    </div>
-                    <div class="partner-body">
-                        <p class="partner-description">
-                            <?php echo htmlspecialchars(substr($ngo['description'] ?? 'Dedicated to serving the community', 0, 80)); ?>...
-                        </p>
-                        <div class="partner-stats">
-                            <div class="stat-box success">
-                                <div class="stat-number"><?php echo number_format($peopleServed); ?></div>
-                                <div class="stat-text">People Served</div>
-                            </div>
-                        </div>
-                        <a href="mailto:<?php echo htmlspecialchars($ngo['email_contact']); ?>" class="partner-contact">
-                            <i class="fas fa-envelope"></i> Get in Touch
-                        </a>
-                    </div>
-                </div>
-                <?php endforeach; ?>
-            </div>
-        </section>
-
-        <!-- Restaurants -->
-        <section class="partners-section last" id="restaurants">
-            <div class="section-header">
-                <h2><i class="fas fa-utensils restaurant"></i> Partner Restaurants</h2>
-                <a href="#">View all →</a>
-            </div>
-            <div class="grid grid-3 partner-cards">
-                <?php foreach (array_slice($restaurants, 0, 3) as $rest): 
-                    $foodCount = $db->query("SELECT COUNT(*) FROM food_listings WHERE restaurant_id = " . $rest['id'])->fetchColumn();
-                    $delivered = $db->query("SELECT COUNT(*) FROM food_listings WHERE restaurant_id = " . $rest['id'] . " AND status = 'delivered'")->fetchColumn();
-                ?>
-                <div class="card partner-card">
-                    <div class="partner-header restaurant">
-                        <div class="partner-emoji">🍽️</div>
-                        <h4 class="partner-name"><?php echo htmlspecialchars($rest['restaurant_name']); ?></h4>
-                        <p class="partner-location">
-                            <i class="fas fa-location-dot"></i> <?php echo htmlspecialchars($rest['city']); ?>
-                        </p>
-                    </div>
-                    <div class="partner-body">
-                        <p class="partner-description">
-                            <?php echo htmlspecialchars(substr($rest['description'] ?? 'Quality dining for good cause', 0, 80)); ?>...
-                        </p>
-                        <div class="partner-stats two-col">
-                            <div class="stat-box warning">
-                                <div class="stat-number"><?php echo $foodCount; ?></div>
-                                <div class="stat-text">Foods Posted</div>
-                            </div>
-                            <div class="stat-box success">
-                                <div class="stat-number"><?php echo $delivered; ?></div>
-                                <div class="stat-text">Delivered</div>
-                            </div>
-                        </div>
-                        <a href="mailto:<?php echo htmlspecialchars($rest['email']); ?>" class="partner-contact restaurant">
-                            <i class="fas fa-envelope"></i> Get in Touch
-                        </a>
-                    </div>
-                </div>
-                <?php endforeach; ?>
-            </div>
-        </section>
     </main>
 
     <!-- Footer -->
@@ -571,7 +523,7 @@ $flash = getFlashMessage();
         function toggleUserMenu() {
             const dropdown = document.getElementById('userDropdown');
             if (dropdown) {
-                dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+                dropdown.classList.toggle('show');
             }
         }
 
@@ -579,33 +531,162 @@ $flash = getFlashMessage();
         document.addEventListener('click', function(event) {
             const userMenu = document.querySelector('.user-menu');
             const dropdown = document.getElementById('userDropdown');
-            
+
             if (userMenu && dropdown && !userMenu.contains(event.target)) {
-                dropdown.style.display = 'none';
+                dropdown.classList.remove('show');
             }
         });
 
-        // Add hover effect to dropdown items
+        // Close dropdown when clicking on a link
         document.querySelectorAll('.dropdown-item').forEach(item => {
-            item.addEventListener('mouseover', function() {
-                this.style.background = '#F3F4F6';
-            });
-            item.addEventListener('mouseout', function() {
-                this.style.background = 'transparent';
+            item.addEventListener('click', function() {
+                const dropdown = document.getElementById('userDropdown');
+                if (dropdown) {
+                    dropdown.classList.remove('show');
+                }
             });
         });
+    </script>
+        
+        // Show thank you modal for donations
+        <?php if (isset($_SESSION['show_donation_thank_you'])): ?>
+        document.addEventListener('DOMContentLoaded', function() {
+            const amount = "<?php echo $_SESSION['donation_amount'] ?? '0'; ?>";
+            showDonationThankYouModal(parseFloat(amount));
+            <?php unset($_SESSION['show_donation_thank_you']); unset($_SESSION['donation_amount']); ?>
+        });
+        <?php endif; ?>
+    </script>
+    
+    <script src="../assets/js/main.js"></script>
+    <script src="../assets/js/micro-interactions.js"></script>
 
-        // Dismiss flash messages after 5 seconds
-        setTimeout(function() {
-            const flashMsg = document.querySelector('.flash-message');
-            if (flashMsg) {
-                flashMsg.style.opacity = '0';
-                flashMsg.style.transition = 'opacity 300ms ease';
-                setTimeout(function() {
-                    flashMsg.style.display = 'none';
-                }, 300);
+    <!-- Enhanced Form Validation & Error Handling -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Form validation with error messages
+            const forms = document.querySelectorAll('form');
+
+            forms.forEach(form => {
+                form.addEventListener('submit', function(e) {
+                    clearPreviousErrors();
+
+                    // Validate required fields
+                    let isValid = true;
+                    const inputs = form.querySelectorAll('input[required], select[required], textarea[required]');
+
+                    inputs.forEach(input => {
+                        if (!input.value.trim()) {
+                            showFieldError(input, 'This field is required');
+                            isValid = false;
+                        } else {
+                            clearFieldError(input);
+                        }
+
+                        // Email validation
+                        if (input.type === 'email' && input.value && !isValidEmail(input.value)) {
+                            showFieldError(input, 'Please enter a valid email');
+                            isValid = false;
+                        }
+                    });
+
+                    // Check for password match in profile form
+                    const newPass = form.querySelector('input[name="new_password"]');
+                    const confirmPass = form.querySelector('input[name="confirm_password"]');
+
+                    if (newPass && confirmPass) {
+                        if (newPass.value && confirmPass.value && newPass.value !== confirmPass.value) {
+                            showFieldError(confirmPass, 'Passwords do not match');
+                            isValid = false;
+                        }
+                    }
+
+                    if (!isValid) {
+                        e.preventDefault();
+                    }
+                });
+            });
+
+            function showFieldError(field, message) {
+                field.classList.add('error');
+
+                // Remove previous error if exists
+                const existingError = field.parentElement.querySelector('.form-error');
+                if (existingError) {
+                    existingError.remove();
+                }
+
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'form-error';
+                errorDiv.textContent = message;
+
+                field.parentElement.appendChild(errorDiv);
             }
-        }, 5000);
+
+            function clearFieldError(field) {
+                field.classList.remove('error');
+                const error = field.parentElement.querySelector('.form-error');
+                if (error) {
+                    error.remove();
+                }
+            }
+
+            function clearPreviousErrors() {
+                document.querySelectorAll('.form-control.error').forEach(el => {
+                    el.classList.remove('error');
+                    const error = el.parentElement.querySelector('.form-error');
+                    if (error) error.remove();
+                });
+            }
+
+            function isValidEmail(email) {
+                return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+            }
+
+            // Add smooth focus transitions
+            document.querySelectorAll('input, textarea, select').forEach(field => {
+                field.addEventListener('focus', function() {
+                    this.parentElement.classList.add('focus-visible');
+                });
+
+                field.addEventListener('blur', function() {
+                    this.parentElement.classList.remove('focus-visible');
+                });
+            });
+
+            // Preset button handler for donations
+            document.querySelectorAll('.preset').forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const amount = this.getAttribute('data-val');
+                    const form = this.closest('form');
+                    const amountInput = form.querySelector('input[name="amount"]');
+
+                    if (amountInput) {
+                        amountInput.value = amount;
+                    }
+
+                    // Update active state
+                    const presetGroup = this.closest('.preset-buttons');
+                    presetGroup.querySelectorAll('.preset').forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                });
+            });
+
+            // Flash message auto-dismiss after 5 seconds
+            const flashMessage = document.querySelector('.flash-message');
+            if (flashMessage) {
+                setTimeout(function() {
+                    flashMessage.style.opacity = '0';
+                    flashMessage.style.transition = 'opacity 300ms ease';
+                    setTimeout(function() {
+                        flashMessage.style.display = 'none';
+                    }, 300);
+                }, 5000);
+            }
+        });
     </script>
 </body>
 </html>

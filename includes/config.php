@@ -22,6 +22,10 @@ define('DB_CHARSET', 'utf8mb4');
 define('APP_NAME', 'Food-Saver');
 define('APP_TAGLINE', 'Reduce Food Waste. Feed the Hungry.');
 
+// Development Mode Configuration
+// Set to true to disable OTP verification during development
+define('DEVELOPMENT_MODE', false);
+
 // Auto-detect APP_URL based on current host and project root path
 $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
 
@@ -61,6 +65,15 @@ define('SMTP_USERNAME', 'pcparthiv20@gmail.com');
 define('SMTP_PASSWORD', 'waxm qzdl tyrn atlk');
 define('FROM_EMAIL', 'pcparthiv20@gmail.com');
 define('FROM_NAME', 'Food-Saver');
+
+// OAuth Configuration
+// Google OAuth - Get credentials from https://console.cloud.google.com
+define('GOOGLE_CLIENT_ID', 'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com');
+define('GOOGLE_CLIENT_SECRET', 'YOUR_GOOGLE_CLIENT_SECRET');
+
+// Facebook OAuth - Get credentials from https://developers.facebook.com
+define('FACEBOOK_APP_ID', 'YOUR_FACEBOOK_APP_ID');
+define('FACEBOOK_APP_SECRET', 'YOUR_FACEBOOK_APP_SECRET');
 
 // File Upload Configuration
 define('UPLOAD_MAX_SIZE', 5 * 1024 * 1024); // 5MB

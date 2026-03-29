@@ -1,7 +1,39 @@
 /**
  * Food-Saver - User Dashboard Styles
- * Clean CSS for user dashboard page - no inline styles
+ * Modern, minimal dashboard with smooth animations and micro-interactions
  */
+
+/* ==================== Animations ==================== */
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes glow {
+    0%, 100% {
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.3);
+    }
+    50% {
+        box-shadow: 0 0 0 8px rgba(16, 185, 129, 0);
+    }
+}
 
 /* ==================== Navigation ==================== */
 .user-navbar {
@@ -20,35 +52,126 @@
     padding: 0.5rem 1rem;
     background: var(--primary-50);
     border-radius: 50px;
+    transition: all 250ms cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    border: none;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.user-badge i:last-child {
+    font-size: 0.75rem;
+    transition: transform 200ms ease;
+}
+
+.user-badge:hover {
+    background: var(--primary-100);
+    color: var(--primary-700);
+    transform: translateY(-1px);
+}
+
+.user-menu {
+    position: relative;
+}
+
+.user-dropdown {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: white;
+    border: 1px solid #E5E7EB;
+    border-radius: var(--radius-lg);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    min-width: 200px;
+    margin-top: 0.5rem;
+    animation: slideDown 250ms cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+}
+
+.user-dropdown.show {
+    display: block;
+}
+
+.dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    color: var(--gray-700);
+    text-decoration: none;
+    transition: all 200ms ease;
+    border-bottom: 1px solid #E5E7EB;
+    font-weight: 500;
+}
+
+.dropdown-item:last-child {
+    border-bottom: none;
+}
+
+.dropdown-item:hover {
+    background: var(--primary-50);
+    color: var(--primary-600);
+    padding-left: 1.25rem;
+}
+
+.dropdown-item i {
+    font-size: 0.95rem;
 }
 
 /* ==================== Hero Section ==================== */
 .dashboard-hero {
     background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-    padding: 4rem 0 3rem 0;
+    padding: 3rem 0 1.5rem 0;
     color: white;
-    margin-bottom: 3rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.dashboard-hero::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -10%;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+    border-radius: 50%;
+}
+
+.dashboard-hero.minimal {
+    padding: 2rem 0 1.5rem 0;
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    margin-bottom: 1.5rem;
 }
 
 .hero-content {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    position: relative;
+    z-index: 1;
+    animation: slideDown 600ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .hero-text h1 {
-    font-size: 2.5rem;
+    font-size: 2rem;
     font-weight: 700;
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
     margin-top: 0;
     color: white;
+    letter-spacing: -0.5px;
 }
 
 .hero-text p {
-    font-size: 1rem;
-    opacity: 0.95;
+    font-size: 0.95rem;
+    opacity: 0.9;
     margin: 0;
     color: white;
+    font-weight: 400;
 }
 
 .hero-emoji {
@@ -58,24 +181,80 @@
 
 /* ==================== Stats Section ==================== */
 .stats-container {
-    margin-bottom: 4rem;
+    margin-bottom: 3rem;
+}
+
+.stats-container.minimal {
+    margin-bottom: 3rem;
+    margin-top: 1.5rem;
+}
+
+.stats-minimal {
+    gap: 1.5rem;
 }
 
 .stat-card-user {
-    border-top: 4px solid var(--primary-600);
+    border-top: 3px solid var(--primary-600);
     padding: 2.5rem 2rem;
     text-align: center;
+    background: white;
+    border-radius: var(--radius-lg);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+    transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-card-user::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+    transition: left 500ms ease;
+    z-index: 0;
+}
+
+.stat-card-user:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 28px rgba(16, 185, 129, 0.15);
+    border-top-color: var(--primary-500);
+}
+
+.stat-card-user:hover::before {
+    left: 100%;
+}
+
+.stats-minimal .stat-card-user {
+    padding: 2rem;
+    border-top: 3px solid var(--primary-600);
 }
 
 .stat-card-user.secondary {
     border-top-color: var(--secondary-600);
 }
 
+.stat-card-user.secondary:hover {
+    box-shadow: 0 12px 28px rgba(245, 158, 11, 0.15);
+    border-top-color: var(--secondary-500);
+}
+
 .stat-card-user.success {
     border-top-color: var(--success);
 }
 
+.stat-card-user.success:hover {
+    box-shadow: 0 12px 28px rgba(16, 185, 129, 0.15);
+}
+
 .stat-card-user.warning {
+    border-top-color: #f59e0b;
+}
+
+.stat-card-user.warning:hover {
+    box-shadow: 0 12px 28px rgba(245, 158, 11, 0.15);
     border-top-color: #f59e0b;
 }
 
@@ -83,6 +262,14 @@
     font-size: 2.5rem;
     font-weight: 700;
     margin-bottom: 0.75rem;
+    position: relative;
+    z-index: 1;
+    animation: fadeInScale 600ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.stats-minimal .stat-value {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
 }
 
 .stat-value.primary {
@@ -105,6 +292,9 @@
     color: var(--gray-600);
     font-weight: 600;
     margin-bottom: 0.75rem;
+    font-size: 0.9rem;
+    position: relative;
+    z-index: 1;
 }
 
 .stat-description {
@@ -112,14 +302,55 @@
     color: var(--gray-500);
 }
 
+/* ==================== Form Validation & Error States ==================== */
+/* NOTE: Base .form-group, .form-label, .form-control are in style.css */
+/* NOTE: Error states are in dashboards.css */
+/* This section is for user dashboard specific form styling only */
+
+.form-success {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+    color: var(--success);
+    animation: slideDown 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.form-success::before {
+    content: '✓';
+    flex-shrink: 0;
+    font-weight: bold;
+}
+
 /* ==================== Main Content ==================== */
 .dashboard-main {
     margin-bottom: 3rem;
+    padding-top: 0;
+}
+
+.page-header {
+    margin-bottom: 3rem;
+    animation: slideDown 600ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.page-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--gray-900);
+    margin: 0;
 }
 
 .flash-message {
     margin-bottom: 2.5rem;
+    animation: slideDown 300ms cubic-bezier(0.4, 0, 0.2, 1);
 }
+
+/* NOTE: Base .card styles are in style.css */
+/* NOTE: .card:hover enhancement is in dashboards.css */
+/* NOTE: .card-header, .card-body, .card-footer are in style.css */
+/* NOTE: .alert styles are in dashboards.css */
+/* User dashboard uses these base styles without modification */
 
 /* ==================== Donation Section ==================== */
 .donate-section {
@@ -128,12 +359,30 @@
     border-bottom: 1px solid var(--gray-100);
 }
 
+.donate-section.minimal {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+.donate-section .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2.5rem;
+}
+
 .donate-section h2 {
     font-size: 1.8rem;
     font-weight: 700;
-    margin-bottom: 3rem;
+    margin-bottom: 0;
     color: var(--gray-900);
     margin-top: 0;
+}
+
+.donate-section .section-header h2 {
+    font-size: 1.5rem;
+    margin-bottom: 0;
 }
 
 .donate-section h2 i {
@@ -147,6 +396,93 @@
 .donation-card {
     border: 2px solid var(--primary-100);
     overflow: hidden;
+}
+
+.donation-card-minimal {
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-lg);
+    background: white;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+    max-width: 600px;
+    transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.donation-card-minimal:hover {
+    box-shadow: 0 12px 32px rgba(16, 185, 129, 0.12);
+    border-color: var(--primary-300);
+}
+
+/* Donation Section Wrapper */
+.donate-section-wrapper {
+    margin-bottom: 4rem;
+    padding-bottom: 2rem;
+}
+
+.donation-section-container {
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.donation-section-header {
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.donation-section-header h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--gray-900);
+    margin: 0 0 0.5rem 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+}
+
+.donation-section-header h2 i {
+    color: var(--primary-600);
+    font-size: 1.8rem;
+}
+
+.donation-section-header p {
+    color: var(--gray-600);
+    font-size: 0.95rem;
+    margin: 0;
+}
+
+.donation-card-centered {
+    max-width: 100%;
+}
+
+/* Section Headers */
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-top: 2rem;
+}
+
+.section-header h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--gray-900);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.section-header a {
+    color: var(--primary-600);
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: all 200ms ease;
+}
+
+.section-header a:hover {
+    color: var(--primary-700);
+    transform: translateX(2px);
 }
 
 .donation-card.ngo-card {
@@ -186,6 +522,8 @@
     font-weight: 600;
     display: block;
     margin-bottom: 1rem;
+    font-size: 0.95rem;
+    color: var(--gray-700);
 }
 
 .preset-buttons {
@@ -202,6 +540,11 @@
     grid-template-columns: repeat(3, 1fr);
 }
 
+.preset-buttons.minimal-presets {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.75rem;
+}
+
 .preset {
     background: white;
     border: 2px solid var(--gray-200);
@@ -209,9 +552,10 @@
     border-radius: var(--radius-md);
     cursor: pointer;
     font-weight: 600;
-    transition: all 200ms;
+    transition: all 150ms ease;
     color: var(--gray-700);
     font-size: 0.95rem;
+    position: relative;
 }
 
 .preset:hover {
@@ -224,7 +568,7 @@
     background: var(--primary-600);
     border-color: var(--primary-600);
     color: white;
-    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+    box-shadow: 0 2px 12px rgba(16, 185, 129, 0.25);
 }
 
 .donation-input {
@@ -234,6 +578,15 @@
     font-size: 1rem;
     width: 100%;
     font-family: inherit;
+    transition: all 250ms cubic-bezier(0.4, 0, 0.2, 1);
+    background: white;
+}
+
+.donation-input:focus {
+    border-color: var(--primary-500);
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+    transform: translateY(-1px);
+    outline: none;
 }
 
 .donation-textarea {
@@ -243,6 +596,16 @@
     font-size: 1rem;
     font-family: inherit;
     width: 100%;
+    transition: all 250ms cubic-bezier(0.4, 0, 0.2, 1);
+    background: white;
+    resize: vertical;
+}
+
+.donation-textarea:focus {
+    border-color: var(--primary-500);
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+    transform: translateY(-1px);
+    outline: none;
 }
 
 .donate-btn {
@@ -250,6 +613,44 @@
     font-weight: 600;
     font-size: 1rem;
     width: 100%;
+    transition: all 250ms cubic-bezier(0.4, 0, 0.2, 1);
+    background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
+    color: white;
+    border: none;
+    border-radius: var(--radius-lg);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.donate-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 500ms ease;
+}
+
+.donate-btn:hover {
+    background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
+    box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
+}
+
+.donate-btn:hover::before {
+    left: 100%;
+}
+
+.donate-btn:active {
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+}
+
+.donate-btn-minimal {
+    padding: 1rem;
+    font-weight: 600;
+    font-size: 1rem;
 }
 
 .donate-btn.ngo {
@@ -292,14 +693,13 @@
 
 /* ==================== Partner Cards ==================== */
 .partners-section {
-    margin-bottom: 5rem;
-    padding-bottom: 3rem;
-    border-bottom: 1px solid var(--gray-100);
+    margin-bottom: 3rem;
+    padding-bottom: 2rem;
 }
 
-.partners-section.last {
+.partners-section:last-of-type {
     border-bottom: none;
-    margin-bottom: 3rem;
+    margin-bottom: 2rem;
 }
 
 .partner-cards {
@@ -310,9 +710,14 @@
     border: none;
     box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
     overflow: hidden;
-    transition: all 300ms;
+    transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
     display: flex;
     flex-direction: column;
+}
+
+.partner-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 16px 32px rgba(0, 0, 0, 0.12);
 }
 
 .partner-header {
@@ -488,7 +893,13 @@
     color: #666;
 }
 
-/* ==================== Responsive ==================== */
+/* ==================== Profile Page ==================== */
+.back-to-dashboard {
+    margin-top: 2rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
 @media (max-width: 768px) {
     .grid-4 {
         grid-template-columns: repeat(2, 1fr);
@@ -503,12 +914,20 @@
         font-size: 2rem;
     }
 
+    .dashboard-hero.minimal .hero-text h1 {
+        font-size: 1.5rem;
+    }
+
     .preset-buttons.four-col {
         grid-template-columns: repeat(2, 1fr);
     }
 
     .preset-buttons.three-col {
         grid-template-columns: 1fr;
+    }
+
+    .preset-buttons.minimal-presets {
+        grid-template-columns: repeat(2, 1fr);
     }
 
     .hero-content {
@@ -524,5 +943,17 @@
         flex-direction: column;
         text-align: center;
         gap: 1rem;
+    }
+
+    .stats-minimal {
+        gap: 1rem;
+    }
+
+    .stat-card-user {
+        padding: 1.5rem;
+    }
+
+    .donation-card-minimal {
+        max-width: 100%;
     }
 }

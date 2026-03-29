@@ -20,6 +20,7 @@ $flash = getFlashMessage();
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo APP_NAME; ?> - <?php echo APP_TAGLINE; ?></title>
@@ -38,6 +39,7 @@ $flash = getFlashMessage();
     <link rel="stylesheet" href="assets/css/index-styles.css">
     <link rel="stylesheet" href="assets/css/mobile-responsive.css">
     <link rel="stylesheet" href="assets/css/mobile-advanced.css">
+    <link rel="stylesheet" href="assets/css/micro-interactions.css">
     
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌱</text></svg>">
@@ -593,10 +595,10 @@ $flash = getFlashMessage();
                         efficiently and fight hunger in our communities.
                     </p>
                     <div class="footer-social">
-                        <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
-                        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-                        <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                        <!-- <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a> -->
+                        <a href="https://x.com/foodsaver333" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="https://www.instagram.com/fo0dsaver" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.linkedin.com/in/parthivvala/" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
                     </div>
                 </div>
                 
@@ -707,6 +709,7 @@ $flash = getFlashMessage();
 
     <!-- Scripts -->
     <script src="assets/js/main.js"></script>
+    <script src="assets/js/micro-interactions.js"></script>
     <script>
         function closeContactThankYouModal() {
             const modal = document.getElementById('contactThankYouModal');
@@ -754,6 +757,16 @@ $flash = getFlashMessage();
                 b.classList.remove('active');
             });
         });
+        
+        // Show thank you modal for donations on home page
+        <?php if (isset($_SESSION['show_donation_thank_you'])): ?>
+        document.addEventListener('DOMContentLoaded', function() {
+            const amount = "<?php echo $_SESSION['donation_amount'] ?? '0'; ?>";
+            const transactionId = "<?php echo $_SESSION['donation_transaction_id'] ?? null; ?>";
+            showDonationThankYouModal(parseFloat(amount), transactionId);
+            <?php unset($_SESSION['show_donation_thank_you']); unset($_SESSION['donation_amount']); unset($_SESSION['donation_transaction_id']); ?>
+        });
+        <?php endif; ?>
     </script>
 </body>
 </html>

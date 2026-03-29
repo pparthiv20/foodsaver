@@ -175,6 +175,9 @@ $flash = getFlashMessage();
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/dashboards.css">
+    <link rel="stylesheet" href="../assets/css/micro-interactions.css">
+    <link rel="stylesheet" href="../assets/css/mobile-responsive.css">
 </head>
 <body>
     <div class="dashboard">
@@ -629,5 +632,80 @@ $flash = getFlashMessage();
     </div>
     
     <script src="../assets/js/main.js"></script>
+
+    <!-- Form Validation & Micro-interactions -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const forms = document.querySelectorAll('form');
+
+            forms.forEach(form => {
+                form.addEventListener('submit', function(e) {
+                    clearPreviousErrors();
+                    let isValid = true;
+
+                    const inputs = form.querySelectorAll('input[required], select[required], textarea[required]');
+                    inputs.forEach(input => {
+                        if (!input.value.trim()) {
+                            showFieldError(input, 'This field is required');
+                            isValid = false;
+                        } else {
+                            clearFieldError(input);
+                        }
+                    });
+
+                    if (!isValid) {
+                        e.preventDefault();
+                    }
+                });
+            });
+
+            function showFieldError(field, message) {
+                field.classList.add('error');
+                const existingError = field.parentElement.querySelector('.form-error');
+                if (existingError) existingError.remove();
+
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'form-error';
+                errorDiv.textContent = message;
+                field.parentElement.appendChild(errorDiv);
+            }
+
+            function clearFieldError(field) {
+                field.classList.remove('error');
+                const error = field.parentElement.querySelector('.form-error');
+                if (error) error.remove();
+            }
+
+            function clearPreviousErrors() {
+                document.querySelectorAll('.form-control.error').forEach(el => {
+                    el.classList.remove('error');
+                    const error = el.parentElement.querySelector('.form-error');
+                    if (error) error.remove();
+                });
+            }
+
+            // Form focus animations
+            document.querySelectorAll('input, textarea, select').forEach(field => {
+                field.addEventListener('focus', function() {
+                    this.parentElement.classList.add('focus-visible');
+                });
+                field.addEventListener('blur', function() {
+                    this.parentElement.classList.remove('focus-visible');
+                });
+            });
+
+            // Alert auto-dismiss
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(alert => {
+                setTimeout(() => {
+                    alert.style.opacity = '0';
+                    alert.style.transition = 'opacity 300ms ease';
+                    setTimeout(() => {
+                        alert.style.display = 'none';
+                    }, 300);
+                }, 5000);
+            });
+        });
+    </script>
 </body>
 </html>

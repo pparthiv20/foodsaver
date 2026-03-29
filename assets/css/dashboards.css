@@ -1,0 +1,338 @@
+/**
+ * Food-Saver - Dashboard Extensions Only
+ * DO NOT DUPLICATE base styles from style.css
+ * This file extends and enhances only, no base redefinitions
+ */
+
+/* ==================== ANIMATIONS (only if not in micro-interactions.css) ==================== */
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* ==================== EXTENSIONS: Cards ==================== */
+/* Only add specific hover enhancements, don't redefine base */
+.card {
+    border-color: var(--gray-200);
+}
+
+.card:hover {
+    border-color: var(--gray-300);
+}
+
+/* ==================== EXTENSIONS: Stat Cards ==================== */
+.stat-card {
+    background: white;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    text-align: center;
+    transition: all 200ms ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.stat-card:hover {
+    border-color: var(--primary-300);
+    box-shadow: 0 8px 16px rgba(16, 185, 129, 0.12);
+}
+
+.stat-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+    font-size: 1.5rem;
+    color: white;
+    transition: all 200ms ease;
+}
+
+.stat-card:hover .stat-icon {
+    transform: scale(1.1);
+}
+
+.stat-icon.primary {
+    background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
+}
+
+.stat-icon.secondary {
+    background: linear-gradient(135deg, var(--secondary-500), var(--secondary-600));
+}
+
+.stat-icon.success {
+    background: linear-gradient(135deg, var(--success), #047857);
+}
+
+.stat-icon.info {
+    background: linear-gradient(135deg, #3b82f6, #1e40af);
+}
+
+.stat-icon.warning {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+}
+
+.stat-icon.error {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+}
+
+.stat-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--gray-900);
+    margin-bottom: 0.5rem;
+    animation: fadeInScale 600ms ease;
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    color: var(--gray-600);
+    font-weight: 500;
+}
+
+/* ==================== EXTENSIONS: Form Elements ==================== */
+/* Only add error states and animations, don't redefine base controls */
+.form-control.error {
+    border-color: #ef4444;
+    background: #fef2f2;
+}
+
+.form-control.error:focus {
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+.form-error {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+    color: #ef4444;
+    animation: slideDown 300ms ease;
+}
+
+.form-error::before {
+    content: '⚠️';
+    flex-shrink: 0;
+}
+
+/* ==================== EXTENSIONS: Table Styles ==================== */
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.data-table thead {
+    background: var(--gray-50);
+    border-bottom: 1px solid var(--gray-200);
+}
+
+.data-table th {
+    padding: 1rem;
+    text-align: left;
+    font-weight: 600;
+    color: var(--gray-700);
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.data-table td {
+    padding: 1rem;
+    border-bottom: 1px solid var(--gray-200);
+    color: var(--gray-700);
+}
+
+.data-table tbody tr {
+    transition: all 150ms ease;
+}
+
+.data-table tbody tr:hover {
+    background: var(--primary-50);
+}
+
+/* ==================== EXTENSIONS: Badge & Status ==================== */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.375rem 0.75rem;
+    border-radius: 50px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.badge-primary {
+    background: var(--primary-100);
+    color: var(--primary-700);
+}
+
+.badge-success {
+    background: #dcfce7;
+    color: #047857;
+}
+
+.badge-warning {
+    background: #fef3c7;
+    color: #b45309;
+}
+
+.badge-error {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.badge-info {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+.badge-secondary {
+    background: #fce7f3;
+    color: #be123c;
+}
+
+/* ==================== EXTENSIONS: Action Buttons ==================== */
+.action-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all 150ms ease;
+    font-size: 0.9rem;
+    background: var(--gray-100);
+    color: var(--gray-700);
+}
+
+.action-btn:hover {
+    background: var(--primary-100);
+    color: var(--primary-600);
+    transform: scale(1.05);
+}
+
+.action-btn-danger {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.action-btn-danger:hover {
+    background: #fecaca;
+    color: #7f1d1d;
+}
+
+.action-btn-success {
+    background: #dcfce7;
+    color: #047857;
+}
+
+.action-btn-success:hover {
+    background: #bbf7d0;
+    color: #064e3b;
+}
+
+/* ==================== EXTENSIONS: Utility Classes ==================== */
+.gap-1 { gap: 0.25rem; }
+.gap-2 { gap: 0.5rem; }
+.gap-3 { gap: 1rem; }
+.gap-4 { gap: 1.5rem; }
+.gap-5 { gap: 2rem; }
+
+.mb-1 { margin-bottom: 0.25rem; }
+.mb-2 { margin-bottom: 0.5rem; }
+.mb-3 { margin-bottom: 1rem; }
+.mb-4 { margin-bottom: 1.5rem; }
+.mb-5 { margin-bottom: 2rem; }
+
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+.text-left { text-align: left; }
+
+.flex {
+    display: flex;
+}
+
+.flex-col {
+    flex-direction: column;
+}
+
+.flex-wrap {
+    flex-wrap: wrap;
+}
+
+.items-center {
+    align-items: center;
+}
+
+.justify-between {
+    justify-content: space-between;
+}
+
+.justify-end {
+    justify-content: flex-end;
+}
+
+.grid {
+    display: grid;
+}
+
+.grid-2 {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+}
+
+.grid-3 {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+}
+
+.grid-4 {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+}
+
+/* ==================== RESPONSIVE ==================== */
+@media (max-width: 1024px) {
+    .grid-4 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .grid-2,
+    .grid-3,
+    .grid-4 {
+        grid-template-columns: 1fr;
+    }
+
+    .data-table {
+        font-size: 0.85rem;
+    }
+
+    .data-table th,
+    .data-table td {
+        padding: 0.75rem;
+    }
+}

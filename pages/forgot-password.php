@@ -110,13 +110,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         $_SESSION['reset_type'] = $userType;
                         $_SESSION['reset_otp'] = $otp; // For testing only
                         $_SESSION['reset_otp_expiry'] = $expiry;
-                        
+
                         if ($emailSent) {
                             $success = "OTP sent to $email. Valid for 5 minutes.";
                         } else {
                             $success = "OTP generated. Check your email within 5 minutes.";
                         }
-                        $step = 2;
+
+                        // DEVELOPMENT MODE: Skip OTP verification
+                        if (DEVELOPMENT_MODE) {
+                            $_SESSION['reset_step'] = 3;
+                            $success = "[Dev Mode] OTP verification skipped. Enter your new password.";
+                            $step = 3;
+                        } else {
+                            $step = 2;
+                        }
                     } else {
                         $error = 'Email not found. Please check and try again.';
                     }

@@ -52,6 +52,11 @@ try {
     
     logActivity($_SESSION['user_id'], $_SESSION['user_type'], 'make_donation', 'Donated ₹' . $amount);
     
+    // Set session variables for thank you modal
+    $_SESSION['show_donation_thank_you'] = true;
+    $_SESSION['donation_amount'] = $amount;
+    $_SESSION['donation_transaction_id'] = $transactionId;
+    
     setFlashMessage('success', 'Thank you for your donation of ₹' . number_format($amount, 2) . '! Your transaction ID is ' . $transactionId);
     
     // Redirect based on user type

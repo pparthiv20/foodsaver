@@ -1,0 +1,718 @@
+/**
+ * Food-Saver - Micro Interactions & Animations CSS
+ * Beautiful animations and visual feedback throughout the application
+ */
+
+/* ==================== KEYFRAME ANIMATIONS ==================== */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.1);
+        opacity: 0.7;
+    }
+}
+
+@keyframes heartBeat {
+    0%, 100% {
+        transform: scale(1);
+    }
+    14% {
+        transform: scale(1.3);
+    }
+    28% {
+        transform: scale(1);
+    }
+    42% {
+        transform: scale(1.3);
+    }
+    70% {
+        transform: scale(1);
+    }
+}
+
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: -1000px 0;
+    }
+    100% {
+        background-position: 1000px 0;
+    }
+}
+
+@keyframes ripple {
+    to {
+        transform: circle(500px);
+        opacity: 0;
+    }
+}
+
+@keyframes confettiFall {
+    to {
+        transform: translateY(100vh) rotate(900deg);
+        opacity: 0;
+    }
+}
+
+@keyframes scaleInCenter {
+    0% {
+        transform: scale(0);
+        opacity: 0;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes slideUpModal {
+    from {
+        opacity: 0;
+        transform: translateY(40px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeOutDown {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+}
+
+@keyframes shake {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    10%, 30%, 50%, 70%, 90% {
+        transform: translateX(-5px);
+    }
+    20%, 40%, 60%, 80% {
+        transform: translateX(5px);
+    }
+}
+
+/* ==================== BUTTON INTERACTIONS ==================== */
+.btn {
+    position: relative;
+    overflow: hidden;
+    transition: all 200ms ease;
+    will-change: box-shadow;
+}
+
+.btn:hover {
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+.btn:active {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.btn-ripple {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.6);
+    transform: scale(0);
+    animation: ripple 600ms ease-out;
+    pointer-events: none;
+}
+
+.btn.loading {
+    pointer-events: none;
+    opacity: 0.7;
+}
+
+/* Primary button special effects */
+.btn-primary {
+    background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
+    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+    position: relative;
+    overflow: visible;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
+    box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+}
+
+.btn-primary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 500ms ease;
+}
+
+.btn-primary:hover::before {
+    left: 100%;
+}
+
+/* ==================== FORM INTERACTIONS ==================== */
+.form-group {
+    transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.form-control {
+    transition: all 250ms cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+}
+
+.form-control:focus {
+    border-color: var(--primary-500);
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+    transform: translateY(-1px);
+}
+
+.form-control::placeholder {
+    transition: opacity 300ms ease;
+}
+
+.form-control:focus::placeholder {
+    opacity: 0.6;
+}
+
+.form-focused {
+    animation: slideInRight 300ms ease;
+}
+
+.form-focused .form-label {
+    color: var(--primary-600);
+    font-weight: 600;
+}
+
+/* Error state animation */
+.form-control.error {
+    border-color: var(--error-500);
+    animation: shake 400ms ease;
+}
+
+.form-error {
+    color: var(--error-500);
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+    animation: fadeInUp 300ms ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.form-error::before {
+    content: '⚠️';
+    font-size: 1rem;
+}
+
+/* ==================== CARD INTERACTIONS ==================== */
+.card {
+    transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform, box-shadow;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+.card.animate-in {
+    animation: fadeInUp 600ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ==================== DONATION THANK YOU MODAL ==================== */
+.donation-thank-you-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    padding: 1rem;
+    animation: fadeInUp 300ms ease;
+    backdrop-filter: blur(4px);
+}
+
+.donation-thank-you-modal.fade-out {
+    animation: fadeOutDown 300ms ease forwards;
+}
+
+.donation-thank-you-content {
+    background: white;
+    border-radius: 16px;
+    max-width: 600px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+    animation: slideUpModal 400ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.donation-thank-you-header {
+    padding: 1rem;
+    border-bottom: 1px solid #f0f0f0;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.modal-close-btn {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #9CA3AF;
+    transition: color 200ms ease;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    transition: all 200ms ease;
+}
+
+.modal-close-btn:hover {
+    background: #f3f4f6;
+    color: #374151;
+}
+
+.donation-thank-you-body {
+    padding: 2rem;
+}
+
+/* Celebration Icon */
+.thank-you-celebration {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.celebration-icon {
+    display: inline-block;
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    animation: heartBeat 1.2s ease-in-out;
+}
+
+.celebration-icon i.pulse {
+    animation: pulse 1.5s ease-in-out infinite;
+    color: #EF4444;
+}
+
+.thank-you-title {
+    font-size: 1.875rem;
+    font-weight: 700;
+    color: #1f2937;
+    text-align: center;
+    margin: 0 0 1.5rem 0;
+    animation: slideInDown 500ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Donation Details */
+.donation-details {
+    background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.detail-row:last-child {
+    margin-bottom: 0;
+}
+
+.detail-label {
+    color: #6b7280;
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.detail-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #10b981;
+    animation: slideInRight 600ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.detail-id {
+    font-size: 0.875rem;
+    font-weight: 500;
+    font-family: 'Courier New', monospace;
+    letter-spacing: 1px;
+    cursor: pointer;
+}
+
+.detail-id:hover {
+    text-decoration: underline;
+}
+
+/* Thank You Message */
+.thank-you-message {
+    background: #f3f4f6;
+    border-left: 4px solid #10b981;
+    padding: 1.25rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+}
+
+.thank-you-message p {
+    margin: 0;
+    color: #374151;
+    line-height: 1.6;
+    font-size: 0.95rem;
+}
+
+/* Impact Stats */
+.thank-you-impact {
+    margin-bottom: 1.5rem;
+}
+
+.thank-you-impact h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin: 0 0 1rem 0;
+}
+
+.impact-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+}
+
+.impact-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem;
+    background: #f9fafb;
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+    transition: all 250ms ease;
+}
+
+.impact-item:hover {
+    background: #f0fdf4;
+    border-color: #10b981;
+    transform: translateY(-2px);
+}
+
+.impact-item i {
+    font-size: 1.5rem;
+    color: #10b981;
+}
+
+.impact-number {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: #1f2937;
+}
+
+.impact-text {
+    font-size: 0.75rem;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Actions */
+.thank-you-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.thank-you-actions .btn {
+    padding: 0.875rem 1rem;
+    font-weight: 600;
+    text-align: center;
+}
+
+/* Newsletter */
+.thank-you-newsletter {
+    background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+    border-radius: 8px;
+    padding: 1.25rem;
+    text-align: center;
+    border: 1px solid #bfdbfe;
+}
+
+.thank-you-newsletter p {
+    margin: 0 0 1rem 0;
+    color: #1e40af;
+    font-weight: 500;
+    font-size: 0.875rem;
+}
+
+/* ==================== CONFETTI ==================== */
+.confetti {
+    position: fixed;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9998;
+}
+
+/* ==================== NOTIFICATIONS ==================== */
+.notification {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    max-width: 400px;
+    background: white;
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    z-index: 9000;
+    animation: slideInRight 300ms ease;
+    opacity: 0;
+    transform: translateX(400px);
+    transition: all 250ms ease;
+}
+
+.notification.show {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.notification-content {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex: 1;
+    color: #374151;
+    font-weight: 500;
+}
+
+.notification-success {
+    border-left: 4px solid #10b981;
+    background: #f0fdf4;
+}
+
+.notification-success .notification-content {
+    color: #047857;
+}
+
+.notification-success i {
+    color: #10b981;
+}
+
+.notification-error {
+    border-left: 4px solid #ef4444;
+    background: #fef2f2;
+}
+
+.notification-error .notification-content {
+    color: #991b1b;
+}
+
+.notification-error i {
+    color: #ef4444;
+}
+
+.notification-warning {
+    border-left: 4px solid #f59e0b;
+    background: #fffbeb;
+}
+
+.notification-warning .notification-content {
+    color: #b45309;
+}
+
+.notification-warning i {
+    color: #f59e0b;
+}
+
+.notification-info {
+    border-left: 4px solid #3b82f6;
+    background: #eff6ff;
+}
+
+.notification-info .notification-content {
+    color: #1e40af;
+}
+
+.notification-info i {
+    color: #3b82f6;
+}
+
+.notification-close {
+    background: none;
+    border: none;
+    color: #9ca3af;
+    font-size: 1.25rem;
+    cursor: pointer;
+    transition: color 200ms ease;
+    padding: 0;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.notification-close:hover {
+    color: #6b7280;
+}
+
+/* ==================== SCROLL TO TOP BUTTON ==================== */
+.scroll-to-top-btn {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
+    color: white;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
+    transition: all 250ms cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 999;
+    animation: slideInRight 300ms ease;
+}
+
+.scroll-to-top-btn:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 30px rgba(16, 185, 129, 0.4);
+}
+
+.scroll-to-top-btn:active {
+    transform: translateY(-2px);
+}
+
+/* ==================== RESPONSIVE ==================== */
+@media (max-width: 768px) {
+    .donation-thank-you-body {
+        padding: 1.5rem;
+    }
+    
+    .thank-you-title {
+        font-size: 1.5rem;
+    }
+    
+    .impact-stats {
+        grid-template-columns: 1fr;
+    }
+    
+    .thank-you-actions {
+        grid-template-columns: 1fr;
+    }
+    
+    .notification {
+        left: 1rem;
+        right: 1rem;
+        max-width: none;
+    }
+    
+    .scroll-to-top-btn {
+        bottom: 1rem;
+        right: 1rem;
+    }
+}
+
+/* ==================== DARK MODE SUPPORT ==================== */
+@media (prefers-color-scheme: dark) {
+    .donation-thank-you-content {
+        background: #1f2937;
+        color: #f3f4f6;
+    }
+    
+    .thank-you-title {
+        color: #f3f4f6;
+    }
+    
+    .modal-close-btn {
+        color: #9ca3af;
+    }
+    
+    .modal-close-btn:hover {
+        background: #374151;
+        color: #f3f4f6;
+    }
+    
+    .thank-you-message {
+        background: #374151;
+        color: #e5e7eb;
+    }
+    
+    .detail-label {
+        color: #d1d5db;
+    }
+    
+    .notification {
+        background: #1f2937;
+    }
+}

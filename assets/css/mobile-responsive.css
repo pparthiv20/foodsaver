@@ -1,0 +1,923 @@
+/**
+ * Food-Saver - Mobile Responsive Styles
+ * Optimized for mobile devices (320px - 768px)
+ * Does NOT affect desktop/laptop screens
+ */
+
+/* ==================== MOBILE VIEWPORT SETTINGS ==================== */
+@media (max-width: 768px) {
+    /* Global Mobile Settings */
+    * {
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+        font-size: 14px;
+        line-height: 1.5;
+    }
+
+    /* ==================== SPACING & PADDING ==================== */
+    .container {
+        padding: 0 1rem;
+    }
+
+    .container-narrow {
+        padding: 0 1rem;
+    }
+
+    /* ==================== TYPOGRAPHY ==================== */
+    h1 {
+        font-size: 1.75rem;
+        margin-bottom: 0.75rem;
+    }
+
+    h2 {
+        font-size: 1.5rem;
+        margin-bottom: 0.75rem;
+    }
+
+    h3 {
+        font-size: 1.25rem;
+        margin-bottom: 0.5rem;
+    }
+
+    h4 {
+        font-size: 1.1rem;
+        margin-bottom: 0.5rem;
+    }
+
+    h5, h6 {
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
+    }
+
+    p {
+        font-size: 0.95rem;
+        margin-bottom: 1rem;
+    }
+
+    small {
+        font-size: 0.8rem;
+    }
+
+    /* ==================== NAVIGATION ==================== */
+    .navbar {
+        padding: 0;
+    }
+
+    .navbar-inner {
+        height: 60px;
+        padding: 0 1rem;
+    }
+
+    .logo {
+        font-size: 1.25rem;
+        gap: 0.5rem;
+    }
+
+    .logo-icon {
+        width: 36px;
+        height: 36px;
+        font-size: 1.1rem;
+    }
+
+    .nav-links {
+        display: none;
+    }
+
+    .mobile-menu-btn {
+        display: flex !important;
+    }
+
+    .user-badge {
+        padding: 0.4rem 0.75rem;
+        font-size: 0.85rem;
+        gap: 0.25rem;
+    }
+
+    .user-badge i:last-child {
+        font-size: 0.7rem;
+    }
+
+    .user-dropdown {
+        min-width: 160px;
+        right: -1rem;
+    }
+
+    .dropdown-item {
+        padding: 0.65rem 0.75rem;
+        font-size: 0.9rem;
+        gap: 0.5rem;
+    }
+
+    /* ==================== HERO SECTION ==================== */
+    .dashboard-hero {
+        padding: 2rem 0 1.5rem 0;
+        margin-bottom: 1.5rem;
+    }
+
+    .dashboard-hero.minimal {
+        padding: 1.5rem 0;
+    }
+
+    .hero-content {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+    }
+
+    .hero-text h1 {
+        font-size: 1.75rem;
+        margin-bottom: 0.5rem;
+        letter-spacing: -0.3px;
+    }
+
+    .hero-text p {
+        font-size: 0.95rem;
+        margin-bottom: 0;
+    }
+
+    .hero-emoji {
+        font-size: 2.5rem;
+        opacity: 0.15;
+    }
+
+    /* ==================== STATS SECTION ==================== */
+    .stats-container {
+        margin-bottom: 2rem;
+    }
+
+    .stats-container.minimal {
+        margin-bottom: 1.5rem;
+    }
+
+    .grid.grid-4,
+    .grid.grid-3,
+    .grid.grid-2 {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .stat-card-user {
+        padding: 1.5rem 1rem;
+        border-top: 3px solid var(--primary-600);
+        margin: 0;
+    }
+
+    .stats-minimal .stat-card-user {
+        padding: 1.25rem 1rem;
+    }
+
+    .stat-value {
+        font-size: 1.75rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+        font-size: 0.85rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .stat-description {
+        font-size: 0.8rem;
+    }
+
+    /* ==================== MAIN CONTENT ==================== */
+    .dashboard-main {
+        margin-bottom: 2rem;
+        padding-top: 0;
+    }
+
+    .page-header {
+        margin-bottom: 1.5rem;
+    }
+
+    .page-title {
+        font-size: 1.5rem;
+    }
+
+    .flash-message {
+        margin-bottom: 1.5rem;
+        padding: 0.9rem 1rem;
+        font-size: 0.9rem;
+    }
+
+    .alert {
+        padding: 0.85rem 1rem;
+        gap: 0.5rem;
+        font-size: 0.9rem;
+    }
+
+    .alert i {
+        font-size: 1.1rem;
+    }
+
+    /* ==================== CARDS ==================== */
+    .card {
+        border-radius: 12px;
+        overflow: hidden;
+        margin-bottom: 1.5rem;
+    }
+
+    .card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-header {
+        padding: 1.25rem 1rem;
+        border-bottom: 1px solid var(--gray-200);
+    }
+
+    .card-header h3 {
+        font-size: 1.1rem;
+        margin: 0;
+    }
+
+    .card-body {
+        padding: 1.5rem 1rem;
+    }
+
+    .card-footer {
+        padding: 1.25rem 1rem;
+    }
+
+    /* ==================== BUTTONS ==================== */
+    .btn {
+        padding: 0.65rem 1.25rem;
+        font-size: 0.95rem;
+        gap: 0.5rem;
+        min-height: 44px;
+        min-width: 44px;
+        border-radius: 10px;
+        transition: all 200ms ease;
+    }
+
+    .btn:active {
+        transform: scale(0.98);
+    }
+
+    .btn-primary {
+        padding: 0.7rem 1.5rem;
+    }
+
+    .btn-sm {
+        padding: 0.5rem 1rem;
+        font-size: 0.8rem;
+        min-height: 36px;
+    }
+
+    .btn-lg {
+        padding: 0.8rem 1.75rem;
+        font-size: 1rem;
+    }
+
+    .btn-block {
+        width: 100%;
+        display: block;
+        margin-bottom: 0.75rem;
+    }
+
+    .btn i {
+        font-size: 0.95rem;
+    }
+
+    /* ==================== FORMS ==================== */
+    .form-group {
+        margin-bottom: 1.25rem;
+    }
+
+    .form-label {
+        font-size: 0.9rem;
+        margin-bottom: 0.4rem;
+    }
+
+    .form-control,
+    select.form-control,
+    textarea.form-control {
+        padding: 0.7rem 1rem;
+        font-size: 16px;
+        border-radius: 8px;
+        min-height: 44px;
+    }
+
+    textarea.form-control {
+        min-height: 100px;
+        font-size: 14px;
+    }
+
+    .form-control:focus {
+        transform: translateY(0);
+    }
+
+    .form-error {
+        font-size: 0.8rem;
+        margin-top: 0.4rem;
+    }
+
+    /* ==================== DONATION SECTION ==================== */
+    .donate-section-wrapper {
+        margin-bottom: 3rem;
+    }
+
+    .donate-section-container {
+        max-width: 100%;
+        margin: 0 auto;
+    }
+
+    .donation-section-header {
+        text-align: center;
+        margin-bottom: 1.5rem;
+    }
+
+    .donation-section-header h2 {
+        font-size: 1.4rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .donation-section-header p {
+        font-size: 0.9rem;
+        color: var(--gray-600);
+        margin-bottom: 0;
+    }
+
+    .donation-card-centered {
+        max-width: 100%;
+    }
+
+    .card-body {
+        padding: 1.25rem;
+    }
+
+    .donation-form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .donation-form-label {
+        font-size: 0.9rem;
+        margin-bottom: 0.75rem;
+        font-weight: 600;
+    }
+
+    .preset-buttons {
+        gap: 0.75rem;
+        margin-bottom: 1rem;
+    }
+
+    .preset-buttons.four-col {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .preset-buttons.three-col {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .preset-buttons.minimal-presets {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
+    }
+
+    .preset {
+        padding: 0.75rem 0.5rem;
+        font-size: 0.85rem;
+        font-weight: 600;
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .donation-input {
+        padding: 0.7rem 1rem;
+        font-size: 16px;
+        min-height: 44px;
+    }
+
+    .donation-textarea {
+        padding: 0.7rem 1rem;
+        font-size: 14px;
+        min-height: 100px;
+    }
+
+    .donate-btn-minimal {
+        padding: 0.75rem 1rem;
+        font-size: 0.95rem;
+        min-height: 48px;
+        width: 100%;
+    }
+
+    /* ==================== PARTNER CARDS SECTION ==================== */
+    .partners-section {
+        margin-bottom: 3rem;
+    }
+
+    .section-header {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .section-header h2 {
+        font-size: 1.3rem;
+        margin-bottom: 0;
+    }
+
+    .section-header a {
+        font-size: 0.9rem;
+    }
+
+    .partner-cards {
+        grid-template-columns: 1fr;
+        gap: 1.25rem;
+    }
+
+    .partner-card {
+        margin-bottom: 0;
+    }
+
+    .partner-header {
+        padding: 1.25rem 1rem;
+        text-align: center;
+    }
+
+    .partner-emoji {
+        font-size: 2.5rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .partner-name {
+        font-size: 1.1rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .partner-location {
+        font-size: 0.85rem;
+    }
+
+    .partner-body {
+        padding: 1rem;
+    }
+
+    .partner-description {
+        font-size: 0.85rem;
+        margin-bottom: 1rem;
+        line-height: 1.4;
+    }
+
+    .partner-stats {
+        gap: 0.75rem;
+        margin-bottom: 1rem;
+    }
+
+    .partner-stats.two-col {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .stat-box {
+        padding: 0.75rem;
+        text-align: center;
+    }
+
+    .stat-number {
+        font-size: 1.25rem;
+        font-weight: 700;
+    }
+
+    .stat-text {
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+    }
+
+    .partner-contact {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.65rem 1rem;
+        background: var(--primary-50);
+        border: 1px solid var(--primary-200);
+        color: var(--primary-600);
+        border-radius: 8px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        transition: all 200ms ease;
+        text-decoration: none;
+        width: 100%;
+        justify-content: center;
+    }
+
+    .partner-contact:hover {
+        background: var(--primary-100);
+        border-color: var(--primary-300);
+        color: var(--primary-700);
+    }
+
+    .partner-contact.restaurant {
+        background: #fef3c7;
+        border-color: #fcd34d;
+        color: #b45309;
+    }
+
+    .partner-contact.restaurant:hover {
+        background: #fde68a;
+        border-color: #fbbf24;
+        color: #92400e;
+    }
+
+    /* ==================== FOOTER ==================== */
+    .dashboard-footer {
+        margin-top: 3rem;
+        padding: 2rem 0 1rem 0;
+    }
+
+    .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+        text-align: center;
+    }
+
+    .footer-section h4 {
+        font-size: 1rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .footer-section p {
+        font-size: 0.85rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .footer-links {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .footer-links li {
+        margin-bottom: 0.4rem;
+    }
+
+    .footer-links a {
+        font-size: 0.85rem;
+    }
+
+    .footer-divider {
+        margin: 1.5rem 0;
+    }
+
+    .footer-copyright {
+        font-size: 0.8rem;
+        padding: 0 1rem 1rem 1rem;
+        text-align: center;
+    }
+
+    /* ==================== PROFILE PAGE ==================== */
+    .profile-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .back-to-dashboard {
+        width: 100%;
+        justify-content: center;
+        margin-top: 1.5rem;
+    }
+
+    /* ==================== TABLE STYLES ==================== */
+    .data-table {
+        font-size: 0.85rem;
+    }
+
+    .data-table th {
+        padding: 0.75rem 0.5rem;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+    }
+
+    .data-table td {
+        padding: 0.75rem 0.5rem;
+    }
+
+    /* ==================== MICRO-INTERACTIONS ==================== */
+    .fade-in-scale {
+        animation-duration: 500ms;
+    }
+
+    .slide-down {
+        animation-duration: 250ms;
+    }
+
+    /* ==================== MODALS & OVERLAYS ==================== */
+    .modal-overlay {
+        padding: 1rem;
+    }
+
+    .modal-content {
+        width: 95%;
+        max-width: 100%;
+        border-radius: 16px;
+        max-height: 90vh;
+    }
+
+    .modal-close-btn {
+        width: 36px;
+        height: 36px;
+        font-size: 1.25rem;
+    }
+
+    /* ==================== UTILITY CLASSES ==================== */
+    .hide-mobile {
+        display: none !important;
+    }
+
+    .show-mobile {
+        display: block !important;
+    }
+
+    .text-center-mobile {
+        text-align: center;
+    }
+
+    .margin-0-mobile {
+        margin: 0 !important;
+    }
+
+    .padding-reduced {
+        padding: 0.75rem !important;
+    }
+}
+
+/* ==================== TABLET ADJUSTMENTS (569px - 768px) ==================== */
+@media (min-width: 569px) and (max-width: 768px) {
+    .grid-4 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .grid-3 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .partner-cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .preset-buttons.four-col {
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    .preset-buttons.three-col {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    h1 {
+        font-size: 2rem;
+    }
+
+    h2 {
+        font-size: 1.75rem;
+    }
+
+    .stat-value {
+        font-size: 2rem;
+    }
+}
+
+/* ==================== SMALL PHONES (320px - 480px) ==================== */
+@media (max-width: 480px) {
+    .container {
+        padding: 0 0.75rem;
+    }
+
+    h1 {
+        font-size: 1.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    h2 {
+        font-size: 1.3rem;
+        margin-bottom: 0.5rem;
+    }
+
+    h3 {
+        font-size: 1.1rem;
+    }
+
+    p {
+        font-size: 0.9rem;
+    }
+
+    .navbar-inner {
+        height: 56px;
+        padding: 0 0.75rem;
+    }
+
+    .logo {
+        font-size: 1.1rem;
+    }
+
+    .logo-icon {
+        width: 32px;
+        height: 32px;
+    }
+
+    .user-badge {
+        padding: 0.35rem 0.5rem;
+        font-size: 0.8rem;
+    }
+
+    .dashboard-hero {
+        padding: 1.5rem 0 1rem 0;
+        margin-bottom: 1rem;
+    }
+
+    .hero-text h1 {
+        font-size: 1.5rem;
+        margin-bottom: 0.4rem;
+    }
+
+    .hero-text p {
+        font-size: 0.85rem;
+    }
+
+    .stat-card-user {
+        padding: 1.25rem 0.75rem;
+    }
+
+    .stat-value {
+        font-size: 1.5rem;
+        margin-bottom: 0.4rem;
+    }
+
+    .stat-label {
+        font-size: 0.8rem;
+    }
+
+    .card-body {
+        padding: 1.25rem 0.85rem;
+    }
+
+    .btn {
+        padding: 0.6rem 1rem;
+        font-size: 0.9rem;
+        min-height: 40px;
+    }
+
+    .form-control {
+        padding: 0.6rem 0.85rem;
+        font-size: 14px;
+        min-height: 40px;
+    }
+
+    .preset {
+        padding: 0.65rem 0.4rem;
+        font-size: 0.8rem;
+        min-height: 40px;
+    }
+
+    .preset-buttons.minimal-presets {
+        gap: 0.5rem;
+    }
+
+    .donation-input {
+        padding: 0.6rem 0.85rem;
+        font-size: 14px;
+    }
+
+    .partner-contact {
+        padding: 0.6rem 0.85rem;
+        font-size: 0.85rem;
+    }
+
+    .section-header {
+        gap: 0.75rem;
+        margin-bottom: 1rem;
+    }
+
+    .partners-section {
+        margin-bottom: 2rem;
+    }
+
+    .dashboard-footer {
+        margin-top: 2rem;
+        padding: 1.5rem 0 1rem 0;
+    }
+
+    .footer-grid {
+        gap: 1.5rem;
+    }
+}
+
+/* ==================== EXTRA LARGE PHONES (481px - 568px) ==================== */
+@media (min-width: 481px) and (max-width: 568px) {
+    .stat-value {
+        font-size: 1.6rem;
+    }
+
+    .preset-buttons.four-col {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .hero-text h1 {
+        font-size: 1.6rem;
+    }
+}
+
+/* ==================== LANDSCAPE MODE ==================== */
+@media (max-height: 500px) and (orientation: landscape) {
+    .dashboard-hero {
+        padding: 1rem 0;
+        margin-bottom: 0.75rem;
+    }
+
+    .hero-text h1 {
+        font-size: 1.4rem;
+        margin-bottom: 0.25rem;
+    }
+
+    .hero-text p {
+        font-size: 0.8rem;
+        margin-bottom: 0;
+    }
+
+    .stats-container {
+        margin-bottom: 1rem;
+    }
+
+    .stat-card-user {
+        padding: 1rem 0.75rem;
+    }
+
+    .stat-value {
+        font-size: 1.4rem;
+        margin-bottom: 0.25rem;
+    }
+
+    .stat-label {
+        font-size: 0.8rem;
+    }
+
+    .dashboard-main {
+        margin-bottom: 1rem;
+    }
+
+    .navbar-inner {
+        height: 50px;
+    }
+}
+
+/* ==================== TOUCH DEVICE ADJUSTMENTS ==================== */
+@media (hover: none) and (pointer: coarse) {
+    .btn:hover {
+        transform: none;
+    }
+
+    .btn:active {
+        transform: scale(0.98);
+    }
+
+    .card:hover {
+        transform: none;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .preset:hover {
+        transform: none;
+    }
+
+    .preset:active {
+        transform: scale(0.95);
+    }
+
+    /* Increase touch targets for mobile */
+    .btn,
+    .form-control,
+    .preset,
+    .dropdown-item {
+        min-height: 44px;
+        min-width: 44px;
+    }
+
+    /* Add active state feedback for touch */
+    .btn,
+    .preset,
+    .dropdown-item {
+        -webkit-touch-callout: none;
+        user-select: none;
+    }
+}
+
+/* ==================== PRINT MEDIA ==================== */
+@media print {
+    .navbar,
+    .dashboard-footer,
+    .btn-block,
+    .donate-btn-minimal {
+        display: none !important;
+    }
+
+    .card {
+        page-break-inside: avoid;
+        box-shadow: none;
+        border: 1px solid var(--gray-300);
+    }
+}

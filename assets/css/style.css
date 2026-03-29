@@ -391,7 +391,6 @@ p {
 .btn-primary:hover {
     background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
     color: white;
-    transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
 }
 
@@ -404,7 +403,6 @@ p {
 .btn-secondary:hover {
     background: linear-gradient(135deg, var(--secondary-600), var(--secondary-700));
     color: white;
-    transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4);
 }
 
@@ -416,8 +414,8 @@ p {
 
 .btn-outline:hover {
     background: var(--primary-50);
-    border-color: var(--primary-500);
     color: var(--primary-700);
+    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.2);
 }
 
 .btn-ghost {
@@ -438,7 +436,6 @@ p {
 
 .btn-white:hover {
     background: var(--gray-50);
-    transform: translateY(-2px);
     box-shadow: var(--shadow-lg);
 }
 

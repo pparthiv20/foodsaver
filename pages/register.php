@@ -158,12 +158,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 } else {
                     // Generate OTP
                     $otp = generateOTP();
-                    
+
                     // Store OTP
                     $expiresAt = date('Y-m-d H:i:s', strtotime('+10 minutes'));
                     $stmt = $db->prepare("INSERT INTO otp_verifications (email, otp, purpose, expires_at) VALUES (?, ?, 'registration', ?)");
                     $stmt->execute([$email, $otp, $expiresAt]);
-                    
+
                     // Store registration data in session
                     $_SESSION['pending_registration'] = [
                         'user_type' => $userType,
@@ -186,15 +186,84 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         'description' => sanitizeInput($_POST['description'] ?? ''),
                         'service_areas' => sanitizeInput($_POST['service_areas'] ?? '')
                     ];
-                    
+
                     $_SESSION['otp_email'] = $email;
-                    
-                    // Send OTP email (placeholder)
-                    // sendEmail($email, 'Verify Your Email - Food-Saver', "Your OTP is: {$otp}");
-                    
-                    // For demo, show OTP in success message
-                    $success = "OTP sent to your email. For demo, use OTP: {$otp}";
-                    $step = 2;
+
+                    // DEVELOPMENT MODE: Skip OTP verification
+                    if (DEVELOPMENT_MODE) {
+                        // Auto-verify and complete registration in development
+                        $userData = $_SESSION['pending_registration'];
+
+                        try {
+                            if ($userData['user_type'] === 'restaurant') {
+                                $stmt = $db->prepare("INSERT INTO restaurants (username, email, password, restaurant_name, owner_name, phone, address, city, state, pincode, cuisine_type, license_number, description) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                                $stmt->execute([
+                                    $userData['username'],
+                                    $userData['email'],
+                                    $userData['password'],
+                                    $userData['restaurant_name'],
+                                    $userData['owner_name'],
+                                    $userData['phone'],
+                                    $userData['address'],
+                                    $userData['city'],
+                                    $userData['state'],
+                                    $userData['pincode'],
+                                    $userData['cuisine_type'] ?? null,
+                                    $userData['license_number'] ?? null,
+                                    $userData['description'] ?? null
+                                ]);
+                            } elseif ($userData['user_type'] === 'ngo') {
+                                $stmt = $db->prepare("INSERT INTO ngos (username, email, password, ngo_name, registration_number, contact_person, phone, email_contact, address, city, state, pincode, description, service_areas) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                                $stmt->execute([
+                                    $userData['username'],
+                                    $userData['email'],
+                                    $userData['password'],
+                                    $userData['ngo_name'],
+                                    $userData['registration_number'],
+                                    $userData['contact_person'],
+                                    $userData['phone'],
+                                    $userData['email'],
+                                    $userData['address'],
+                                    $userData['city'],
+                                    $userData['state'],
+                                    $userData['pincode'],
+                                    $userData['description'] ?? null,
+                                    $userData['service_areas'] ?? null
+                                ]);
+                            } else {
+                                $stmt = $db->prepare("INSERT INTO users (username, email, password, full_name, phone, address, city, state) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+                                $stmt->execute([
+                                    $userData['username'],
+                                    $userData['email'],
+                                    $userData['password'],
+                                    $userData['full_name'],
+                                    $userData['phone'] ?? null,
+                                    $userData['address'] ?? null,
+                                    $userData['city'] ?? null,
+                                    $userData['state'] ?? null
+                                ]);
+                            }
+
+                            // Clear session data
+                            unset($_SESSION['pending_registration']);
+                            unset($_SESSION['otp_email']);
+
+                            setFlashMessage('success', '[Dev Mode] Registration successful! OTP verification skipped. Please login to continue.');
+                            header('Location: ' . APP_URL . '/pages/login.php?type=' . $userData['user_type']);
+                            exit;
+
+                        } catch (PDOException $e) {
+                            $error = 'Registration failed. Please try again. Error: ' . $e->getMessage();
+                        }
+                    } else {
+                        // PRODUCTION MODE: Show OTP verification step
+                        // Send OTP email (placeholder)
+                        // sendEmail($email, 'Verify Your Email - Food-Saver', "Your OTP is: {$otp}");
+
+                        // For demo, show OTP in success message
+                        $success = "OTP sent to your email. For demo, use OTP: {$otp}";
+                        $step = 2;
+                    }
                 }
             }
         }
@@ -218,6 +287,7 @@ function isValidEmail($email) {
     <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="stylesheet" href="../assets/css/mobile-responsive.css">
     <link rel="stylesheet" href="../assets/css/mobile-advanced.css">
+    <link rel="stylesheet" href="../assets/css/micro-interactions.css">
     <style>
         .auth-page {
             min-height: 100vh;
@@ -349,6 +419,84 @@ function isValidEmail($email) {
         .role-option h4 {
             font-size: 0.875rem;
             margin: 0;
+        }
+        
+        /* OAuth Styling */
+        .oauth-divider {
+            display: flex;
+            align-items: center;
+            margin: var(--space-lg) 0;
+            gap: var(--space-md);
+        }
+        
+        .oauth-divider::before,
+        .oauth-divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--gray-200);
+        }
+        
+        .oauth-divider span {
+            font-size: 0.875rem;
+            color: var(--gray-500);
+            font-weight: 500;
+        }
+        
+        .oauth-buttons {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--space-md);
+            margin-bottom: var(--space-lg);
+        }
+        
+        .oauth-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-sm);
+            padding: var(--space-md) var(--space-lg);
+            border: 2px solid var(--gray-200);
+            border-radius: var(--radius-lg);
+            background: white;
+            color: var(--gray-700);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.875rem;
+            transition: all var(--transition-fast);
+            cursor: pointer;
+        }
+        
+        .oauth-btn:hover {
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.15);
+        }
+
+        .oauth-btn span {
+            font-size: 0.875rem;
+        }
+
+        .oauth-icon {
+            width: 18px;
+            height: 18px;
+        }
+
+        .oauth-google:hover {
+            box-shadow: 0 4px 12px rgba(66, 133, 244, 0.2);
+        }
+
+        .oauth-facebook:hover {
+            box-shadow: 0 4px 12px rgba(24, 119, 242, 0.2);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 600px) {
+            .oauth-buttons {
+                grid-template-columns: 1fr;
+            }
+            
+            .oauth-btn {
+                width: 100%;
+            }
         }
     </style>
 </head>
@@ -532,6 +680,31 @@ function isValidEmail($email) {
                                 Create Account
                             </button>
                         </form>
+                        
+                        <!-- Social Login Divider -->
+                        <div class="oauth-divider">
+                            <span>Or sign up with</span>
+                        </div>
+                        
+                        <!-- Social Login Buttons -->
+                        <div class="oauth-buttons">
+                            <a href="#" class="oauth-btn oauth-google" data-provider="google" data-type="<?php echo $userType; ?>" title="Sign up with Google">
+                                <svg class="oauth-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                                    <path fill="currentColor" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                                    <path fill="currentColor" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                                    <path fill="currentColor" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                                </svg>
+                                <span>Google</span>
+                            </a>
+                            
+                            <a href="#" class="oauth-btn oauth-facebook" data-provider="facebook" data-type="<?php echo $userType; ?>" title="Sign up with Facebook">
+                                <svg class="oauth-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill="currentColor" d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                                </svg>
+                                <span>Facebook</span>
+                            </a>
+                        </div>
                     <?php else: ?>
                         <!-- OTP Verification Form -->
                         <form method="POST" action="">
@@ -581,5 +754,30 @@ function isValidEmail($email) {
     </div>
     
     <script src="../assets/js/main.js"></script>
+    <script src="../assets/js/micro-interactions.js"></script>
+    <script>
+        // OAuth button handlers for registration
+        function setupOAuthButtons() {
+            const oauthBtns = document.querySelectorAll('.oauth-btn[data-provider]');
+            
+            oauthBtns.forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const provider = this.dataset.provider;
+                    const userType = this.dataset.type;
+                    redirectToOAuth(provider, userType);
+                });
+            });
+        }
+        
+        function redirectToOAuth(provider, userType) {
+            // Redirect to OAuth start handler
+            const url = window.location.origin + window.location.pathname.split('/pages')[0] + '/pages/oauth_start.php?provider=' + encodeURIComponent(provider) + '&type=' + encodeURIComponent(userType);
+            window.location.href = url;
+        }
+        
+        // Initialize OAuth buttons
+        setupOAuthButtons();
+    </script>
 </body>
 </html>

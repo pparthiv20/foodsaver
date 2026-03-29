@@ -501,11 +501,28 @@ function throttle(func, limit) {
 }
 
 // ==================== Donation Amount Selection ====================
+document.querySelectorAll('.preset').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        // Remove active class from siblings
+        this.parentElement.querySelectorAll('.preset').forEach(b => b.classList.remove('active'));
+        // Add active class to clicked button
+        this.classList.add('active');
+
+        // Update the amount input
+        const amount = this.dataset.val;
+        const amountInput = this.closest('form').querySelector('input[name="amount"]');
+        if (amountInput) {
+            amountInput.value = amount;
+        }
+    });
+});
+
 document.querySelectorAll('.donation-amount').forEach(btn => {
     btn.addEventListener('click', function() {
         document.querySelectorAll('.donation-amount').forEach(b => b.classList.remove('active'));
         this.classList.add('active');
-        
+
         const amount = this.dataset.amount;
         const customInput = document.querySelector('input[name="custom_amount"]');
         if (customInput) {
