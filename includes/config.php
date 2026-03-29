@@ -21,7 +21,25 @@ define('DB_CHARSET', 'utf8mb4');
 // Application Configuration
 define('APP_NAME', 'Food-Saver');
 define('APP_TAGLINE', 'Reduce Food Waste. Feed the Hungry.');
-define('APP_URL', 'http://localhost/food-saver-php');
+
+// Auto-detect APP_URL based on current host and project root path
+$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+$host = $_SERVER['HTTP_HOST'] ?? 'localhost';
+$projectRootPath = realpath(__DIR__ . '/..');
+$documentRootPath = realpath($_SERVER['DOCUMENT_ROOT'] ?? '');
+$basePath = '';
+
+if ($projectRootPath && $documentRootPath) {
+    $normalizedProjectRoot = str_replace('\\', '/', $projectRootPath);
+    $normalizedDocumentRoot = rtrim(str_replace('\\', '/', $documentRootPath), '/');
+
+    if (strpos($normalizedProjectRoot, $normalizedDocumentRoot) === 0) {
+        $basePath = substr($normalizedProjectRoot, strlen($normalizedDocumentRoot));
+    }
+}
+
+$basePath = rtrim($basePath, '/');
+define('APP_URL', $protocol . '://' . $host . $basePath);
 define('APP_VERSION', '1.0.0');
 
 // Email Configuration
@@ -119,6 +137,69 @@ function getCurrentUser() {
     $stmt = $db->prepare("SELECT * FROM {$table} WHERE id = ?");
     $stmt->execute([$_SESSION['user_id']]);
     return $stmt->fetch();
+}
+
+function getTableNameForUserType($userType) {
+    $validTypes = ['user', 'restaurant', 'ngo', 'admin'];
+    if (in_array($userType, $validTypes)) {
+        return $userType . 's';
+    }
+    return null;
+}
+
+function checkRateLimit($email, $type = 'login', $maxAttempts = 5, $timeWindow = 900) {
+    if (!isset($_SESSION['rate_limit'])) {
+        $_SESSION['rate_limit'] = [];
+    }
+    
+    $key = md5($email . '_' . $type);
+    if (!isset($_SESSION['rate_limit'][$key])) {
+        $_SESSION['rate_limit'][$key] = ['attempts' => 0, 'first_attempt' => time()];
+    }
+    
+    $data = &$_SESSION['rate_limit'][$key];
+    $elapsed = time() - $data['first_attempt'];
+    
+    if ($elapsed > $timeWindow) {
+        $data = ['attempts' => 0, 'first_attempt' => time()];
+        return true;
+    }
+    
+    return $data['attempts'] < $maxAttempts;
+}
+
+function getRemainingAttempts($email, $type = 'login', $maxAttempts = 5) {
+    if (!isset($_SESSION['rate_limit'])) {
+        return $maxAttempts;
+    }
+    
+    $key = md5($email . '_' . $type);
+    if (!isset($_SESSION['rate_limit'][$key])) {
+        return $maxAttempts;
+    }
+    
+    $data = $_SESSION['rate_limit'][$key];
+    $timeWindow = 900;
+    $elapsed = time() - $data['first_attempt'];
+    
+    if ($elapsed > $timeWindow) {
+        return $maxAttempts;
+    }
+    
+    return max(0, $maxAttempts - $data['attempts']);
+}
+
+function recordAttempt($email, $type = 'login') {
+    if (!isset($_SESSION['rate_limit'])) {
+        $_SESSION['rate_limit'] = [];
+    }
+    
+    $key = md5($email . '_' . $type);
+    if (!isset($_SESSION['rate_limit'][$key])) {
+        $_SESSION['rate_limit'][$key] = ['attempts' => 0, 'first_attempt' => time()];
+    }
+    
+    $_SESSION['rate_limit'][$key]['attempts']++;
 }
 
 function requireAuth($allowedTypes = []) {

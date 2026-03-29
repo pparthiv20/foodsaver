@@ -108,7 +108,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             unset($_SESSION['otp_email']);
                             
                             setFlashMessage('success', 'Registration successful! Please login to continue.');
-                            header('Location: login.php?type=' . $userData['user_type']);
+                            header('Location: ' . APP_URL . '/pages/login.php?type=' . $userData['user_type']);
                             exit;
                             
                         } catch (PDOException $e) {

@@ -235,7 +235,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     }
                     
                     setFlashMessage('success', 'Password reset successfully! You can now login with your new password.');
-                    header('Location: login.php');
+                    header('Location: ' . APP_URL . '/pages/login.php');
                     exit;
                 }
             }

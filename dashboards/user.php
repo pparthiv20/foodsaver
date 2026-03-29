@@ -12,7 +12,7 @@ $user = getCurrentUser();
 
 // If donor profile is blocked/suspended, redirect to suspended page
 if (isset($user['status']) && in_array($user['status'], ['blocked', 'suspended'], true)) {
-    header('Location: ../pages/suspended.php?type=user');
+    header('Location: ' . APP_URL . '/pages/suspended.php?type=user');
     exit;
 }
 

@@ -56,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 $error = 'Your account is pending approval. Please wait for admin verification.';
                             } elseif (in_array($user['status'], ['rejected', 'suspended', 'blocked'], true)) {
                                 // Redirect blocked/suspended/rejected accounts to suspended page
-                                header('Location: suspended.php?type=' . urlencode($userType));
+                                header('Location: ' . APP_URL . '/pages/suspended.php?type=' . urlencode($userType));
                                 exit;
                             }
                         }
