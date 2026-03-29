@@ -375,6 +375,7 @@ p {
     cursor: pointer;
     transition: all var(--transition-base);
     white-space: nowrap;
+    pointer-events: auto;
 }
 
 .btn:focus {

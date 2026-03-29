@@ -18,6 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initSidebar();
     initCharts();
     initDataTables();
+    initNavButtons();
 });
 
 // ==================== Navigation ====================
@@ -35,6 +36,39 @@ function initNavigation() {
             navbar.classList.remove('scrolled');
         }
     }, { passive: true });
+}
+
+// ==================== Nav Buttons ====================
+function initNavButtons() {
+    const loginBtn = document.querySelector('.nav-login-btn');
+    const joinUsBtn = document.querySelector('.nav-joinus-btn');
+    
+    if (loginBtn) {
+        // Ensure Login button navigates correctly
+        loginBtn.addEventListener('click', function(e) {
+            // Allow default link navigation
+            if (!e.ctrlKey && !e.metaKey && !e.shiftKey) {
+                window.location.href = this.href;
+            }
+        });
+        
+        // Prevent any hover state from affecting Join Us button
+        loginBtn.addEventListener('mouseenter', function() {
+            if (joinUsBtn) {
+                joinUsBtn.style.pointerEvents = 'auto';
+            }
+        });
+    }
+    
+    if (joinUsBtn) {
+        // Ensure Join Us button works independently
+        joinUsBtn.addEventListener('click', function(e) {
+            // Allow default link navigation
+            if (!e.ctrlKey && !e.metaKey && !e.shiftKey) {
+                window.location.href = this.href;
+            }
+        });
+    }
 }
 
 // ==================== Mobile Menu ====================

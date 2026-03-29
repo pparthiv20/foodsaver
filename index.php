@@ -86,13 +86,13 @@ $flash = getFlashMessage();
                 
                 <div class="nav-actions">
                     <?php if ($isLoggedIn): ?>
-                        <a href="dashboards/<?php echo $_SESSION['user_type']; ?>.php" class="btn btn-primary btn-sm">
+                        <a href="dashboards/<?php echo $_SESSION['user_type']; ?>.php" class="btn btn-primary btn-sm" role="button">
                             Dashboard
                         </a>
-                        <a href="pages/logout.php" class="btn btn-outline btn-sm">Logout</a>
+                        <a href="pages/logout.php" class="btn btn-outline btn-sm" role="button">Logout</a>
                     <?php else: ?>
-                        <a href="pages/login.php" class="btn btn-outline btn-sm">Login</a>
-                        <a href="pages/register.php" class="btn btn-primary btn-sm">Join Us</a>
+                        <a href="pages/login.php" class="btn btn-outline btn-sm nav-login-btn" role="button">Login</a>
+                        <a href="pages/register.php" class="btn btn-primary btn-sm nav-joinus-btn" role="button">Join Us</a>
                     <?php endif; ?>
                 </div>
                 

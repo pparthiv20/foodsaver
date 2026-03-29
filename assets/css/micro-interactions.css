@@ -149,6 +149,8 @@
     overflow: hidden;
     transition: all 200ms ease;
     will-change: box-shadow;
+    pointer-events: auto;
+    isolation: isolate;
 }
 
 .btn:hover {
@@ -195,10 +197,44 @@
     height: 100%;
     background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
     transition: left 500ms ease;
+    pointer-events: none;
 }
 
 .btn-primary:hover::before {
     left: 100%;
+}
+
+/* Outline button */
+.btn-outline {
+    pointer-events: auto;
+}
+
+.btn-outline:hover {
+    background: var(--primary-50) !important;
+    color: var(--primary-700) !important;
+    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.2) !important;
+}
+
+/* Login button - prevent animation inheritance */
+.nav-login-btn {
+    flex-shrink: 0;
+    white-space: nowrap;
+    pointer-events: auto;
+}
+
+.nav-login-btn::before {
+    display: none !important;
+}
+
+.nav-login-btn::after {
+    display: none !important;
+}
+
+/* Join Us button - preserve animation */
+.nav-joinus-btn {
+    flex-shrink: 0;
+    white-space: nowrap;
+    pointer-events: auto;
 }
 
 /* ==================== FORM INTERACTIONS ==================== */

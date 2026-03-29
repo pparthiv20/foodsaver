@@ -339,10 +339,19 @@ if ($flash) {
             padding: var(--space-md);
             cursor: pointer;
             border-left: 1px solid #d1d5db;
+            pointer-events: auto;
         }
-        
+
         .input-box-wrapper .btn:hover {
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+        }
+
+        /* Login Submit Button */
+        #public-form .btn-primary,
+        #admin-form .btn-primary {
+            pointer-events: auto;
+            cursor: pointer;
+            width: 100%;
         }
         
         /* OAuth Styling */
