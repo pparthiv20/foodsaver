@@ -446,9 +446,57 @@ if ($flash) {
                 width: 100%;
             }
         }
+
+        /* Back to Home Button */
+        .back-home-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 999;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 16px;
+            background: white;
+            /* color: var(--primary-600); */
+            border: 2px solid var(--primary-300);
+            /* border-radius: var(--radius-lg); */
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 300ms ease;
+            /* box-shadow: 0 4px 12px rgba(16, 185, 129, 0.15); */
+            cursor: pointer;
+        }
+
+        .back-home-btn:hover {
+            background: var(--primary-50);
+            border-color: var(--primary-500);
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.25);
+            transform: translateX(-4px);
+        }
+
+        .back-home-btn i {
+            font-size: 1.1rem;
+        }
+
+        @media (max-width: 768px) {
+            .back-home-btn {
+                top: 15px;
+                left: 15px;
+                padding: 8px 12px;
+                font-size: 0.85rem;
+            }
+        }
     </style>
 </head>
 <body>
+    <!-- Back to Home Button -->
+    <a href="../index.php" class="back-home-btn" title="Return to Home">
+        <i class="fas fa-arrow-left"></i>
+        <span>Back to Home</span>
+    </a>
+
     <div class="auth-page">
         <div class="auth-container">
             <!-- Public Login Card -->
@@ -466,16 +514,16 @@ if ($flash) {
                 
                 <div class="auth-body">
                     <?php if ($error): ?>
-                        <div style="padding: 12px; background: #fee; border-left: 4px solid #dc2626; border-radius: 6px; margin-bottom: 16px; color: #dc2626; font-weight: 500; display: flex; align-items: center; gap: 8px;">
-                            <i class="fas fa-exclamation-circle"></i>
-                            <?php echo $error; ?>
+                        <div class="alert alert-error" data-auto-dismiss="30000">
+                            <span><i class="fas fa-exclamation-circle"></i> <?php echo $error; ?></span>
+                            <button type="button" class="alert-close" onclick="this.parentElement.remove();">&times;</button>
                         </div>
                     <?php endif; ?>
                     
                     <?php if ($success): ?>
-                        <div class="alert alert-success" data-auto-dismiss="5000">
-                            <i class="fas fa-check-circle"></i>
-                            <?php echo $success; ?>
+                        <div class="alert alert-success" data-auto-dismiss="30000">
+                            <span><i class="fas fa-check-circle"></i> <?php echo $success; ?></span>
+                            <button type="button" class="alert-close" onclick="this.parentElement.remove();">&times;</button>
                         </div>
                     <?php endif; ?>
                     
@@ -654,11 +702,7 @@ if ($flash) {
             </div>
             
             <div style="text-align: center; margin-top: 24px; display: flex; justify-content: space-between; align-items: center; gap: 16px;" id="footer-links">
-                <p class="text-sm text-gray">
-                    <a href="../index.php" style="color: var(--primary-600); text-decoration: none;">
-                        <i class="fas fa-arrow-left"></i> Back to Home
-                    </a>
-                </p>
+                
                 <a href="#" id="admin-login-link" class="text-sm text-gray" style="color: var(--gray-600); text-decoration: none; cursor: pointer;">
                     Admin Login
                 </a>

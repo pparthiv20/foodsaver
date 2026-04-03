@@ -64,6 +64,37 @@ $flash = getFlashMessage();
         </div>
     <?php endif; ?>
 
+    <!-- Donation thanks modal -->
+    <div id="donationThankYouModal" class="modal-overlay" style="display: none; position: fixed; z-index: 1001; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); justify-content: center; align-items: center;">
+        <div class="modal-content" style="background: white; border-radius: 15px; padding: 0; max-width: 450px; width: 90%; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3); animation: slideUp 400ms ease;">
+            <div style="padding: 3rem 2rem 2rem; text-align: center; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; border-radius: 15px 15px 0 0;">
+                <div style="font-size: 4rem; margin-bottom: 1rem;">🎉</div>
+                <h2 style="margin: 0 0 0.5rem 0; font-size: 1.8rem; font-weight: 700;">Thank You!</h2>
+                <p style="margin: 0; opacity: 0.95; font-size: 0.95rem;">Your donation means the world to us</p>
+            </div>
+            <div style="padding: 2rem;">
+                <div style="background: #f0fdf4; border: 1px solid #d1fae5; border-radius: 10px; padding: 1.5rem; margin-bottom: 1.5rem; text-align: center;">
+                    <div style="color: #059669; font-size: 1.3rem; font-weight: 600; margin-bottom: 0.5rem;"> Donation Amount: ₹<span id="donationAmount">0</span></div>
+                    <div style="color: #6b7280; font-size: 0.85rem;">Transaction ID: <span id="transactionId" style="font-family: monospace; color: #059669; font-weight: 600;">-</span></div>
+                </div>
+                <p style="color: #6b7280; line-height: 1.6; margin-bottom: 1.5rem;">
+                    Your generous contribution will help us feed the hungry and reduce food waste. Together we're making a real difference in our community.
+                </p>
+                <button type="button" onclick="closeDonationThankYouModal()" style="width: 100%; padding: 1rem; background: #10b981; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 1rem; transition: background 200ms;">
+                    Continue
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Flash Messages with Auto-Dismiss -->
+    <?php if ($flash && $flash['message'] !== 'contact_thanks'): ?>
+        <div class="alert alert-<?php echo $flash['type']; ?>" data-auto-dismiss="30000" style="position: fixed; top: 20px; right: 20px; z-index: 999; max-width: 400px; animation: slideInRight 300ms ease;">
+            <span><?php echo $flash['message']; ?></span>
+            <button type="button" class="alert-close" onclick="this.parentElement.remove();">&times;</button>
+        </div>
+    <?php endif; ?>
+
     <!-- Navigation -->
     <nav class="navbar">
         <div class="container">
@@ -72,7 +103,7 @@ $flash = getFlashMessage();
                     <div class="logo-icon">
                         <i class="fas fa-leaf"></i>
                     </div>
-                    <span>Food-Saver</span>
+                    <span>Food Saver</span>
                 </a>
                 
                 <ul class="nav-links">
@@ -80,8 +111,8 @@ $flash = getFlashMessage();
                     <li><a href="#how-it-works">How It Works</a></li>
                     <li><a href="#about-us">About Us</a></li>
                     <li><a href="#objective">Objective</a></li>
-                    <li><a href="#reports">Reports</a></li>
-                    <li><a href="#contact">Contact</a></li>
+                    <li><a href="pages/reports.php">Reports</a></li>
+                    <li><a href="pages/contact-page.php">Contact</a></li>
                 </ul>
                 
                 <div class="nav-actions">
@@ -229,13 +260,13 @@ $flash = getFlashMessage();
                         Fighting Hunger Through Innovation
                     </h3>
                     <p class="about-text">
-                        Food-Saver is a mission driven platform dedicated to reducing food waste while addressing hunger in our communities. We believe that surplus food from restaurants should never go to waste when hungry families need nourishment.
+                        Food Saver is a mission driven platform dedicated to reducing food waste while addressing hunger in our communities. We believe that surplus food from restaurants should never go to waste when hungry families need nourishment.
                     </p>
                     <p class="about-text-last">
                         By connecting restaurants, NGOs, and donors, we create a sustainable ecosystem where everyone benefits. Our technology makes it simple, efficient, and impactful to redistribute food and save lives.
                     </p>
                     <button onclick="openDonationModal()" class="btn btn-primary btn-lg">
-                        <i class="fas fa-heart"></i>
+                        <!-- <i class="fas fa-heart"></i> -->
                         Support Our Mission
                     </button>
                 </div>
@@ -311,7 +342,7 @@ $flash = getFlashMessage();
             
             <div class="text-center objective-cta">
                 <button onclick="openDonationModal()" class="btn btn-primary btn-lg">
-                    <i class="fas fa-heart"></i>
+                    <!-- <i class="fas fa-heart"></i> -->
                     Contribute to Our Mission
                 </button>
             </div>
@@ -381,9 +412,8 @@ $flash = getFlashMessage();
                 </a>
             </div>
         </div>
-    </section>
-
-    <!-- Have a Query Section -->
+    </section>        
+    <!-- Have a Query Section --> 
     <section id="contact" class="section">
         <div class="container">
             <div class="scroll-animate">
@@ -395,7 +425,7 @@ $flash = getFlashMessage();
                         Reach out to us anytime and we'll get back to you promptly.
                     </p>
                     <a href="pages/contact-page.php" class="btn btn-primary btn-lg">
-                        <i class="fas fa-envelope"></i> Contact Us
+                        <!-- <i class="fas fa-envelope"></i>--> Contact Us 
                     </a>
                 </div>
             </div>
@@ -573,7 +603,7 @@ $flash = getFlashMessage();
                     Join thousands of restaurants, NGOs, and volunteers who are making a real difference in fighting hunger and reducing food waste. Together, we can create a sustainable future where no food goes to waste.
                 </p>
                 <a href="pages/register.php" class="btn btn-white btn-lg">
-                    <i class="fas fa-sign-in-alt"></i> Join Us Now
+                    <!-- <i class="fas fa-sign-in-alt"></i>--> Join Us Now 
                 </a>
             </div>
         </div>
@@ -588,7 +618,7 @@ $flash = getFlashMessage();
                         <div class="logo-icon">
                             <i class="fas fa-leaf"></i>
                         </div>
-                        <span>Food-Saver</span>
+                        <span>Food Saver</span>
                     </a>
                     <p>
                         Connecting restaurants, NGOs, and donors to redistribute surplus food 
@@ -635,25 +665,23 @@ $flash = getFlashMessage();
             </div>
             
             <div class="footer-bottom">
-                <p>&copy; <?php echo date('Y'); ?> Food-Saver. All rights reserved.</p>
+                <p>&copy; <?php echo date('Y'); ?> Food Saver. All rights reserved.</p>
                 <p>Made with <i class="fas fa-heart text-error"></i> for a hunger-free world</p>
             </div>
         </div>
     </footer>
 
     <!-- Donation Modal -->
-    <div id="donationModal" class="modal" style="display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); animation: fadeIn 300ms ease; justify-content: center; align-items: center;">
-        <div class="modal-content" style="background-color: white; margin: auto; padding: 0; border-radius: var(--radius-xl); width: 90%; max-width: 500px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3); animation: slideUp 300ms ease;">
-            <div style="padding: 2rem; background: linear-gradient(135deg, var(--primary-500), var(--primary-600)); color: white; border-radius: var(--radius-xl) var(--radius-xl) 0 0; display: flex; justify-content: space-between; align-items: center;">
-                <h2 style="margin: 0; font-size: 1.5rem;"> Make a Donation</h2>
-                <button onclick="closeDonationModal()" style="background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer; transition: transform 200ms;">&times;</button>
+    <div id="donationModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2> Make a Donation</h2>
+                <button onclick="closeDonationModal()" class="modal-close-btn">&times;</button>
             </div>
-            <div style="padding: 2rem;">
+            <div class="modal-body">
                 <?php if ($isLoggedIn): ?>
-                    <form method="POST" action="dashboards/user.php">
+                    <form method="POST" action="pages/donate.php">
                         <?php echo csrfField(); ?>
-                        <input type="hidden" name="action" value="make_donation">
-                        <input type="hidden" name="ngo_id" value="0">
                         
                         <div style="margin-bottom: 1.5rem;">
                             <label style="display: block; font-weight: 600; margin-bottom: 1rem;">Choose Amount</label>
@@ -669,9 +697,12 @@ $flash = getFlashMessage();
                             <label for="customAmount" style="display: block; font-weight: 600; margin-bottom: 0.5rem;">Or Enter Custom Amount</label>
                             <div style="display: flex; align-items: center; gap: 0.5rem;">
                                 <span style="font-weight: 600;">₹</span>
-                                <input type="number" id="customAmount" name="amount" class="form-control" value="1000" min="10" required style="padding: 0.75rem; border: 1px solid var(--gray-300); border-radius: var(--radius-md);">
+                                <input type="number" id="customAmount" name="amount" class="form-control" value="1000" min="10" required style="padding: 0.75rem; border: 1px solid var(--gray-300); border-radius: var(--radius-md); flex: 1;">
                             </div>
                         </div>
+
+                        <input type="hidden" name="payment_method" value="online">
+                        <input type="hidden" name="message" value="">
                         
                         <button type="submit" class="btn btn-primary btn-block" style="padding: 1rem; font-weight: 600; width: 100%;">
                             <i class="fas fa-donate"></i> Donate Now
@@ -707,7 +738,6 @@ $flash = getFlashMessage();
         }
     </style>
 
-    <!-- Scripts -->
     <script src="assets/js/main.js"></script>
     <script src="assets/js/micro-interactions.js"></script>
     <script>
@@ -716,6 +746,34 @@ $flash = getFlashMessage();
             if (modal) {
                 modal.classList.remove('show');
                 modal.style.display = 'none';
+            }
+        }
+
+        function closeDonationThankYouModal() {
+            const modal = document.getElementById('donationThankYouModal');
+            if (modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        function showDonationThankYouModal(amount, transactionId) {
+            const modal = document.getElementById('donationThankYouModal');
+            const amountEl = document.getElementById('donationAmount');
+            const txnIdEl = document.getElementById('transactionId');
+            
+            if (amountEl) {
+                amountEl.textContent = amount.toFixed(2);
+            }
+            if (txnIdEl) {
+                txnIdEl.textContent = transactionId || '-';
+            }
+            
+            if (modal) {
+                modal.style.display = 'flex';
+                // Close modal after 10 seconds
+                setTimeout(() => {
+                    closeDonationThankYouModal();
+                }, 10000);
             }
         }
 

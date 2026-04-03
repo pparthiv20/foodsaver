@@ -289,11 +289,14 @@ function initTooltips() {
 
 // ==================== Notifications ====================
 function initNotifications() {
-    // Auto-dismiss flash messages
+    // Auto-dismiss flash messages - 30 seconds (longer display)
     const flashMessages = document.querySelectorAll('.alert[data-auto-dismiss]');
     
     flashMessages.forEach(alert => {
-        const duration = parseInt(alert.dataset.autoDismiss) || 5000;
+        // Show the alert by adding the 'show' class
+        alert.classList.add('show');
+        
+        const duration = parseInt(alert.dataset.autoDismiss) || 30000;
         
         setTimeout(() => {
             alert.style.opacity = '0';
@@ -303,7 +306,7 @@ function initNotifications() {
     });
 }
 
-function showNotification(message, type = 'info', duration = 5000) {
+function showNotification(message, type = 'info', duration = 30000) {
     const notification = document.createElement('div');
     notification.className = `alert alert-${type}`;
     notification.innerHTML = `

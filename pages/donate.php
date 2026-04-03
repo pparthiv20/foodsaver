@@ -1,6 +1,6 @@
 <?php
 /**
- * Food-Saver - Donation Handler
+ * Food-Saver - Simple Donation Handler
  */
 
 require_once '../includes/config.php';
@@ -17,7 +17,7 @@ if (!verifyCSRFToken($_POST['csrf_token'] ?? '')) {
 }
 
 $amount = floatval($_POST['amount'] ?? 0);
-$paymentMethod = $_POST['payment_method'] ?? 'upi';
+$paymentMethod = $_POST['payment_method'] ?? 'online';
 $message = sanitizeInput($_POST['message'] ?? '');
 
 if ($amount < 10) {
@@ -38,11 +38,12 @@ if (!isLoggedIn()) {
     exit;
 }
 
-// Process donation for logged in users
+// Process donation for logged in users - simple direct approach
 try {
     $db = getDB();
-    $transactionId = 'TXN' . time() . rand(1000, 9999);
+    $transactionId = 'DONATION' . time() . rand(10000, 99999);
     
+    // Create donation record
     $stmt = $db->prepare("
         INSERT INTO donations (user_id, amount, payment_method, message, status, transaction_id)
         VALUES (?, ?, ?, ?, 'completed', ?)
@@ -50,26 +51,25 @@ try {
     
     $stmt->execute([$_SESSION['user_id'], $amount, $paymentMethod, $message, $transactionId]);
     
-    logActivity($_SESSION['user_id'], $_SESSION['user_type'], 'make_donation', 'Donated ₹' . $amount);
+    // Log activity
+    logActivity($_SESSION['user_id'], $_SESSION['user_type'], 'make_donation', 'Donated ₹' . number_format($amount, 2));
     
-    // Set session variables for thank you modal
+    // Set session variables for thank you
     $_SESSION['show_donation_thank_you'] = true;
     $_SESSION['donation_amount'] = $amount;
     $_SESSION['donation_transaction_id'] = $transactionId;
     
-    setFlashMessage('success', 'Thank you for your donation of ₹' . number_format($amount, 2) . '! Your transaction ID is ' . $transactionId);
+    setFlashMessage('success', '✓ Thank you for your donation of ₹' . number_format($amount, 2) . '! Transaction ID: ' . $transactionId);
     
-    // Redirect based on user type
-    if ($_SESSION['user_type'] === 'user') {
-        header('Location: ../dashboards/user.php?page=donations');
-    } else {
-        header('Location: ../index.php#donate');
-    }
+    // Redirect back to home to show thank you modal
+    header('Location: ../index.php');
     exit;
     
 } catch (PDOException $e) {
+    error_log("Donation Error: " . $e->getMessage());
     setFlashMessage('error', 'Failed to process donation. Please try again.');
     header('Location: ../index.php#donate');
     exit;
 }
+?>
 ?>

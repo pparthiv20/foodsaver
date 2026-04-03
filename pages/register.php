@@ -257,11 +257,57 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         }
                     } else {
                         // PRODUCTION MODE: Show OTP verification step
-                        // Send OTP email (placeholder)
-                        // sendEmail($email, 'Verify Your Email - Food-Saver', "Your OTP is: {$otp}");
-
-                        // For demo, show OTP in success message
-                        $success = "OTP sent to your email. For demo, use OTP: {$otp}";
+                        // Send OTP email with HTML template
+                        $emailSubject = "Email Verification - Food-Saver";
+                        $emailBody = "
+                        <html>
+                        <head>
+                            <style>
+                                body { font-family: Arial, sans-serif; }
+                                .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+                                .header { background: linear-gradient(135deg, #10b981, #059669); color: white; padding: 20px; text-align: center; border-radius: 8px; margin-bottom: 20px; }
+                                .content { background: #f9fafb; padding: 20px; border-radius: 8px; }
+                                .otp-box { background: white; padding: 20px; text-align: center; border: 2px solid #10b981; border-radius: 8px; margin: 20px 0; }
+                                .otp-code { font-size: 32px; font-weight: bold; color: #10b981; letter-spacing: 5px; }
+                                .footer { text-align: center; color: #6b7280; font-size: 12px; margin-top: 20px; }
+                            </style>
+                        </head>
+                        <body>
+                            <div class='container'>
+                                <div class='header'>
+                                    <h1>🍃 Food-Saver</h1>
+                                </div>
+                                <div class='content'>
+                                    <h2>Welcome to Food-Saver!</h2>
+                                    <p>Thank you for registering. Please use the OTP below to verify your email address. This OTP will expire in 10 minutes.</p>
+                                    
+                                    <div class='otp-box'>
+                                        <p style='color: #6b7280; margin: 0 0 10px 0;'>Your OTP is:</p>
+                                        <div class='otp-code'>$otp</div>
+                                    </div>
+                                    
+                                    <p style='color: #dc2626; font-weight: bold;'>⚠️ Never share this OTP with anyone. We will never ask for it.</p>
+                                    
+                                    <p style='color: #6b7280; font-size: 14px;'>
+                                        If you did not create this account, please ignore this email or contact support immediately.
+                                    </p>
+                                </div>
+                                <div class='footer'>
+                                    <p>&copy; " . date('Y') . " Food-Saver. All rights reserved.</p>
+                                    <p>This is an automated message. Please do not reply to this email.</p>
+                                </div>
+                            </div>
+                        </body>
+                        </html>
+                        ";
+                        
+                        $emailSent = sendEmail($email, $emailSubject, $emailBody);
+                        
+                        if ($emailSent) {
+                            $success = "Registration OTP sent to your email. Please check your inbox and spam folder. Valid for 10 minutes.";
+                        } else {
+                            $success = "OTP generated. Check your email within 10 minutes.";
+                        }
                         $step = 2;
                     }
                 }
@@ -528,16 +574,16 @@ function isValidEmail($email) {
                     </div>
                     
                     <?php if ($error): ?>
-                        <div class="alert alert-error" data-auto-dismiss="5000">
-                            <i class="fas fa-exclamation-circle"></i>
-                            <?php echo $error; ?>
+                        <div class="alert alert-error" data-auto-dismiss="30000">
+                            <span><i class="fas fa-exclamation-circle"></i> <?php echo $error; ?></span>
+                            <button type="button" class="alert-close" onclick="this.parentElement.remove();">&times;</button>
                         </div>
                     <?php endif; ?>
                     
                     <?php if ($success): ?>
-                        <div class="alert alert-success" data-auto-dismiss="10000">
-                            <i class="fas fa-check-circle"></i>
-                            <?php echo $success; ?>
+                        <div class="alert alert-success" data-auto-dismiss="30000">
+                            <span><i class="fas fa-check-circle"></i> <?php echo $success; ?></span>
+                            <button type="button" class="alert-close" onclick="this.parentElement.remove();">&times;</button>
                         </div>
                     <?php endif; ?>
                     

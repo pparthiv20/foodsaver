@@ -275,9 +275,9 @@ $flash = getFlashMessage();
             <!-- Dashboard Body -->
             <div class="dashboard-body">
                 <?php if ($flash): ?>
-                    <div class="alert alert-<?php echo $flash['type']; ?>" data-auto-dismiss="5000">
-                        <i class="fas fa-<?php echo $flash['type'] === 'success' ? 'check-circle' : 'exclamation-circle'; ?>"></i>
-                        <?php echo $flash['message']; ?>
+                    <div class="alert alert-<?php echo $flash['type']; ?>" data-auto-dismiss="30000">
+                        <span><i class="fas fa-<?php echo $flash['type'] === 'success' ? 'check-circle' : 'exclamation-circle'; ?>"></i> <?php echo $flash['message']; ?></span>
+                        <button type="button" class="alert-close" onclick="this.parentElement.remove();">&times;</button>
                     </div>
                 <?php endif; ?>
                 

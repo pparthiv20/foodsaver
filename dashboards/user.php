@@ -182,9 +182,9 @@ $flash = getFlashMessage();
 
     <main class="container dashboard-main">
         <?php if ($flash): ?>
-            <div class="alert alert-<?php echo $flash['type']; ?> flash-message">
-                <i class="fas fa-<?php echo $flash['type'] === 'success' ? 'check-circle' : 'exclamation-circle'; ?>"></i>
-                <?php echo $flash['message']; ?>
+            <div class="alert alert-<?php echo $flash['type']; ?>" data-auto-dismiss="30000">
+                <span><i class="fas fa-<?php echo $flash['type'] === 'success' ? 'check-circle' : 'exclamation-circle'; ?>"></i> <?php echo $flash['message']; ?></span>
+                <button type="button" class="alert-close" onclick="this.parentElement.remove();">&times;</button>
             </div>
         <?php endif; ?>
 
@@ -674,18 +674,6 @@ $flash = getFlashMessage();
                     this.classList.add('active');
                 });
             });
-
-            // Flash message auto-dismiss after 5 seconds
-            const flashMessage = document.querySelector('.flash-message');
-            if (flashMessage) {
-                setTimeout(function() {
-                    flashMessage.style.opacity = '0';
-                    flashMessage.style.transition = 'opacity 300ms ease';
-                    setTimeout(function() {
-                        flashMessage.style.display = 'none';
-                    }, 300);
-                }, 5000);
-            }
         });
     </script>
 </body>
