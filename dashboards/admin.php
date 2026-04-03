@@ -334,6 +334,38 @@ $page = $_GET['page'] ?? 'dashboard';
                         </div>
                     </div>
                     
+                    <!-- Quick Reports -->
+                    <div class="card mb-4">
+                        <div class="card-header flex justify-between items-center">
+                            <h3><i class="fas fa-file-pdf text-primary"></i> Quick Reports Download</h3>
+                            <a href="?page=reports" class="btn btn-sm btn-outline">View All Reports</a>
+                        </div>
+                        <div class="card-body">
+                            <div class="grid grid-4 text-center">
+                                <div class="p-3 border rounded">
+                                    <i class="fas fa-chart-line text-2xl mb-2 text-primary" style="font-size: 2rem;"></i>
+                                    <h4 class="mb-1" style="font-size: 1rem; font-weight: 600;">Monthly Financial</h4>
+                                    <button class="btn btn-sm btn-primary w-full mt-2" onclick="window.location.href='?page=reports&download_pdf=monthly-financial'">Download PDF</button>
+                                </div>
+                                <div class="p-3 border rounded">
+                                    <i class="fas fa-users text-2xl mb-2 text-info" style="font-size: 2rem; color: #3b82f6;"></i>
+                                    <h4 class="mb-1" style="font-size: 1rem; font-weight: 600;">User Activity</h4>
+                                    <button class="btn btn-sm btn-primary w-full mt-2" onclick="window.location.href='?page=reports&download_pdf=user-activity'">Download PDF</button>
+                                </div>
+                                <div class="p-3 border rounded">
+                                    <i class="fas fa-utensils text-2xl mb-2 text-warning" style="font-size: 2rem; color: #f59e0b;"></i>
+                                    <h4 class="mb-1" style="font-size: 1rem; font-weight: 600;">Restaurants</h4>
+                                    <button class="btn btn-sm btn-primary w-full mt-2" onclick="window.location.href='?page=reports&download_pdf=restaurants-report'">Download PDF</button>
+                                </div>
+                                <div class="p-3 border rounded">
+                                    <i class="fas fa-hands-helping text-2xl mb-2 text-success" style="font-size: 2rem; color: #10b981;"></i>
+                                    <h4 class="mb-1" style="font-size: 1rem; font-weight: 600;">NGOs Report</h4>
+                                    <button class="btn btn-sm btn-primary w-full mt-2" onclick="window.location.href='?page=reports&download_pdf=ngos-report'">Download PDF</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
                     <!-- Pending Approvals -->
                     <div class="grid grid-2">
                         <div class="card">
@@ -442,7 +474,7 @@ $page = $_GET['page'] ?? 'dashboard';
     <script src="../assets/js/main.js"></script>
     <script>
         // Handle approve/reject actions
-        async function handleAction(action, type, id) {
+        async function handleAction(action, type, id, element = null) {
             if (!confirm(`Are you sure you want to ${action} this ${type}?`)) return;
             
             try {
@@ -451,7 +483,40 @@ $page = $_GET['page'] ?? 'dashboard';
                 
                 if (data.success) {
                     showNotification(data.message, 'success');
-                    setTimeout(() => location.reload(), 1000);
+                    
+                    if (element && (action === 'block' || action === 'unblock')) {
+                        // Immediately toggle button state
+                        if (action === 'block') {
+                            element.textContent = 'Unblock';
+                            element.setAttribute('onclick', `handleAction('unblock', '${type}', ${id}, this)`);
+                            
+                            const row = element.closest('tr');
+                            if (row) {
+                                const badge = row.querySelector('.badge');
+                                if (badge) {
+                                    badge.className = 'badge badge-blocked';
+                                    badge.textContent = 'Blocked';
+                                }
+                            }
+                        } else {
+                            element.textContent = 'Block';
+                            element.setAttribute('onclick', `handleAction('block', '${type}', ${id}, this)`);
+                            
+                            const row = element.closest('tr');
+                            if (row) {
+                                const badge = row.querySelector('.badge');
+                                if (badge) {
+                                    const cssClass = type === 'user' ? 'badge-active' : 'badge-approved';
+                                    const text = type === 'user' ? 'Active' : 'Approved';
+                                    badge.className = `badge ${cssClass}`;
+                                    badge.textContent = text;
+                                }
+                            }
+                        }
+                    } else {
+                        // Reload if it's not an immediate toggle action or element missing
+                        setTimeout(() => location.reload(), 1000);
+                    }
                 } else {
                     showNotification(data.message, 'error');
                 }

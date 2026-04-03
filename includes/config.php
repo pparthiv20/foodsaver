@@ -9,7 +9,7 @@ error_reporting(E_ALL);
 ini_set('display_errors', 0);
 
 // Session configuration
-session_start();
+    session_start();
 
 // Database Configuration - MySQL (InfinityFree)
 define('DB_HOST', 'sql103.infinityfree.com');

@@ -75,16 +75,44 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             // Log activity
                             logActivity($user['id'], $userType, 'login', 'User logged in successfully');
 
-                            // Redirect
+                            // Redirect with InfinityFree compatibility
                             $redirect = $_SESSION['redirect_url'] ?? null;
                             unset($_SESSION['redirect_url']);
+                            
+                            // Ensure session is written before redirect
+                            session_write_close();
 
-                            if ($redirect) {
-                                header('Location: ' . $redirect);
-                            } else {
-                                redirectBasedOnRole();
+                            // Clear output buffer
+                            if (ob_get_level()) {
+                                ob_end_clean();
                             }
+                            
+                            if ($redirect) {
+                                header('Location: ' . $redirect, true, 302);
+                            } else {
+                                // Redirect based on role
+                                $redirectUrl = APP_URL . '/index.php';
+                                switch ($userType) {
+                                    case 'admin':
+                                        $redirectUrl = APP_URL . '/dashboards/admin.php';
+                                        break;
+                                    case 'restaurant':
+                                        $redirectUrl = APP_URL . '/dashboards/restaurant.php';
+                                        break;
+                                    case 'ngo':
+                                        $redirectUrl = APP_URL . '/dashboards/ngo.php';
+                                        break;
+                                    case 'user':
+                                        $redirectUrl = APP_URL . '/dashboards/user.php';
+                                        break;
+                                }
+                                header('Location: ' . $redirectUrl, true, 302);
+                            }
+                            
+                            // JavaScript fallback for InfinityFree
+                            echo '<script>window.location.href = window.location.href;</script>';
                             exit;
+
                         }
                     } else {
                         // Record failed attempt for rate limiting

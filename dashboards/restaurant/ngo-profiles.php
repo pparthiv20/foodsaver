@@ -107,7 +107,18 @@ $ngos = $db->query("
                 <button class="btn btn-primary btn-sm flex-1" onclick="contactNGO('<?php echo htmlspecialchars($ngo['ngo_name']); ?>', '<?php echo htmlspecialchars($ngo['email_contact']); ?>')">
                     <i class="fas fa-envelope"></i> Contact
                 </button>
-                <button class="btn btn-outline btn-sm flex-1" onclick="viewNGODetails('<?php echo $ngo['id']; ?>')">
+                <button class="btn btn-outline btn-sm flex-1" 
+                    data-details='<?php echo htmlspecialchars(json_encode([
+                        "NGO Name" => $ngo["ngo_name"],
+                        "Location" => ($ngo["city"] ?? "N/A") . ", " . ($ngo["state"] ?? "N/A"),
+                        "Service Areas" => $ngo["service_areas"] ?? "Multiple areas",
+                        "Contact Person" => $ngo["contact_person"] ?? "N/A",
+                        "Phone" => $ngo["phone"] ?? "N/A",
+                        "Email" => $ngo["email_contact"] ?? "N/A",
+                        "Registration No" => $ngo["registration_number"] ?? "N/A",
+                        "Description" => $ngo["description"] ?? "N/A"
+                    ]), ENT_QUOTES, "UTF-8"); ?>'
+                    onclick="viewAnyDetails('NGO Details', this)">
                     <i class="fas fa-eye"></i> View
                 </button>
             </div>
@@ -123,152 +134,7 @@ $ngos = $db->query("
     <?php endif; ?>
 </div>
 
-<style>
-.ngo-card {
-    transition: all 300ms ease;
-}
 
-.ngo-card:hover {
-    transform: translateY(-5px);
-    box-shadow: var(--shadow-lg);
-}
-
-.contact-info {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-}
-
-.contact-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    font-size: 0.875rem;
-    padding: 0.5rem 0;
-    border-bottom: 1px solid var(--gray-100);
-}
-
-.contact-item .label {
-    font-weight: 600;
-    color: var(--gray-700);
-    min-width: 100px;
-}
-
-.contact-item .value {
-    color: var(--gray-600);
-    text-align: right;
-}
-
-.stats-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0.75rem;
-}
-
-.stat {
-    padding: 0.75rem;
-    background: var(--gray-50);
-    border-radius: var(--radius-md);
-    text-align: center;
-}
-
-.stat-value {
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: var(--primary-600);
-}
-
-.stat-label {
-    font-size: 0.75rem;
-    color: var(--gray-600);
-    margin-top: 0.25rem;
-}
-
-.badge-success {
-    background: rgba(16, 185, 129, 0.1);
-    color: #047857;
-    padding: 0.25rem 0.75rem;
-    border-radius: var(--radius-full);
-    font-size: 0.75rem;
-    font-weight: 600;
-}
-
-.flex {
-    display: flex;
-}
-
-.justify-between {
-    justify-content: space-between;
-}
-
-.items-start {
-    align-items: flex-start;
-}
-
-.gap-2 {
-    gap: 0.5rem;
-}
-
-.gap-3 {
-    gap: 1rem;
-}
-
-.mb-2 {
-    margin-bottom: 0.5rem;
-}
-
-.mb-3 {
-    margin-bottom: 1rem;
-}
-
-.mb-4 {
-    margin-bottom: 1.5rem;
-}
-
-.text-sm {
-    font-size: 0.875rem;
-}
-
-.text-lg {
-    font-size: 1.125rem;
-}
-
-.text-gray {
-    color: var(--gray-600);
-}
-
-.text-primary {
-    color: var(--primary-600);
-}
-
-.font-bold {
-    font-weight: 700;
-}
-
-.flex-1 {
-    flex: 1;
-}
-
-.text-danger {
-    color: #ef4444;
-}
-
-@media (max-width: 1024px) {
-    .grid-3 {
-        grid-template-columns: 1fr 1fr;
-    }
-}
-
-@media (max-width: 768px) {
-    .grid-3 {
-        grid-template-columns: 1fr;
-    }
-
-    .flex-wrap {
-        flex-wrap: wrap;
-    }
-}
-</style>
 
 <script>
 function contactNGO(ngoName, email) {

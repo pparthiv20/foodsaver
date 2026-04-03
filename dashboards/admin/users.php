@@ -44,9 +44,21 @@ $users = $db->query("SELECT * FROM users ORDER BY created_at DESC LIMIT 20")->fe
                     </td>
                     <td><?php echo date('M d, Y', strtotime($user['created_at'] ?? 'now')); ?></td>
                     <td>
-                        <button class="btn btn-sm btn-outline" type="button">View</button>
                         <button class="btn btn-sm btn-outline" type="button"
-                                onclick="handleAction('<?php echo ($user['status'] ?? 'active') === 'blocked' ? 'unblock' : 'block'; ?>', 'user', <?php echo (int)$user['id']; ?>)">
+                            data-details='<?php echo htmlspecialchars(json_encode([
+                                "Full Name" => $user["full_name"],
+                                "Email" => $user["email"],
+                                "Phone" => $user["phone"] ?? "N/A",
+                                "Address" => ($user["address"] ?? "N/A") . ", " . ($user["city"] ?? "N/A") . ", " . ($user["state"] ?? "N/A"),
+                                "Role" => ucfirst($user["user_type"] ?? "User"),
+                                "Join Date" => date("M d, Y H:i", strtotime($user["created_at"])),
+                                "Status" => ucfirst($user["status"] ?? "Active")
+                            ]), ENT_QUOTES, "UTF-8"); ?>'
+                            onclick="viewAnyDetails('User Details', this)">
+                            View
+                        </button>
+                        <button class="btn btn-sm btn-outline" type="button"
+                                onclick="handleAction('<?php echo ($user['status'] ?? 'active') === 'blocked' ? 'unblock' : 'block'; ?>', 'user', <?php echo (int)$user['id']; ?>, this)">
                             <?php echo ($user['status'] ?? 'active') === 'blocked' ? 'Unblock' : 'Block'; ?>
                         </button>
                     </td>
@@ -57,43 +69,4 @@ $users = $db->query("SELECT * FROM users ORDER BY created_at DESC LIMIT 20")->fe
     </div>
 </div>
 
-<style>
-.table {
-    width: 100%;
-    border-collapse: collapse;
-}
 
-.table thead {
-    background: var(--gray-50);
-}
-
-.table th,
-.table td {
-    padding: 1rem;
-    text-align: left;
-    border-bottom: 1px solid var(--gray-200);
-}
-
-.table th {
-    font-weight: 600;
-    color: var(--gray-700);
-}
-
-.badge {
-    display: inline-block;
-    padding: 0.25rem 0.75rem;
-    border-radius: var(--radius-full);
-    font-size: 0.75rem;
-    font-weight: 600;
-}
-
-.badge-active {
-    background: rgba(16, 185, 129, 0.1);
-    color: #047857;
-}
-
-.badge-blocked {
-    background: rgba(239, 68, 68, 0.1);
-    color: #b91c1c;
-}
-</style>

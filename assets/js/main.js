@@ -384,6 +384,72 @@ function closeModal(modalId) {
     }
 }
 
+// Global Details Modal functionality
+window.showDetailsModal = function(title, subtitle, detailsMap) {
+    let modal = document.getElementById('globalDetailsModal');
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'globalDetailsModal';
+        modal.className = 'modal-overlay';
+        modal.innerHTML = `
+            <div class="modal-content" style="max-width: 500px; padding: 0;">
+                <div class="modal-header" style="background: var(--gray-50); padding: 1.5rem; border-bottom: 1px solid var(--gray-200); position: relative; border-radius: 16px 16px 0 0;">
+                    <h2 id="gdmTitle" style="margin: 0; font-size: 1.5rem; font-weight: 700; color: var(--gray-800);">Title</h2>
+                    <p id="gdmSubtitle" style="margin: 0.5rem 0 0 0; color: var(--gray-500); font-size: 0.875rem;">Subtitle</p>
+                    <button type="button" class="modal-close" style="position: absolute; top: 1.5rem; right: 1.5rem; background: transparent; border: none; font-size: 1.5rem; cursor: pointer; color: var(--gray-400);">&times;</button>
+                </div>
+                <div class="modal-body" style="padding: 1.5rem; max-height: 70vh; overflow-y: auto;">
+                    <div id="gdmContent" style="display: flex; flex-direction: column; gap: 1rem;"></div>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+        
+        modal.querySelector('.modal-close').addEventListener('click', () => {
+            closeModal('globalDetailsModal');
+        });
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeModal('globalDetailsModal');
+            }
+        });
+    }
+
+    document.getElementById('gdmTitle').innerHTML = title;
+    document.getElementById('gdmSubtitle').innerHTML = subtitle || '';
+    
+    const content = document.getElementById('gdmContent');
+    content.innerHTML = '';
+    
+    for (const [key, value] of Object.entries(detailsMap)) {
+        if (!value) continue;
+        const item = document.createElement('div');
+        item.style.display = 'flex';
+        item.style.flexDirection = 'column';
+        item.style.borderBottom = '1px solid var(--gray-100)';
+        item.style.paddingBottom = '0.5rem';
+        item.innerHTML = `
+            <span style="font-size: 0.75rem; font-weight: 600; color: var(--gray-500); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.25rem;">${key}</span>
+            <span style="font-size: 1rem; color: var(--gray-800); word-break: break-word;">${value === true ? '<i class="fas fa-check" style="color: #10B981;"></i>' : value}</span>
+        `;
+        content.appendChild(item);
+    }
+    
+    openModal('globalDetailsModal');
+};
+
+window.viewAnyDetails = function(title, btn) {
+    let detailsStr = btn.getAttribute('data-details');
+    if (!detailsStr) return;
+    try {
+        let details = JSON.parse(detailsStr);
+        let subtitle = details.Name || details['Full Name'] || details['NGO Name'] || details['Restaurant Name'] || '';
+        showDetailsModal(title, subtitle ? `<i class="fas fa-info-circle"></i> ` + subtitle : '', details);
+    } catch(e) {
+        console.error("Failed to parse details", e);
+    }
+};
+
 // ==================== Dropdowns ====================
 function initDropdowns() {
     document.querySelectorAll('.dropdown').forEach(dropdown => {

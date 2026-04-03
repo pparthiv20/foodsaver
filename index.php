@@ -163,7 +163,7 @@ $flash = getFlashMessage();
                         </button>
                         <a href="pages/register.php" class="btn btn-outline btn-lg">
                             Contribute Now
-                    </a>
+                        </a>
                     </div>
                 </div>
                 

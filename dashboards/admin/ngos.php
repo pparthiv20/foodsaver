@@ -45,9 +45,23 @@ $ngos = $db->query("SELECT * FROM ngos ORDER BY created_at DESC LIMIT 20")->fetc
                     </td>
                     <td><?php echo date('M d, Y', strtotime($ngo['created_at'])); ?></td>
                     <td>
-                        <button class="btn btn-sm btn-outline" type="button">View</button>
                         <button class="btn btn-sm btn-outline" type="button"
-                                onclick="handleAction('<?php echo $ngo['status'] === 'blocked' ? 'unblock' : 'block'; ?>', 'ngo', <?php echo (int)$ngo['id']; ?>)">
+                            data-details='<?php echo htmlspecialchars(json_encode([
+                                "NGO Name" => $ngo["ngo_name"],
+                                "Contact Person" => $ngo["contact_person"] ?? "N/A",
+                                "Email" => $ngo["email_contact"] ?? "N/A",
+                                "Phone" => $ngo["phone"] ?? "N/A",
+                                "Location" => ($ngo["city"] ?? "N/A") . ", " . ($ngo["state"] ?? "N/A"),
+                                "Service Areas" => $ngo["service_areas"] ?? "N/A",
+                                "Registration No" => $ngo["registration_number"] ?? "N/A",
+                                "Join Date" => date("M d, Y H:i", strtotime($ngo["created_at"])),
+                                "Status" => ucfirst($ngo["status"] ?? "Active")
+                            ]), ENT_QUOTES, "UTF-8"); ?>'
+                            onclick="viewAnyDetails('NGO Details', this)">
+                            View
+                        </button>
+                        <button class="btn btn-sm btn-outline" type="button"
+                                onclick="handleAction('<?php echo $ngo['status'] === 'blocked' ? 'unblock' : 'block'; ?>', 'ngo', <?php echo (int)$ngo['id']; ?>, this)">
                             <?php echo $ngo['status'] === 'blocked' ? 'Unblock' : 'Block'; ?>
                         </button>
                     </td>
@@ -58,53 +72,4 @@ $ngos = $db->query("SELECT * FROM ngos ORDER BY created_at DESC LIMIT 20")->fetc
     </div>
 </div>
 
-<style>
-.table {
-    width: 100%;
-    border-collapse: collapse;
-}
 
-.table thead {
-    background: var(--gray-50);
-}
-
-.table th,
-.table td {
-    padding: 1rem;
-    text-align: left;
-    border-bottom: 1px solid var(--gray-200);
-}
-
-.table th {
-    font-weight: 600;
-    color: var(--gray-700);
-}
-
-.badge {
-    display: inline-block;
-    padding: 0.25rem 0.75rem;
-    border-radius: var(--radius-full);
-    font-size: 0.75rem;
-    font-weight: 600;
-}
-
-.badge-approved {
-    background: rgba(16, 185, 129, 0.1);
-    color: #047857;
-}
-
-.badge-pending {
-    background: rgba(245, 158, 11, 0.1);
-    color: #b45309;
-}
-
-.badge-rejected {
-    background: rgba(239, 68, 68, 0.1);
-    color: #991b1b;
-}
-
-.badge-blocked {
-    background: rgba(239, 68, 68, 0.1);
-    color: #991b1b;
-}
-</style>

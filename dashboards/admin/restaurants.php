@@ -45,9 +45,23 @@ $restaurants = $db->query("SELECT * FROM restaurants ORDER BY created_at DESC LI
                     </td>
                     <td><?php echo date('M d, Y', strtotime($restaurant['created_at'])); ?></td>
                     <td>
-                        <button class="btn btn-sm btn-outline" type="button">View</button>
                         <button class="btn btn-sm btn-outline" type="button"
-                                onclick="handleAction('<?php echo $restaurant['status'] === 'blocked' ? 'unblock' : 'block'; ?>', 'restaurant', <?php echo (int)$restaurant['id']; ?>)">
+                            data-details='<?php echo htmlspecialchars(json_encode([
+                                "Restaurant Name" => $restaurant["restaurant_name"],
+                                "Contact Person" => $restaurant["contact_person"] ?? "N/A",
+                                "Email" => $restaurant["email"] ?? "N/A",
+                                "Phone" => $restaurant["phone"] ?? "N/A",
+                                "Location" => ($restaurant["city"] ?? "N/A") . ", " . ($restaurant["state"] ?? "N/A"),
+                                "Cuisine" => $restaurant["cuisine_type"] ?? "N/A",
+                                "Hours" => $restaurant["operating_hours"] ?? "N/A",
+                                "Join Date" => date("M d, Y H:i", strtotime($restaurant["created_at"])),
+                                "Status" => ucfirst($restaurant["status"] ?? "Active")
+                            ]), ENT_QUOTES, "UTF-8"); ?>'
+                            onclick="viewAnyDetails('Restaurant Details', this)">
+                            View
+                        </button>
+                        <button class="btn btn-sm btn-outline" type="button"
+                                onclick="handleAction('<?php echo $restaurant['status'] === 'blocked' ? 'unblock' : 'block'; ?>', 'restaurant', <?php echo (int)$restaurant['id']; ?>, this)">
                             <?php echo $restaurant['status'] === 'blocked' ? 'Unblock' : 'Block'; ?>
                         </button>
                     </td>
@@ -58,53 +72,4 @@ $restaurants = $db->query("SELECT * FROM restaurants ORDER BY created_at DESC LI
     </div>
 </div>
 
-<style>
-.table {
-    width: 100%;
-    border-collapse: collapse;
-}
 
-.table thead {
-    background: var(--gray-50);
-}
-
-.table th,
-.table td {
-    padding: 1rem;
-    text-align: left;
-    border-bottom: 1px solid var(--gray-200);
-}
-
-.table th {
-    font-weight: 600;
-    color: var(--gray-700);
-}
-
-.badge {
-    display: inline-block;
-    padding: 0.25rem 0.75rem;
-    border-radius: var(--radius-full);
-    font-size: 0.75rem;
-    font-weight: 600;
-}
-
-.badge-approved {
-    background: rgba(16, 185, 129, 0.1);
-    color: #047857;
-}
-
-.badge-pending {
-    background: rgba(245, 158, 11, 0.1);
-    color: #b45309;
-}
-
-.badge-rejected {
-    background: rgba(239, 68, 68, 0.1);
-    color: #991b1b;
-}
-
-.badge-blocked {
-    background: rgba(239, 68, 68, 0.1);
-    color: #991b1b;
-}
-</style>
