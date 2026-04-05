@@ -2,8 +2,6 @@
 
 A modern, responsive, full-stack PHP web application that helps reduce food waste by connecting **Restaurants**, **NGOs**, and **Donors** on a single digital platform.
 
-> 📌 **GitHub Pages**: The docs/ folder is deployed to GitHub Pages as your project landing page. The PHP backend should be deployed to a traditional web server.
-
 ## ✨ Key Features
 
 ### 🏪 Restaurant Dashboard
