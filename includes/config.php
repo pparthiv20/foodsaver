@@ -9,36 +9,47 @@ error_reporting(E_ALL);
 ini_set('display_errors', 0);
 
 // Session configuration
+if (session_status() === PHP_SESSION_NONE) {
     session_start();
+}
 
-// Database Configuration - MySQL (InfinityFree)
-define('DB_HOST', 'sql103.infinityfree.com');
-define('DB_USERNAME', 'if0_41439659');
-define('DB_PASSWORD', '2uSkHrVjAWZ8u2');
-define('DB_NAME', 'if0_41439659_food');
-define('DB_CHARSET', 'utf8mb4');
+// Load environment variables from .env file
+$envFile = __DIR__ . '/../.env';
+if (file_exists($envFile)) {
+    $lines = file($envFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+    foreach ($lines as $line) {
+        // Skip comments
+        if (strpos(trim($line), '#') === 0) continue;
+        if (strpos($line, '=') !== false) {
+            list($key, $value) = explode('=', $line, 2);
+            $key = trim($key);
+            $value = trim($value);
+            if (!empty($key)) {
+                $_ENV[$key] = $value;
+                putenv("$key=$value");
+            }
+        }
+    }
+}
+
+// Database Configuration - Uses .env or defaults to localhost (XAMPP)
+define('DB_HOST', $_ENV['DB_HOST'] ?? 'localhost');
+define('DB_USERNAME', $_ENV['DB_USERNAME'] ?? 'root');
+define('DB_PASSWORD', $_ENV['DB_PASSWORD'] ?? '');
+define('DB_NAME', $_ENV['DB_NAME'] ?? 'food_saver');
+define('DB_CHARSET', $_ENV['DB_CHARSET'] ?? 'utf8mb4');
 
 // Application Configuration
-define('APP_NAME', 'Food-Saver');
-define('APP_TAGLINE', 'Reduce Food Waste. Feed the Hungry.');
+define('APP_NAME', $_ENV['APP_NAME'] ?? 'Food-Saver');
+define('APP_TAGLINE', $_ENV['APP_TAGLINE'] ?? 'Reduce Food Waste. Feed the Hungry.');
 
 // Development Mode Configuration
 // Set to true to disable OTP verification during development
-define('DEVELOPMENT_MODE', false);
+define('DEVELOPMENT_MODE', ($_ENV['DEVELOPMENT_MODE'] ?? 'true') === 'true');
 
 // Auto-detect APP_URL based on current host and project root path
 $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
-
-// Set your Infinity Free domain here as fallback
-// Production domain for all redirects
-define('PRODUCTION_DOMAIN', 'foodsaver.xo.je');
-
-$host = $_SERVER['HTTP_HOST'] ?? PRODUCTION_DOMAIN;
-
-// Only use localhost if we're actually on localhost
-if ($host === 'localhost' || empty($_SERVER['HTTP_HOST'])) {
-    $host = PRODUCTION_DOMAIN;
-}
+$host = $_SERVER['HTTP_HOST'] ?? 'localhost';
 
 $projectRootPath = realpath(__DIR__ . '/..');
 $documentRootPath = realpath($_SERVER['DOCUMENT_ROOT'] ?? '');
@@ -55,25 +66,21 @@ if ($projectRootPath && $documentRootPath) {
 
 $basePath = rtrim($basePath, '/');
 define('APP_URL', $protocol . '://' . $host . $basePath);
-define('APP_VERSION', '1.0.0');
+define('APP_VERSION', $_ENV['APP_VERSION'] ?? '1.0.0');
 
 // Email Configuration
-define('SMTP_HOST', 'smtp.gmail.com');
-define('SMTP_PORT', 587);
-
-define('SMTP_USERNAME', 'pcparthiv20@gmail.com');
-define('SMTP_PASSWORD', 'waxm qzdl tyrn atlk');
-define('FROM_EMAIL', 'pcparthiv20@gmail.com');
-define('FROM_NAME', 'Food-Saver');
+define('SMTP_HOST', $_ENV['SMTP_HOST'] ?? 'smtp.gmail.com');
+define('SMTP_PORT', (int)($_ENV['SMTP_PORT'] ?? 587));
+define('SMTP_USERNAME', $_ENV['SMTP_USERNAME'] ?? '');
+define('SMTP_PASSWORD', $_ENV['SMTP_PASSWORD'] ?? '');
+define('FROM_EMAIL', $_ENV['FROM_EMAIL'] ?? 'noreply@foodsaver.local');
+define('FROM_NAME', $_ENV['FROM_NAME'] ?? 'Food-Saver');
 
 // OAuth Configuration
-// Google OAuth - Get credentials from https://console.cloud.google.com
-define('GOOGLE_CLIENT_ID', 'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com');
-define('GOOGLE_CLIENT_SECRET', 'YOUR_GOOGLE_CLIENT_SECRET');
-
-// Facebook OAuth - Get credentials from https://developers.facebook.com
-define('FACEBOOK_APP_ID', 'YOUR_FACEBOOK_APP_ID');
-define('FACEBOOK_APP_SECRET', 'YOUR_FACEBOOK_APP_SECRET');
+define('GOOGLE_CLIENT_ID', $_ENV['GOOGLE_CLIENT_ID'] ?? '');
+define('GOOGLE_CLIENT_SECRET', $_ENV['GOOGLE_CLIENT_SECRET'] ?? '');
+define('FACEBOOK_APP_ID', $_ENV['FACEBOOK_APP_ID'] ?? '');
+define('FACEBOOK_APP_SECRET', $_ENV['FACEBOOK_APP_SECRET'] ?? '');
 
 // File Upload Configuration
 define('UPLOAD_MAX_SIZE', 5 * 1024 * 1024); // 5MB

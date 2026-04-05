@@ -6,50 +6,27 @@
 
 require_once '../includes/config.php';
 
-// Check if PDF download is requested
-if (isset($_GET['download_pdf'])) {
-    $reportType = $_GET['download_pdf'];
-    $month = $_GET['month'] ?? date('m');
-    $year = $_GET['year'] ?? date('Y');
-    
-    // Validate inputs
-    if (!preg_match('/^[0-9]{4}$/', $year) || !preg_match('/^[0-9]{2}$/', $month)) {
-        die('Invalid parameters');
-    }
-    
-    // Generate PDF filename
-    $filename = $reportType . '_' . $year . '-' . $month . '.pdf';
-    
-    // For now, create a simple text-based download (replace with actual PDF generation library)
-    header('Content-Type: application/pdf');
-    header('Content-Disposition: attachment; filename="' . $filename . '"');
-    header('Content-Length: 0');
-    
-    // This is a placeholder - in production, use TCPDF or mPDF library
-    echo "PDF Report: $reportType\nYear: $year\nMonth: $month\n";
-    exit;
-}
-
 // Get database statistics
 $db = getDB();
 $stats = [
     'total_food_posted' => $db->query("SELECT COUNT(*) FROM food_listings")->fetchColumn(),
     'total_food_delivered' => $db->query("SELECT COUNT(*) FROM food_listings WHERE status = 'delivered'")->fetchColumn(),
-    'total_donations' => $db->query("SELECT COUNT(*) FROM donations WHERE status = 'completed'")->fetchColumn(),
-    'total_donation_amount' => $db->query("SELECT COALESCE(SUM(amount), 0) FROM donations WHERE status = 'completed'")->fetchColumn(),
+    'total_donations' => $db->query("SELECT COALESCE(SUM(amount), 0) FROM donations WHERE status = 'completed'")->fetchColumn(),
     'total_restaurants' => $db->query("SELECT COUNT(*) FROM restaurants WHERE status = 'approved'")->fetchColumn(),
     'total_ngos' => $db->query("SELECT COUNT(*) FROM ngos WHERE status = 'approved'")->fetchColumn(),
 ];
 
-// Get monthly data
-$monthlyReports = $db->query("
-    SELECT DATE_FORMAT(created_at, '%Y-%m') as month, COUNT(*) as total_food
-    FROM food_listings
-    WHERE status = 'delivered'
-    GROUP BY DATE_FORMAT(created_at, '%Y-%m')
-    ORDER BY month DESC
-    LIMIT 12
-")->fetchAll(PDO::FETCH_ASSOC);
+$currentYear = date('Y');
+
+// Only current year for yearly report
+$years = [$currentYear];
+
+// Only Jan, Feb, Mar of current year for monthly reports
+$months = [
+    ['month' => '01', 'year' => $currentYear, 'name' => "January $currentYear"],
+    ['month' => '02', 'year' => $currentYear, 'name' => "February $currentYear"],
+    ['month' => '03', 'year' => $currentYear, 'name' => "March $currentYear"],
+];
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -57,14 +34,65 @@ $monthlyReports = $db->query("
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Download Reports - <?php echo APP_NAME; ?></title>
+    
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Styles -->
     <link rel="stylesheet" href="../assets/css/style.css">
-    <link rel="stylesheet" href="../assets/css/mobile-responsive.css">
-    <link rel="stylesheet" href="../assets/css/mobile-advanced.css">
+    <link rel="stylesheet" href="../assets/css/index-styles.css">
+    
+    <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌱</text></svg>">
+    
+    <style>
+        .reports-container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        
+        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 40px; }
+        .stat-card { background: white; border-radius: 12px; padding: 25px; border: 1px solid #e0e0e0; }
+        .stat-icon { width: 50px; height: 50px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; margin-bottom: 15px; }
+        .stat-icon.green { background: #e8f5e9; color: #2ecc71; }
+        .stat-icon.blue { background: #e3f2fd; color: #2196f3; }
+        .stat-value { font-size: 28px; font-weight: 700; color: #2ecc71; }
+        .stat-label { font-size: 14px; color: #666; margin-top: 5px; }
+        
+        .reports-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 30px; margin-bottom: 40px; }
+        .report-section { background: white; border-radius: 12px; padding: 25px; border: 1px solid #e0e0e0; }
+        .section-header h2 { font-size: 20px; color: #333; margin-bottom: 5px; }
+        .section-header p { font-size: 14px; color: #666; margin-bottom: 20px; }
+        
+        .report-item { display: flex; align-items: center; gap: 15px; padding: 15px; background: #f8f9fa; border-radius: 10px; margin-bottom: 15px; }
+        .report-item:last-child { margin-bottom: 0; }
+        .report-icon { width: 45px; height: 45px; background: linear-gradient(135deg, #e8f5e9, #c8e6c9); border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .report-icon i { color: #2ecc71; font-size: 18px; }
+        .report-info { flex: 1; min-width: 0; }
+        .report-info h4 { font-size: 15px; color: #333; margin-bottom: 3px; }
+        .report-info p { font-size: 12px; color: #888; }
+        .report-meta { font-size: 11px; color: #aaa; margin-top: 5px; }
+        .report-meta i { margin-right: 5px; }
+        
+        .btn-download { display: inline-flex; align-items: center; gap: 8px; padding: 10px 18px; background: #2ecc71; color: white; border-radius: 8px; text-decoration: none; font-size: 13px; font-weight: 500; flex-shrink: 0; }
+        .btn-download:hover { background: #27ae60; color: white; }
+        
+        .directories-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+        .directory-card { background: white; border-radius: 12px; padding: 25px; border: 1px solid #e0e0e0; display: flex; align-items: center; gap: 20px; }
+        .directory-icon { width: 60px; height: 60px; background: linear-gradient(135deg, #2ecc71, #27ae60); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px; color: white; flex-shrink: 0; }
+        .directory-info { flex: 1; }
+        .directory-info h3 { font-size: 18px; color: #333; margin-bottom: 5px; }
+        .directory-info p { font-size: 13px; color: #666; }
+        
+        @media (max-width: 768px) {
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .reports-grid, .directories-grid { grid-template-columns: 1fr; }
+            .report-item { flex-wrap: wrap; }
+            .btn-download { width: 100%; justify-content: center; margin-top: 10px; }
+        }
+    </style>
 </head>
 <body>
     <!-- Navigation -->
@@ -82,452 +110,199 @@ $monthlyReports = $db->query("
                     <li><a href="../index.php#home">Home</a></li>
                     <li><a href="../index.php#how-it-works">How It Works</a></li>
                     <li><a href="../index.php#about-us">About Us</a></li>
-                    <li><a href="../index.php#reports" class="active">Reports</a></li>
+                    <li><a href="reports.php" class="active">Reports</a></li>
                     <li><a href="../index.php#contact">Contact</a></li>
                 </ul>
                 
                 <div class="nav-actions">
                     <?php if (isLoggedIn()): ?>
                         <a href="../dashboards/<?php echo $_SESSION['user_type']; ?>.php" class="btn btn-primary btn-sm">
-                            Dashboard
+                            <i class="fas fa-tachometer-alt"></i> Dashboard
                         </a>
-                        <a href="logout.php" class="btn btn-outline btn-sm">Logout</a>
+                        <a href="logout.php" class="btn btn-secondary btn-sm">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
                     <?php else: ?>
-                        <a href="login.php" class="btn btn-outline btn-sm">Login</a>
-                        <a href="register.php" class="btn btn-primary btn-sm">Register</a>
+                        <a href="login.php" class="btn btn-secondary btn-sm">
+                            <i class="fas fa-sign-in-alt"></i> Login
+                        </a>
+                        <a href="register.php" class="btn btn-primary btn-sm">
+                            <i class="fas fa-user-plus"></i> Register
+                        </a>
                     <?php endif; ?>
                 </div>
             </div>
         </div>
     </nav>
 
+    <!-- Page Header -->
+    <section class="section" style="padding-top: 8rem; padding-bottom: 2rem; background: linear-gradient(135deg, rgba(22, 163, 74, 0.05), rgba(34, 197, 94, 0.05));">
+        <div class="container">
+            <div class="text-center">
+                <span class="section-label">Download Reports</span>
+                <h1 class="section-title">System Reports</h1>
+                <p class="section-subtitle">Download detailed reports about food donations, distributions, and platform statistics</p>
+            </div>
+        </div>
+    </section>
+
     <!-- Main Content -->
-    <main class="container py-5">
-        <!-- Header Section -->
-        <div class="page-header text-center mb-5">
-            <h1 class="page-title">System Reports</h1>
-            <p class="page-subtitle">Download detailed reports about food donations, distributions, and platform statistics</p>
-        </div>
-
-        <!-- Summary Stats -->
-        <div class="dashboard-stats mb-5">
-            <div class="stat-card">
-                <div class="stat-icon primary">
-                    <i class="fas fa-apple-alt"></i>
+    <section class="section" style="padding-top: 2rem; background: #f5f7fa;">
+        <div class="reports-container">
+            
+            <!-- Stats Cards -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon green"><i class="fas fa-apple-alt"></i></div>
+                    <div class="stat-value"><?php echo number_format($stats['total_food_posted']); ?></div>
+                    <div class="stat-label">Total Food Posted</div>
                 </div>
-                <div class="stat-value"><?php echo number_format($stats['total_food_posted']); ?></div>
-                <div class="stat-label">Total Food Posted</div>
+                <div class="stat-card">
+                    <div class="stat-icon green"><i class="fas fa-check-circle"></i></div>
+                    <div class="stat-value"><?php echo number_format($stats['total_food_delivered']); ?></div>
+                    <div class="stat-label">Food Delivered</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon green"><i class="fas fa-rupee-sign"></i></div>
+                    <div class="stat-value">₹<?php echo number_format($stats['total_donations']); ?></div>
+                    <div class="stat-label">Total Donations</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon blue"><i class="fas fa-users"></i></div>
+                    <div class="stat-value"><?php echo number_format($stats['total_restaurants']); ?></div>
+                    <div class="stat-label">Active Restaurants</div>
+                </div>
             </div>
-            <div class="stat-card">
-                <div class="stat-icon secondary">
-                    <i class="fas fa-check-circle"></i>
-                </div>
-                <div class="stat-value"><?php echo number_format($stats['total_food_delivered']); ?></div>
-                <div class="stat-label">Food Delivered</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon success">
-                    <i class="fas fa-donate"></i>
-                </div>
-                <div class="stat-value">₹<?php echo number_format($stats['total_donation_amount']); ?></div>
-                <div class="stat-label">Total Donations</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon info">
-                    <i class="fas fa-users"></i>
-                </div>
-                <div class="stat-value"><?php echo number_format($stats['total_restaurants']); ?></div>
-                <div class="stat-label">Active Restaurants</div>
-            </div>
-        </div>
-
-        <!-- Reports Section -->
-        <div class="grid grid-2">
-            <!-- Yearly Reports -->
-            <div class="card">
-                <div class="card-header">
-                    <h3>Yearly Reports</h3>
-                    <p class="card-subtitle">Download comprehensive annual reports</p>
-                </div>
-                <div class="card-body">
-                    <div class="reports-list">
-                        <?php 
-                        $currentYear = date('Y');
-                        for ($i = 0; $i < 3; $i++):
-                            $year = $currentYear - $i;
-                        ?>
-                        <div class="report-item">
-                            <div class="report-icon">
-                                <i class="fas fa-file-pdf"></i>
-                            </div>
-                            <div class="report-info">
-                                <h4 class="report-title">Annual Report <?php echo $year; ?></h4>
-                                <p class="report-description">Comprehensive yearly overview and achievements</p>
-                                <div class="report-meta">
-                                    <span class="report-date">
-                                        <i class="fas fa-calendar"></i> Year <?php echo $year; ?>
-                                    </span>
-                                    <span class="report-size">~3.5 MB</span>
-                                </div>
-                            </div>
-                            <div class="report-actions">
-                                <button class="btn btn-sm btn-primary" onclick="downloadReport('annual', '<?php echo $year; ?>', '')">
-                                    <i class="fas fa-download"></i> Download
-                                </button>
+            
+            <!-- Reports Grid -->
+            <div class="reports-grid">
+                <!-- Yearly Reports -->
+                <div class="report-section">
+                    <div class="section-header">
+                        <h2>Yearly Reports</h2>
+                        <p>Download comprehensive annual reports</p>
+                    </div>
+                    
+                    <?php foreach ($years as $year): ?>
+                    <div class="report-item">
+                        <div class="report-icon"><i class="fas fa-file-pdf"></i></div>
+                        <div class="report-info">
+                            <h4>Annual Report <?php echo $year; ?></h4>
+                            <p>Comprehensive yearly overview and achievements</p>
+                            <div class="report-meta">
+                                <i class="fas fa-calendar"></i> Year <?php echo $year; ?>
+                                <span style="margin-left: 15px;"><i class="fas fa-file"></i> ~3.5 MB</span>
                             </div>
                         </div>
-                        <?php endfor; ?>
+                        <a href="../public_report.php?type=yearly&year=<?php echo $year; ?>" class="btn-download" target="_blank">
+                            <i class="fas fa-download"></i> Download
+                        </a>
                     </div>
+                    <?php endforeach; ?>
                 </div>
-            </div>
-
-            <!-- Monthly Reports -->
-            <div class="card">
-                <div class="card-header">
-                    <h3>Monthly Reports</h3>
-                    <p class="card-subtitle">Download month-by-month detailed analysis</p>
-                </div>
-                <div class="card-body">
-                    <div class="reports-list">
-                        <?php
-                        $months = [];
-                        for ($i = 0; $i < 12; $i++):
-                            $date = new DateTime();
-                            $date->modify("-$i months");
-                            $monthKey = $date->format('m');
-                            $yearKey = $date->format('Y');
-                            $monthName = $date->format('F Y');
-                        ?>
-                        <div class="report-item">
-                            <div class="report-icon">
-                                <i class="fas fa-file-pdf"></i>
-                            </div>
-                            <div class="report-info">
-                                <h4 class="report-title">Monthly Report - <?php echo $monthName; ?></h4>
-                                <p class="report-description">Detailed food distribution and donation statistics</p>
-                                <div class="report-meta">
-                                    <span class="report-date">
-                                        <i class="fas fa-calendar"></i> <?php echo $monthName; ?>
-                                    </span>
-                                    <span class="report-size">~1.8 MB</span>
-                                </div>
-                            </div>
-                            <div class="report-actions">
-                                <button class="btn btn-sm btn-primary" onclick="downloadReport('monthly', '<?php echo $yearKey; ?>', '<?php echo $monthKey; ?>')">
-                                    <i class="fas fa-download"></i> Download
-                                </button>
+                
+                <!-- Monthly Reports -->
+                <div class="report-section">
+                    <div class="section-header">
+                        <h2>Monthly Reports</h2>
+                        <p>Download month-by-month detailed analysis</p>
+                    </div>
+                    
+                    <?php foreach ($months as $m): ?>
+                    <div class="report-item">
+                        <div class="report-icon"><i class="fas fa-file-pdf"></i></div>
+                        <div class="report-info">
+                            <h4>Monthly Report - <?php echo $m['name']; ?></h4>
+                            <p>Detailed food distribution and donation statistics</p>
+                            <div class="report-meta">
+                                <i class="fas fa-calendar"></i> <?php echo $m['name']; ?>
+                                <span style="margin-left: 15px;"><i class="fas fa-file"></i> ~1.8 MB</span>
                             </div>
                         </div>
-                        <?php endfor; ?>
+                        <a href="../public_report.php?type=monthly&month=<?php echo $m['month']; ?>&year=<?php echo $m['year']; ?>" class="btn-download" target="_blank">
+                            <i class="fas fa-download"></i> Download
+                        </a>
                     </div>
+                    <?php endforeach; ?>
                 </div>
+            </div>
+            
+            <!-- Partner Directories -->
+            <h2 style="font-size: 20px; color: #333; margin-bottom: 20px;">Partner Directories</h2>
+            <div class="directories-grid">
+                <div class="directory-card">
+                    <div class="directory-icon"><i class="fas fa-utensils"></i></div>
+                    <div class="directory-info">
+                        <h3>Restaurant Directory</h3>
+                        <p><?php echo $stats['total_restaurants']; ?> restaurant partners with names and addresses</p>
+                    </div>
+                    <a href="../public_report.php?type=restaurants" class="btn-download" target="_blank">
+                        <i class="fas fa-download"></i> Download
+                    </a>
+                </div>
+                <div class="directory-card">
+                    <div class="directory-icon"><i class="fas fa-hands-helping"></i></div>
+                    <div class="directory-info">
+                        <h3>NGO Directory</h3>
+                        <p><?php echo $stats['total_ngos']; ?> NGO partners with names and addresses</p>
+                    </div>
+                    <a href="../public_report.php?type=ngos" class="btn-download" target="_blank">
+                        <i class="fas fa-download"></i> Download
+                    </a>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 40px; color: #999; font-size: 13px; padding-bottom: 40px;">
+                <p>💡 Tip: Click "Print / Save as PDF" on the report page to save as PDF file</p>
             </div>
         </div>
-
-        <!-- Additional Reports -->
-        <div class="grid grid-2 mt-4">
-            <!-- Statistics Report -->
-            <div class="card">
-                <div class="card-header">
-                    <h3>Platform Statistics</h3>
-                    <p class="card-subtitle">Key metrics and performance indicators</p>
-                </div>
-                <div class="card-body">
-                    <div class="stats-table">
-                        <div class="stat-row">
-                            <span class="stat-label">Total Restaurants</span>
-                            <span class="stat-value"><?php echo number_format($stats['total_restaurants']); ?></span>
-                        </div>
-                        <div class="stat-row">
-                            <span class="stat-label">Total NGOs</span>
-                            <span class="stat-value"><?php echo number_format($stats['total_ngos']); ?></span>
-                        </div>
-                        <div class="stat-row">
-                            <span class="stat-label">Food Listings Posted</span>
-                            <span class="stat-value"><?php echo number_format($stats['total_food_posted']); ?></span>
-                        </div>
-                        <div class="stat-row">
-                            <span class="stat-label">Food Successfully Delivered</span>
-                            <span class="stat-value"><?php echo number_format($stats['total_food_delivered']); ?></span>
-                        </div>
-                        <div class="stat-row">
-                            <span class="stat-label">Total Donations Received</span>
-                            <span class="stat-value"><?php echo number_format($stats['total_donations']); ?></span>
-                        </div>
-                        <div class="stat-row">
-                            <span class="stat-label">Total Donation Amount</span>
-                            <span class="stat-value">₹<?php echo number_format($stats['total_donation_amount']); ?></span>
-                        </div>
-                    </div>
-                    <div class="form-actions mt-4">
-                        <button class="btn btn-primary btn-block" onclick="downloadReport('statistics', '', '')">
-                            <i class="fas fa-download"></i> Download Statistics Report
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Export Summary -->
-            <div class="card">
-                <div class="card-header">
-                    <h3>Export Options</h3>
-                    <p class="card-subtitle">Choose your preferred format</p>
-                </div>
-                <div class="card-body">
-                    <div class="export-options">
-                        <div class="option-item">
-                            <div class="option-icon">
-                                <i class="fas fa-file-pdf"></i>
-                            </div>
-                            <div class="option-info">
-                                <h4>PDF Format</h4>
-                                <p class="text-sm text-gray">Print-friendly PDF documents with charts and tables</p>
-                            </div>
-                        </div>
-                        <div class="option-item">
-                            <div class="option-icon">
-                                <i class="fas fa-file-excel"></i>
-                            </div>
-                            <div class="option-info">
-                                <h4>Excel Format</h4>
-                                <p class="text-sm text-gray">Spreadsheets for data analysis and custom reports</p>
-                            </div>
-                        </div>
-                        <div class="option-item">
-                            <div class="option-icon">
-                                <i class="fas fa-file-csv"></i>
-                            </div>
-                            <div class="option-info">
-                                <h4>CSV Format</h4>
-                                <p class="text-sm text-gray">Raw data in comma-separated values format</p>
-                            </div>
-                        </div>
-                    </div>
-                    <p class="text-sm text-gray text-center mt-4">
-                        <i class="fas fa-lock-alt"></i> All reports are secure and private
-                    </p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Help Section -->
-        <div class="card mt-4 bg-info-light">
-            <div class="card-body">
-                <div class="flex items-start gap-3">
-                    <i class="fas fa-info-circle text-info fa-lg"></i>
-                    <div>
-                        <h4 class="mb-1">How to Use Reports</h4>
-                        <p class="text-sm">
-                            <strong>Yearly Reports:</strong> Get a comprehensive overview of annual food distribution and donations.<br>
-                            <strong>Monthly Reports:</strong> Track detailed month-by-month performance and trends.<br>
-                            <strong>Statistics:</strong> View key platform metrics and performance indicators.
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </main>
+    </section>
 
     <!-- Footer -->
-    <footer class="footer mt-5">
+    <footer class="footer">
         <div class="container">
-            <div class="grid grid-3">
-                <div>
-                    <h4 class="mb-2">About</h4>
-                    <p class="text-sm text-gray">Food-Saver connects restaurants, NGOs, and donors to reduce food waste and feed the hungry.</p>
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="../index.php" class="logo">
+                        <div class="logo-icon">
+                            <i class="fas fa-leaf"></i>
+                        </div>
+                        <span>Food Saver</span>
+                    </a>
+                    <p>
+                        Connecting restaurants, NGOs, and donors to redistribute surplus food 
+                        efficiently and fight hunger in our communities.
+                    </p>
                 </div>
+                
                 <div>
-                    <h4 class="mb-2">Quick Links</h4>
-                    <ul class="text-sm text-gray">
-                        <li><a href="../index.php">Home</a></li>
+                    <h4 class="footer-title">Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="../index.php#home">Home</a></li>
                         <li><a href="../index.php#how-it-works">How It Works</a></li>
                         <li><a href="../index.php#about-us">About Us</a></li>
-                        <li><a href="../index.php#reports">Reports</a></li>
                         <li><a href="../index.php#contact">Contact</a></li>
                     </ul>
                 </div>
+                
                 <div>
-                    <h4 class="mb-2">Contact</h4>
-                    <p class="text-sm text-gray">
-                        <i class="fas fa-envelope"></i> info@foodsaver.com<br>
-                        <i class="fas fa-phone"></i> +91 1234567890
-                    </p>
+                    <h4 class="footer-title">Support</h4>
+                    <ul class="footer-links">
+                        <li><a href="contact-page.php">Contact Us</a></li>
+                        <li><a href="help-center.php">Help Center</a></li>
+                        <li><a href="privacy-policy.php">Privacy Policy</a></li>
+                        <li><a href="terms-of-service.php">Terms of Service</a></li>
+                    </ul>
                 </div>
             </div>
-            <hr class="my-4">
-            <div class="text-center text-sm text-gray">
-                <p>&copy; <?php echo date('Y'); ?> Food-Saver. All rights reserved.</p>
+
+            <div class="footer-bottom">
+                <p>&copy; <?php echo date('Y'); ?> <?php echo APP_NAME; ?>. All rights reserved.</p>
             </div>
         </div>
     </footer>
 
-    <style>
-        .reports-list {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            max-height: 600px;
-            overflow-y: auto;
-        }
-
-        .report-item {
-            display: flex;
-            align-items: flex-start;
-            gap: 1rem;
-            padding: 1rem;
-            background: var(--gray-50);
-            border-radius: var(--radius-lg);
-            border: 1px solid var(--gray-200);
-            transition: all var(--transition-base);
-        }
-
-        .report-item:hover {
-            background: var(--gray-100);
-            border-color: var(--primary-300);
-            box-shadow: var(--shadow-md);
-        }
-
-        .report-icon {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 48px;
-            height: 48px;
-            background: var(--primary-100);
-            color: var(--primary-600);
-            border-radius: var(--radius-lg);
-            font-size: 1.5rem;
-            flex-shrink: 0;
-        }
-
-        .report-info {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .report-title {
-            font-size: 1rem;
-            font-weight: 600;
-            color: var(--gray-900);
-            margin-bottom: 0.25rem;
-        }
-
-        .report-description {
-            font-size: 0.875rem;
-            color: var(--gray-600);
-            margin-bottom: 0.5rem;
-        }
-
-        .report-meta {
-            display: flex;
-            gap: 1rem;
-            font-size: 0.75rem;
-            color: var(--gray-500);
-        }
-
-        .report-actions {
-            flex-shrink: 0;
-        }
-
-        .stats-table {
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-        }
-
-        .stat-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0.75rem;
-            background: var(--gray-50);
-            border-radius: var(--radius-md);
-            border-left: 3px solid var(--primary-500);
-        }
-
-        .stat-label {
-            font-weight: 500;
-            color: var(--gray-700);
-        }
-
-        .stat-value {
-            font-size: 1.25rem;
-            font-weight: 700;
-            color: var(--primary-600);
-        }
-
-        .export-options {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-
-        .option-item {
-            display: flex;
-            align-items: flex-start;
-            gap: 1rem;
-            padding: 1rem;
-            background: var(--gray-50);
-            border-radius: var(--radius-lg);
-        }
-
-        .option-icon {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 40px;
-            height: 40px;
-            background: var(--primary-100);
-            color: var(--primary-600);
-            border-radius: var(--radius-md);
-            font-size: 1.25rem;
-            flex-shrink: 0;
-        }
-
-        .option-info h4 {
-            font-weight: 600;
-            color: var(--gray-900);
-            margin-bottom: 0.25rem;
-        }
-
-        .bg-info-light {
-            background: rgba(59, 130, 246, 0.05);
-            border: 1px solid rgba(59, 130, 246, 0.2);
-        }
-
-        .btn-block {
-            width: 100%;
-        }
-
-        @media (max-width: 768px) {
-            .report-item {
-                flex-direction: column;
-            }
-
-            .report-actions {
-                width: 100%;
-            }
-
-            .grid-2 {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
-
+    <!-- Scripts -->
     <script src="../assets/js/main.js"></script>
-    <script>
-        function downloadReport(type, year, month) {
-            showNotification('Preparing your report...', 'info');
-            
-            setTimeout(() => {
-                let url = 'pages/reports.php?download_pdf=' + type;
-                if (year) url += '&year=' + year;
-                if (month) url += '&month=' + month;
-                
-                window.location.href = url;
-                showNotification('Report downloaded successfully!', 'success');
-            }, 500);
-        }
-    </script>
 </body>
 </html>
