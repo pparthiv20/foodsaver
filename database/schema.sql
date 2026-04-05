@@ -76,7 +76,7 @@ CREATE TABLE users (
     city VARCHAR(50),
     state VARCHAR(50),
     avatar VARCHAR(255),
-    status ENUM('active', 'inactive') DEFAULT 'active',
+    status ENUM('active', 'inactive', 'blocked', 'suspended') DEFAULT 'active',
     last_login DATETIME,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
