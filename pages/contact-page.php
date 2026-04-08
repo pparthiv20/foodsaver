@@ -66,22 +66,19 @@ $flash = getFlashMessage();
                     <li><a href="../index.php#home">Home</a></li>
                     <li><a href="../index.php#how-it-works">How It Works</a></li>
                     <li><a href="../index.php#about-us">About Us</a></li>
-                    <li><a href="../index.php#reports">Reports</a></li>
+                    <li><a href="reports.php">Reports</a></li>
                     <li><a href="../index.php#contact">Contact</a></li>
                 </ul>
                 
                 <div class="nav-actions">
-                    <?php if ($isLoggedIn = isLoggedIn()): ?>
-                        <a href="logout.php" class="btn btn-secondary btn-sm">
-                            <i class="fas fa-sign-out-alt"></i> Logout
+                    <?php if ($isLoggedIn): ?>
+                        <a href="dashboards/<?php echo $_SESSION['user_type']; ?>.php" class="btn btn-primary btn-sm" role="button">
+                            Dashboard
                         </a>
+                        <a href="logout.php" class="btn btn-outline btn-sm" role="button">Logout</a>
                     <?php else: ?>
-                        <a href="login.php" class="btn btn-secondary btn-sm">
-                            <i class="fas fa-sign-in-alt"></i> Login
-                        </a>
-                        <a href="register.php" class="btn btn-primary btn-sm">
-                            <i class="fas fa-user-plus"></i> Register
-                        </a>
+                        <a href="login.php" class="btn btn-outline btn-sm nav-login-btn" role="button">Login</a>
+                        <a href="pages/register.php" class="btn btn-primary btn-sm nav-joinus-btn" role="button">Join Us</a>
                     <?php endif; ?>
                 </div>
             </div>
@@ -192,7 +189,7 @@ $flash = getFlashMessage();
                                 Call Us
                             </h3>
                             <p class="text-gray">
-                                <strong>Phone:</strong> +91 98765 43210<br>
+                                <strong>Phone:</strong> +91 82380 14262<br>
                                 <strong>Hours:</strong> Mon to Sat: 9:00 AM to 6:00 PM<br>
                                 <strong>Timezone:</strong> IST (UTC+5:30)
                             </p>
@@ -284,6 +281,14 @@ $flash = getFlashMessage();
                         <li><a href="help-center.php">Help Center</a></li>
                         <li><a href="privacy-policy.php">Privacy Policy</a></li>
                         <li><a href="terms-of-service.php">Terms of Service</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="footer-title">Contact</h4>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-envelope"></i> foodsaver33@gmail.com</li>
+                        <li><i class="fas fa-phone"></i> +91 82380 14262</li>
+                        <li><i class="fas fa-map-marker-alt"></i> Ahmedabad, India</li>
                     </ul>
                 </div>
             </div>

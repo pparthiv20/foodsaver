@@ -111,24 +111,18 @@ $months = [
                     <li><a href="../index.php#how-it-works">How It Works</a></li>
                     <li><a href="../index.php#about-us">About Us</a></li>
                     <li><a href="reports.php" class="active">Reports</a></li>
-                    <li><a href="../index.php#contact">Contact</a></li>
+                    <li><a href="contact-page.php">Contact</a></li>
                 </ul>
                 
                 <div class="nav-actions">
-                    <?php if (isLoggedIn()): ?>
-                        <a href="../dashboards/<?php echo $_SESSION['user_type']; ?>.php" class="btn btn-primary btn-sm">
-                            <i class="fas fa-tachometer-alt"></i> Dashboard
+                    <?php if ($isLoggedIn): ?>
+                        <a href="dashboards/<?php echo $_SESSION['user_type']; ?>.php" class="btn btn-primary btn-sm" role="button">
+                            Dashboard
                         </a>
-                        <a href="logout.php" class="btn btn-secondary btn-sm">
-                            <i class="fas fa-sign-out-alt"></i> Logout
-                        </a>
+                        <a href="logout.php" class="btn btn-outline btn-sm" role="button">Logout</a>
                     <?php else: ?>
-                        <a href="login.php" class="btn btn-secondary btn-sm">
-                            <i class="fas fa-sign-in-alt"></i> Login
-                        </a>
-                        <a href="register.php" class="btn btn-primary btn-sm">
-                            <i class="fas fa-user-plus"></i> Register
-                        </a>
+                        <a href="login.php" class="btn btn-outline btn-sm nav-login-btn" role="button">Login</a>
+                        <a href="pages/register.php" class="btn btn-primary btn-sm nav-joinus-btn" role="button">Join Us</a>
                     <?php endif; ?>
                 </div>
             </div>
@@ -274,6 +268,7 @@ $months = [
                         efficiently and fight hunger in our communities.
                     </p>
                 </div>
+                
                 
                 <div>
                     <h4 class="footer-title">Quick Links</h4>

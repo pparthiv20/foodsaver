@@ -244,9 +244,9 @@ require_once '../includes/config.php';
                 <div>
                     <h4 class="footer-title">Contact</h4>
                     <ul class="footer-links">
-                        <li><i class="fas fa-envelope"></i> contact@foodsaver.org</li>
-                        <li><i class="fas fa-phone"></i> +91 98765 43210</li>
-                        <li><i class="fas fa-map-marker-alt"></i> Mumbai, India</li>
+                        <li><i class="fas fa-envelope"></i> foodsaver33@gmail.com</li>
+                        <li><i class="fas fa-phone"></i> +91 82380 14262</li>
+                        <li><i class="fas fa-map-marker-alt"></i> Ahmedabad, India</li>
                     </ul>
                 </div>
             </div>
